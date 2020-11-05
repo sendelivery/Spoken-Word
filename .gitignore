@@ -14,8 +14,6 @@
 # They also could contain extremely sensitive data
 /[Mm]emoryCaptures/
 
-/[Aa]ssets/[Ww]atson-SDK/*
-
 # Asset meta data should only be ignored when the corresponding asset is also ignored
 !/[Aa]ssets/**/*.meta
 
@@ -71,3 +69,8 @@ crashlytics-build.properties
 # Temporary auto-generated Android Assets
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
+
+# All Watson and IBM SDK files
+FYP - Spoken Word/Assets/Watson-SDK/
+FYP - Spoken Word/Assets/unity-sdk-core-1.2.1/*
+FYP - Spoken Word/Assets/unity-sdk-core-1.2.1.meta
