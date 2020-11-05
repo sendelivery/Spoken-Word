@@ -162,6 +162,7 @@ GameObject:
   m_Component:
   - component: {fileID: 507040666}
   - component: {fileID: 507040665}
+  - component: {fileID: 507040667}
   m_Layer: 0
   m_Name: ExampleStreaming
   m_TagString: Untagged
@@ -176,7 +177,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 507040664}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dffcb047c29a9d04fbe134c6109b2c22, type: 3}
   m_Name: 
@@ -199,6 +200,22 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &507040667
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 507040664}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11e6815f22be8a54692d5819ea99ae26, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _serviceUrl: https://api.eu-gb.speech-to-text.watson.cloud.ibm.com/instances/6ea3ab50-9420-476c-a7bd-d7fefa31f4b3
+  ResultsField: {fileID: 1912705358}
+  _iamApikey: pABoHA5QFyGO6ZCZpB9p96eEEQf5xMv3bkH5HvPfqODT
+  _recognizeModel: 
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
