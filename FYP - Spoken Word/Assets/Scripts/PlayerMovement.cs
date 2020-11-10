@@ -1,6 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -17,7 +16,9 @@ public class PlayerMovement : MonoBehaviour
     Vector3 velocity;
     bool isGrounded;
 
-    void Update() {
+	public Text textField;
+
+	void Update() {
 		isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
 
 		if (isGrounded && velocity.y < 0) {
@@ -36,6 +37,16 @@ public class PlayerMovement : MonoBehaviour
 		velocity.y += gravity * Time.deltaTime;
 
 		controller.Move(velocity * Time.deltaTime);
+
+		// process text
+		if (textField.text.Contains("(Final, ")) {
+			if (textField.text.Contains("go") && textField.text.Contains("a")) {
+				string incomingSpeech = "A";
+				GetComponent<PlayerAI>().HandleObjective(incomingSpeech); // Something is wrong with this line!
+			} else {
+				GetComponent<PlayerMovement>().HandleInput(textField.text);
+			}
+		}
 	}
 
 	public void HandleInput(string incomingSpeech) {

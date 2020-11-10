@@ -7,7 +7,6 @@ using UnityEngine.UIElements;
 public class ProcessText : MonoBehaviour
 {
     public Text textField;
-
 	[SerializeField] private GameObject player;
 
 	private void Start() {
@@ -17,9 +16,12 @@ public class ProcessText : MonoBehaviour
 	void Update()
     {
         if (textField.text.Contains("(Final, ")) {
-
-            player.GetComponent<PlayerMovement>().HandleInput(textField.text);
-            // HandleInput(textField.text);
+			if (textField.text.Contains("go") && textField.text.Contains("a")) {
+				string incomingSpeech = "A";
+				player.GetComponent<PlayerAI>().HandleObjective(incomingSpeech); // Something is wrong with this line!
+			} else {
+				player.GetComponent<PlayerMovement>().HandleInput(textField.text);
+			}
 		}
     }
 }
