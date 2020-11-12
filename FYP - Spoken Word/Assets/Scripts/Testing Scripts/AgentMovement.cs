@@ -9,29 +9,27 @@ using UnityEngine.Playables;
 public class AgentMovement : MonoBehaviour
 {
 
-    NavMeshAgent agent;
-    public Camera cam;
-
-    public Transform target;
-
     // Start is called before the first frame update
     void Start()
     {
-        agent = GetComponent<NavMeshAgent>();
+
     }
 
-    // Update is called once per frame
-    void Update()
+    public bool CheckTarget(NavMeshAgent agent, Transform target) 
     {
         NavMeshPath path = new NavMeshPath();
 
-        agent.CalculatePath(target.position, path);
-        // Debug.Log(path.status);
-        if (path.status == NavMeshPathStatus.PathComplete) {
-            agent.isStopped = false;
-            agent.SetDestination(target.position);
+        if (agent.CalculatePath(target.position, path)) {
+            //agent.isStopped = false;
+            //agent.SetDestination(target.position);
+
+            return true;
+
         } else {
-            agent.isStopped = true;
+
+            return false;
+
+            //agent.isStopped = true;
         }
     }
 }

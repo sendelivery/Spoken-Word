@@ -19,22 +19,7 @@ public class PlayerController : MonoBehaviour
     Vector3 velocity;
     bool isGrounded;
 
-    void Start()
-    {
-		AgentMovement agentMovement = GetComponent<AgentMovement>();
-		NavMeshAgent navMeshAgent = GetComponent<NavMeshAgent>();
-
-		agentMovement.enabled = false;
-		navMeshAgent.enabled = false;
-    }
-
-    // Update is called once per frame
-    void Update() {
-		HandleInput();
-        CheckTarget();
-	}
-
-	private void CheckTarget() {
+	/*private void CheckTarget() {
 		AgentMovement agentMovement = GetComponent<AgentMovement>();
 		NavMeshAgent navMeshAgent = GetComponent<NavMeshAgent>();
 
@@ -43,9 +28,13 @@ public class PlayerController : MonoBehaviour
 			// disable the player controller and re enable the agent movement
 			// most likely have a movement manager script that enable and disables as the player sees fit.
 		}
+	}*/
+
+	private void Start() {
+		
 	}
 
-	private void HandleInput() {
+	public void HandleInput() {
 		isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
 
 		if (isGrounded && velocity.y < 0) {
@@ -59,6 +48,7 @@ public class PlayerController : MonoBehaviour
 
 		controller.Move(move * speed * Time.deltaTime);
 
+		// Jump
 		if (Input.GetButtonDown("Jump") && isGrounded) {
 			velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
 		}
