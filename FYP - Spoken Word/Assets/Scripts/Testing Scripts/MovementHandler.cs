@@ -29,7 +29,16 @@ public class MovementHandler : MonoBehaviour
         if (playerController.enabled == true)
         {
             playerController.HandleInput();
-		}
+		} else if (playerController.enabled == false && Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0 || Input.GetButtonDown("Jump"))
+        {
+            navMeshAgent.enabled = false;
+            target = null; // TODO destroy target
+
+            playerController.enabled = true;
+            characterController.enabled = true;
+ 
+            playerController.HandleInput();
+        }
 
         if (target) 
         {
@@ -39,21 +48,27 @@ public class MovementHandler : MonoBehaviour
             if (agentMovement.CheckTarget(navMeshAgent, target)) 
             {
                 playerController.enabled = false;
+                characterController.enabled = false;
                 navMeshAgent.SetDestination(target.position);
 
-                Debug.Log(navMeshAgent.remainingDistance);
                 float dist = navMeshAgent.remainingDistance;
 
                 // Once the target has been reached, destroy the target, re enable the player controller and disable the agent
-                if (dist != Mathf.Infinity && dist != 0 && navMeshAgent.pathStatus == NavMeshPathStatus.PathComplete && dist <= goalRadius) {
+                if (dist != Mathf.Infinity && dist != 0 && navMeshAgent.pathStatus == NavMeshPathStatus.PathComplete && dist <= goalRadius)
+                {
                     target = null; // TODO destroy the target
+
                     playerController.enabled = true;
+                    characterController.enabled = true;
+
                     navMeshAgent.enabled = false;
                 }
 
 			} else {
                 navMeshAgent.enabled = false;
-			}
+                playerController.enabled = true;
+                characterController.enabled = true;
+            }
         }
     }
 }

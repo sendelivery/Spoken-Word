@@ -30,9 +30,7 @@ public class PlayerController : MonoBehaviour
 		}
 	}*/
 
-	private void Start() {
-		
-	}
+	private void Start() { }
 
 	public void HandleInput() {
 		isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
@@ -46,7 +44,12 @@ public class PlayerController : MonoBehaviour
 
 		Vector3 move = transform.right * x + transform.forward * z;
 
-		controller.Move(move * speed * Time.deltaTime);
+		if (Input.GetKey(KeyCode.LeftShift)) {
+			controller.Move(move * speed * 1.5f *Time.deltaTime);
+		} else {
+			controller.Move(move * speed * Time.deltaTime);
+		}
+		
 
 		// Jump
 		if (Input.GetButtonDown("Jump") && isGrounded) {
