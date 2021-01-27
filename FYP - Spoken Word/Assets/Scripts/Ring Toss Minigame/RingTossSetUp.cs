@@ -7,6 +7,8 @@ public class RingTossSetUp : MonoBehaviour
     // Position  and rotation variables
     public Vector3 defaultRingPos;
     public Vector3 nextRingPos;
+    public GameObject defPosTest;
+    public GameObject nextPosTest;
     public float posOffset = 1f;
     public Vector3 defaultRingRotation;
 
@@ -28,6 +30,9 @@ public class RingTossSetUp : MonoBehaviour
         // Then calculate and position the rings based on the number of rings specified.
         if(numberOfRings > 0)
 		{
+            defaultRingPos = defPosTest.transform.position; // THIS IS A TEST
+            nextRingPos = nextPosTest.transform.position; // THIS IS A TEST
+
             Quaternion ringRotation = Quaternion.Euler(defaultRingRotation);
             string name = "Ring ";
             // Instantiate the first ring, then add it to the list.

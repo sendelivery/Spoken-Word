@@ -11906,14 +11906,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1076043209, guid: 475e63ce95e5e714abacad162755a3e7, type: 3}
-      propertyPath: field of view
-      value: 75
-      objectReference: {fileID: 0}
-    - target: {fileID: 1076043211, guid: 475e63ce95e5e714abacad162755a3e7, type: 3}
-      propertyPath: mouseSensitivity
-      value: 150
-      objectReference: {fileID: 0}
     - target: {fileID: 7402570711180509174, guid: 475e63ce95e5e714abacad162755a3e7,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -11968,21 +11960,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7402570711180509174, guid: 475e63ce95e5e714abacad162755a3e7,
-        type: 3}
-      propertyPath: m_LocalScale.x
-      value: 0.3
-      objectReference: {fileID: 0}
-    - target: {fileID: 7402570711180509174, guid: 475e63ce95e5e714abacad162755a3e7,
-        type: 3}
-      propertyPath: m_LocalScale.y
-      value: 0.3
-      objectReference: {fileID: 0}
-    - target: {fileID: 7402570711180509174, guid: 475e63ce95e5e714abacad162755a3e7,
-        type: 3}
-      propertyPath: m_LocalScale.z
-      value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: 8588430073964907520, guid: 475e63ce95e5e714abacad162755a3e7,
         type: 3}

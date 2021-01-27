@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour
     public CharacterController controller;
 
     public float speed = 1.5f;
+	public float runSpeed = 4f;
     public float gravity = -9.81f;
     public float jumpHeight = 3f;
 
@@ -45,7 +46,7 @@ public class PlayerController : MonoBehaviour
 		Vector3 move = transform.right * x + transform.forward * z;
 
 		if (Input.GetKey(KeyCode.LeftShift)) {
-			controller.Move(move * speed * 1.5f *Time.deltaTime);
+			controller.Move(move * runSpeed *Time.deltaTime);
 		} else {
 			controller.Move(move * speed * Time.deltaTime);
 		}
