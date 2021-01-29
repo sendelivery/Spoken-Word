@@ -1,8 +1,10 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Xml.Serialization;
 using UnityEngine;
+using UnityEngine.UI;
 
 [ExecuteInEditMode]
 public class Waypoint : MonoBehaviour {
@@ -19,6 +21,14 @@ public class Waypoint : MonoBehaviour {
 
 	private bool clicked;
 	private bool backOut;
+
+	public Button exitButton;
+
+	private void Start()
+	{
+		//Calls the TaskOnClick method when you click the Button
+		exitButton.onClick.AddListener(TaskOnClick);
+	}
 
 	private void Update() {
 		// gameObject.name = "Objective " + wName;
@@ -37,6 +47,7 @@ public class Waypoint : MonoBehaviour {
 
 		if (clicked && Input.GetButtonDown("Fire2"))
 		{
+			print("yeah i'm here");
 			backOut = true;
 		}
 
@@ -44,9 +55,10 @@ public class Waypoint : MonoBehaviour {
 		// super weird. Find another solution.
 		if (backOut) 
 		{
-			// Disable player camera control
+			clicked = false;
+			// Grab the player camera control to enable later
 			MouseLook mouseLook = mainCamera.GetComponent<MouseLook>();
-			mouseLook.enabled = false;
+			//mouseLook.enabled = true;
 
 			// Rotation
 			mainCamera.transform.rotation = Quaternion.Slerp
@@ -57,11 +69,11 @@ public class Waypoint : MonoBehaviour {
 				(mainCamera.transform.position, defaultCameraPostion.transform.position, 8f * Time.deltaTime);
 
 			// Check if reached desired location
-			if (mainCamera.transform == defaultCameraPostion.transform)
+			if (mainCamera.transform.position == defaultCameraPostion.transform.position)
 			{
-				clicked = false;
 				backOut = false;
 				mouseLook.enabled = true;
+				Cursor.lockState = CursorLockMode.Locked;
 			}
 		}
 		if (clicked)
@@ -79,11 +91,11 @@ public class Waypoint : MonoBehaviour {
 				(mainCamera.transform.position, desiredLocation.position, 8f * Time.deltaTime);
 
 			// Check if reached desired location
-			/*if (mainCamera.transform.position == desiredLocation.position)
+			if (mainCamera.transform.position == desiredLocation.position)
 			{
 				clicked = false;
-				mouseLook.enabled = true;
-			}*/
+				Cursor.lockState = CursorLockMode.Confined;
+			}
 		}
 	}
 
@@ -98,5 +110,10 @@ public class Waypoint : MonoBehaviour {
 			yield return null;
 		}
 		print("not in the while");
+	}
+
+	private void TaskOnClick()
+	{
+		backOut = true;
 	}
 }
