@@ -9,24 +9,40 @@ using UnityEngine.UI;
 [ExecuteInEditMode]
 public class Waypoint : MonoBehaviour {
     
+	// Waypoint name and description, not really used at the moment.
+	[Tooltip("Give each waypoint a unique name, this is how the player will navigate to it using voice control.")]
 	public string wName;
     public string description;
 
-	public Camera mainCamera;
+	[Tooltip("How close the player has to be before they can click on a waypoint.")]
+	public float clickDistance = 1.5f;
 
-	public Transform desiredLocation;
-	public float acceptableDistance = 1.5f;
+	// Camera stuff, used to move the camera in and out of position when casting a ray on a waypoint
+	Camera mainCamera;
+	Transform defaultCameraPostion;
+	Transform desiredCameraPosition;
 
-	public Transform defaultCameraPostion;
-
-	private bool clicked;
+	private bool waypointSelected;
 	private bool backOut;
 
 	public Button exitButton;
 
+	private GameObject player;
+
 	private void Start()
 	{
-		//Calls the TaskOnClick method when you click the Button
+		// Get the desired camera position within the waypoint and the default camera position within the player game object
+		// Small CPU overhead, same with the rest, maybe cache?
+		// https://docs.unity3d.com/ScriptReference/Camera-main.html
+		// https://docs.unity3d.com/ScriptReference/Caching.html
+		mainCamera = Camera.main;
+		desiredCameraPosition = GameObject.FindGameObjectWithTag("WaypointCamPos").transform;
+		defaultCameraPostion = GameObject.FindGameObjectWithTag("PlayerCamPos").transform;
+
+		// Get the player
+		player = GameObject.FindGameObjectWithTag("Player");
+
+		//Calls the TaskOnClick method when you click the exit button
 		exitButton.onClick.AddListener(TaskOnClick);
 	}
 
@@ -35,27 +51,14 @@ public class Waypoint : MonoBehaviour {
 
 		// If a raycast is sent to the waypoint gameobject, and if that distance is close enough, move the camera into view.
 		// TODO: This raycast code should not be in the waypoint script, but for now it can stay
-		if (Input.GetButtonDown("Fire1") && clicked == false)
+		if (Input.GetButtonDown("Fire1") && waypointSelected == false)
 		{
-			RaycastHit hit;
-			bool hitObjective = Physics.Raycast(mainCamera.transform.position, mainCamera.transform.forward, out hit, 100f);
-			if (hitObjective && hit.transform.gameObject.GetComponent<Waypoint>() && hit.distance <= acceptableDistance)
-			{
-				clicked = true;
-			}
+			FireRay();
 		}
 
-		if (clicked && Input.GetButtonDown("Fire2"))
-		{
-			print("yeah i'm here");
-			backOut = true;
-		}
-
-		// TODO: Doesn't work!!! Camera gets stuck inbetween the original and waypoint position,
-		// super weird. Find another solution.
 		if (backOut) 
 		{
-			clicked = false;
+			waypointSelected = false;
 			// Grab the player camera control to enable later
 			MouseLook mouseLook = mainCamera.GetComponent<MouseLook>();
 			//mouseLook.enabled = true;
@@ -63,6 +66,7 @@ public class Waypoint : MonoBehaviour {
 			// Rotation
 			mainCamera.transform.rotation = Quaternion.Slerp
 				(mainCamera.transform.rotation, defaultCameraPostion.transform.rotation, Time.deltaTime * 8f);
+			print("slerp applied");
 
 			// Translation
 			mainCamera.transform.position = Vector3.Lerp
@@ -72,48 +76,51 @@ public class Waypoint : MonoBehaviour {
 			if (mainCamera.transform.position == defaultCameraPostion.transform.position)
 			{
 				backOut = false;
-				mouseLook.enabled = true;
+				player.GetComponent<MovementHandler>().enabled = true;
+				mainCamera.GetComponent<MouseLook>().enabled = true;
 				Cursor.lockState = CursorLockMode.Locked;
 			}
 		}
-		if (clicked)
+		if (waypointSelected)
 		{
 			// Disable player camera control
-			MouseLook mouseLook = mainCamera.GetComponent<MouseLook>();
-			mouseLook.enabled = false;
+			//MouseLook mouseLook = mainCamera.GetComponent<MouseLook>();
+			//mouseLook.enabled = false;
+
+			player.GetComponent<MovementHandler>().enabled = false;
+			mainCamera.GetComponent<MouseLook>().enabled = false;
 
 			// Rotation
 			mainCamera.transform.rotation = Quaternion.Slerp
-				(mainCamera.transform.rotation, desiredLocation.rotation, Time.deltaTime * 8f);
+				(mainCamera.transform.rotation, desiredCameraPosition.rotation, Time.deltaTime * 8f);
 
 			// Translation
 			mainCamera.transform.position = Vector3.Lerp
-				(mainCamera.transform.position, desiredLocation.position, 8f * Time.deltaTime);
+				(mainCamera.transform.position, desiredCameraPosition.position, 8f * Time.deltaTime);
 
 			// Check if reached desired location
-			if (mainCamera.transform.position == desiredLocation.position)
+			if (mainCamera.transform.position == desiredCameraPosition.position)
 			{
-				clicked = false;
+				waypointSelected = false;
 				Cursor.lockState = CursorLockMode.Confined;
 			}
 		}
 	}
 
-	public IEnumerator MoveCamToView()
+	private void FireRay()
 	{
-		print("just entered the move cam to view");
-		// Keep moving the ring towards the default position every frame until it reaches it.
-		while (mainCamera.transform.position != desiredLocation.position)
+		// Fire a ray, if it hits a waypoint, start moving the camera towards the waypoint from the next frame.
+		RaycastHit hit;
+		bool hitObjective = Physics.Raycast(mainCamera.transform.position, mainCamera.transform.forward, out hit, 100f);
+		if (hitObjective && hit.transform.gameObject.GetComponent<Waypoint>() && hit.distance <= clickDistance)
 		{
-			mainCamera.transform.position = Vector3.MoveTowards(mainCamera.transform.position, desiredLocation.position, 8f * Time.deltaTime);
-
-			yield return null;
+			waypointSelected = true;
 		}
-		print("not in the while");
 	}
 
 	private void TaskOnClick()
 	{
+		// Starts moving the camera back towards the original position inside the player on the next frame.
 		backOut = true;
 	}
 }
