@@ -463,8 +463,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac0ad2a6b261d3f41a5af9cd34eb1616, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ringNum: 0
   part: {fileID: 0}
-  force: {x: 0, y: 100, z: -100}
+  force: {x: 100, y: 100, z: 0}
 --- !u!1 &9210125145074103067
 GameObject:
   m_ObjectHideFlags: 0

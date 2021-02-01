@@ -32,12 +32,12 @@ public class PlayerUISetUp : MonoBehaviour
 		desiredCameraPosition = GameObject.FindGameObjectWithTag("WaypointCamPos").transform;
 		defaultCameraPostion = GameObject.FindGameObjectWithTag("PlayerCamPos").transform;
 
-		// Get the player
+		// Get the player, used to disable movement and mouse look when necessary
 		player = GameObject.FindGameObjectWithTag("Player");
 
 		// Get the exit button, then listen for TaskOnClick
 		// TODO tag the rt exit button with RT_Exit
-		exitButton = GameObject.FindGameObjectWithTag("RT_Exit").GetComponent<UnityEngine.UI.Button>();
+		exitButton = GameObject.FindGameObjectWithTag("RT Exit").GetComponent<UnityEngine.UI.Button>();
 		exitButton.onClick.AddListener(TaskOnClick);
 	}
 

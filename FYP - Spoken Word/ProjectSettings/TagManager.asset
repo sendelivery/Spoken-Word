@@ -9,6 +9,7 @@ TagManager:
   - Force Bar
   - PlayerCamPos
   - WaypointCamPos
+  - RT Exit
   layers:
   - Default
   - TransparentFX

@@ -4,21 +4,23 @@ using UnityEngine;
 
 public class RingTossSetUp : MonoBehaviour
 {
-    // Position  and rotation variables
-    public Vector3 defaultRingPos;
-    public Vector3 nextRingPos;
-    public GameObject defPosTest;
-    public GameObject nextPosTest;
+    // Position variables
+    public GameObject defaultRingPosition;
+    public GameObject nextRingPosition;
+
+    private Vector3 defRingPos;
+    private Vector3 nextRingPos;
+
+    // Rotation variables
     public float posOffset = 1f;
     public Vector3 defaultRingRotation;
 
+    // Desired number of rings
     public int numberOfRings;
     private List<Ring> rings = new List<Ring>();
 
-    private int ringNum = 0;
-
     public ParticleSystem bubbles;
-    public GameObject forceBar;
+    //public GameObject forceBar;
 
     // Start is called before the first frame update,
     // here the specified amount of rings is instantiated and placed in the scene accordingly.
@@ -30,13 +32,13 @@ public class RingTossSetUp : MonoBehaviour
         // Then calculate and position the rings based on the number of rings specified.
         if(numberOfRings > 0)
 		{
-            defaultRingPos = defPosTest.transform.position; // THIS IS A TEST
-            nextRingPos = nextPosTest.transform.position; // THIS IS A TEST
+            defRingPos = defaultRingPosition.transform.position;
+            nextRingPos = nextRingPosition.transform.position;
 
             Quaternion ringRotation = Quaternion.Euler(defaultRingRotation);
             string name = "Ring ";
             // Instantiate the first ring, then add it to the list.
-            rings.Add(RingFactory.CreateRing(defaultRingPos, ringRotation,
+            rings.Add(RingFactory.CreateRing(defRingPos, ringRotation,
                 name, true, true, false));
 
             // Add the specified number of rings to the list following the first one.
@@ -65,11 +67,11 @@ public class RingTossSetUp : MonoBehaviour
     {
         // These if can definitely be shortened somehow...
         // Check if first ring in list is no longer active (just been fired)
-        if (rings.Count > 0 && rings[ringNum].GetIsActive() == false && rings[ringNum].GetInPlace() == true)
+        if (rings.Count > 0 && rings[0].GetIsActive() == false && rings[0].GetInPlace() == true)
 		{
-            rings.Remove(rings[ringNum]); // Remove it from the list of rings
+            rings.Remove(rings[0]); // Remove it from the list of rings
 
-            if (rings.Count > 0 && rings[ringNum] && rings[ringNum].GetInPlace() == false) // Check if the next ring exists and if it's in place
+            if (rings.Count > 0 && rings[0] && rings[0].GetInPlace() == false) // Check if the next ring exists and if it's in place
             {
                 StartCoroutine(PrepareRing());
             }
@@ -91,6 +93,6 @@ public class RingTossSetUp : MonoBehaviour
         //yield on a new YieldInstruction that waits for the particles to end.
         yield return new WaitForSeconds(Mathf.Ceil(bubbles.main.duration));
 
-        rings[ringNum].PrepareNextRing(defaultRingPos); // Move that ring in place once the bubbles have finished.
+        rings[0].PrepareNextRing(defRingPos); // Move that ring in place once the bubbles have finished.
     }
 }
