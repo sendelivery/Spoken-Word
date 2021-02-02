@@ -48,7 +48,7 @@ public class Ring : MonoBehaviour
         }
     }
 
-    // No longer used.
+    // Not used in Oscillator2.cs
     public void SetForceMultiplier(float multi)
     {
         forceMultiplier = multi;

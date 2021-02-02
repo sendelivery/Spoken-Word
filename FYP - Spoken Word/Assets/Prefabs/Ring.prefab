@@ -366,6 +366,7 @@ GameObject:
   - component: {fileID: 5425087415988416941}
   - component: {fileID: 6162770440206864250}
   - component: {fileID: 1738876621162008445}
+  - component: {fileID: 5583769751896018165}
   m_Layer: 0
   m_Name: Ring
   m_TagString: Ring
@@ -466,6 +467,19 @@ MonoBehaviour:
   ringNum: 0
   part: {fileID: 0}
   force: {x: 100, y: 100, z: 0}
+--- !u!135 &5583769751896018165
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6162770440206864251}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.00005
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &9210125145074103067
 GameObject:
   m_ObjectHideFlags: 0
