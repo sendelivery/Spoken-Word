@@ -7,6 +7,8 @@ public class Score : MonoBehaviour
     public Text scoreText;
     private int score;
 
+    public Animator animationUponGoal;
+
     public static Score Instance { get { return _instance; } }
 
     private void Awake()
@@ -32,5 +34,7 @@ public class Score : MonoBehaviour
 	{
         score += amount;
         scoreText.text = score.ToString();
+
+        animationUponGoal.SetInteger("requiredScore", score);
     }
 }
