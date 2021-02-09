@@ -44,7 +44,7 @@ public class PlayerUISetUp : MonoBehaviour
 	private void Update()
 	{
 		// Fire ray on fire 1, ray distance is 1.5f
-		if (Input.GetButtonDown("Fire1") && waypointSelected == false)
+		if (/*Input.GetButtonDown("Fire1") && waypointSelected == false*/false)
 		{
 			// If a raycast hits a waypoint within 1.5f, set waypointSelected to true.
 			FireRay();
@@ -54,7 +54,7 @@ public class PlayerUISetUp : MonoBehaviour
 		if (waypointSelected)
 		{
 			// Disable player control
-			player.GetComponent<MovementHandler>().enabled = false;
+			player.GetComponent<ControlHandler>().enabled = false;
 			mainCamera.GetComponent<MouseLook>().enabled = false;
 
 			// Rotation
@@ -90,7 +90,7 @@ public class PlayerUISetUp : MonoBehaviour
 			{
 				// Re-enable player control
 				backOut = false;
-				player.GetComponent<MovementHandler>().enabled = true;
+				player.GetComponent<ControlHandler>().enabled = true;
 				mainCamera.GetComponent<MouseLook>().enabled = true;
 				Cursor.lockState = CursorLockMode.Locked;
 			}
@@ -98,7 +98,7 @@ public class PlayerUISetUp : MonoBehaviour
 		
 	}
 
-	private void FireRay()
+	public (bool, RaycastHit) FireRay()
 	{
 		// Fire a ray, if it hits a waypoint, start moving the camera towards the waypoint from the next frame.
 		RaycastHit hit;
@@ -106,7 +106,10 @@ public class PlayerUISetUp : MonoBehaviour
 		if (hitObjective && hit.transform.gameObject.GetComponent<Waypoint>() && hit.distance <= clickDistance)
 		{
 			waypointSelected = true;
+			// TODO: Set the desired camera pos to that of the specific waypoint selected.
+			return (true, hit);
 		}
+		return (false, hit);
 	}
 
 	private void TaskOnClick()
