@@ -54,7 +54,7 @@ public class PlayerUISetUp : MonoBehaviour
 		if (waypointSelected)
 		{
 			// Disable player control
-			player.GetComponent<ControlHandler>().enabled = false;
+			player.GetComponent<Control.ControlHandler>().enabled = false;
 			mainCamera.GetComponent<MouseLook>().enabled = false;
 
 			// Rotation
@@ -90,7 +90,7 @@ public class PlayerUISetUp : MonoBehaviour
 			{
 				// Re-enable player control
 				backOut = false;
-				player.GetComponent<ControlHandler>().enabled = true;
+				player.GetComponent<Control.ControlHandler>().enabled = true;
 				mainCamera.GetComponent<MouseLook>().enabled = true;
 				Cursor.lockState = CursorLockMode.Locked;
 			}

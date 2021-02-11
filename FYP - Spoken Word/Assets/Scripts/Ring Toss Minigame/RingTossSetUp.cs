@@ -22,7 +22,7 @@ public class RingTossSetUp : MonoBehaviour
     public ParticleSystem bubbles;
     //public GameObject forceBar;
 
-    // Start is called before the first frame update,
+    // Start is called before the first frame update, (awake does not work here, resultls in null reference exception)
     // here the specified amount of rings is instantiated and placed in the scene accordingly.
     void Start()
     {

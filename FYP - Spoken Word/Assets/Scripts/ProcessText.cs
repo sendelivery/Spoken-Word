@@ -18,9 +18,9 @@ public class ProcessText : MonoBehaviour
         if (textField.text.Contains("(Final, ")) {
 			if (textField.text.Contains("go") && textField.text.Contains("a")) {
 				string incomingSpeech = "A";
-				player.GetComponent<PlayerAI>().HandleObjective(incomingSpeech); // Something is wrong with this line!
+				//player.GetComponent<PlayerAI>().HandleObjective(incomingSpeech); // Something is wrong with this line!
 			} else {
-				player.GetComponent<PlayerMovement>().HandleInput(textField.text);
+				//player.GetComponent<PlayerMovement>().HandleInput(textField.text);
 			}
 		}
     }

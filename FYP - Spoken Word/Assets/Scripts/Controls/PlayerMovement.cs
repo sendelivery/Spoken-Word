@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.AI;
 
 // Currently this script is doing nothing, reconsider its use when refactoring the ControlHandler.cs
-public class PlayerController : MonoBehaviour
+public class PlayerMovement: MonoBehaviour
 {
     public CharacterController controller;
 
