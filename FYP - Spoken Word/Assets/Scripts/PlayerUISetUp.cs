@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 [ExecuteInEditMode]
 public class PlayerUISetUp : MonoBehaviour
@@ -18,7 +19,7 @@ public class PlayerUISetUp : MonoBehaviour
 	private bool waypointSelected;
 	private bool backOut;
 
-	private Button exitButton;
+	private Button rtExitButton;
 
 	private GameObject player;
 
@@ -36,25 +37,16 @@ public class PlayerUISetUp : MonoBehaviour
 		player = GameObject.FindGameObjectWithTag("Player");
 
 		// Get the exit button, then listen for TaskOnClick
-		// TODO tag the rt exit button with RT_Exit
-		exitButton = GameObject.FindGameObjectWithTag("RT Exit").GetComponent<UnityEngine.UI.Button>();
-		exitButton.onClick.AddListener(TaskOnClick);
+		rtExitButton = GameObject.FindGameObjectWithTag("RT Exit").GetComponent<UnityEngine.UI.Button>();
+		rtExitButton.onClick.AddListener(RTExitTaskOnClick);
 	}
 
 	private void Update()
 	{
-		// Fire ray on fire 1, ray distance is 1.5f
-		if (/*Input.GetButtonDown("Fire1") && waypointSelected == false*/false)
-		{
-			// If a raycast hits a waypoint within 1.5f, set waypointSelected to true.
-			FireRay();
-		}
-
 		// Move the camera into the specified view of the waypoint.
 		if (waypointSelected)
 		{
 			// Disable player control
-			player.GetComponent<Control.ControlHandler>().enabled = false;
 			mainCamera.GetComponent<MouseLook>().enabled = false;
 
 			// Rotation
@@ -70,6 +62,7 @@ public class PlayerUISetUp : MonoBehaviour
 			{
 				waypointSelected = false;
 				Cursor.lockState = CursorLockMode.Confined;
+				EventSystem.current.SetSelectedGameObject(rtExitButton.gameObject);
 			}
 		}
 
@@ -90,9 +83,11 @@ public class PlayerUISetUp : MonoBehaviour
 			{
 				// Re-enable player control
 				backOut = false;
-				player.GetComponent<Control.ControlHandler>().enabled = true;
 				mainCamera.GetComponent<MouseLook>().enabled = true;
 				Cursor.lockState = CursorLockMode.Locked;
+
+				// Set controls back to default controls
+				player.GetComponent<Control.ControlHandler>().SwitchStateDefault();
 			}
 		}
 		
@@ -112,9 +107,10 @@ public class PlayerUISetUp : MonoBehaviour
 		return (false, hit);
 	}
 
-	private void TaskOnClick()
+	public void RTExitTaskOnClick()
 	{
 		// Starts moving the camera back towards the original position inside the player on the next frame.
 		backOut = true;
+		EventSystem.current.SetSelectedGameObject(null);
 	}
 }

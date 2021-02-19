@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.AI;
 
 namespace Control
@@ -6,7 +7,7 @@ namespace Control
 	public class ControlHandler : ControlStateMachine
     {
         [Header("User Control Instances")]
-        // [SerializeField] PlayerMovement playerMovement;
+        [SerializeField] PlayerPhysics playerPhysics;
         [SerializeField] CharacterController characterController;
 
         [Header("Agent Control Instances")]
@@ -22,41 +23,61 @@ namespace Control
         private static Settings _settings;
 
         State _default;
-        State _minigame;
+        State _ringtoss;
 
         private void Awake()
         {
             PlayerControls controls = new PlayerControls();
 
-            _settings = new Settings(characterController, agentMovement, navMeshAgent,
+            controls.Pause.Enable();
+            controls.Pause.Pause.performed += ctx => GameManager.Pause();
+
+            // _settings contains references to any objects or components needed by each state to move the character for example.
+            _settings = new Settings(this.gameObject, playerPhysics, characterController, agentMovement, navMeshAgent,
                 runSpeed, sensitivity, Camera.main, controls, playerUI);
 
-            print("Creating default state...");
             _default = new Default(_settings);
-            Debug.Log("Default created: " + _default);
-            print("Creating minigame state...");
-            _minigame = new Minigame(_settings);
+            _ringtoss = new RingToss(_settings);
+
+            SetState(_default);
         }
 
-        void Start()
-        {
-            print("Setting state to default...\nDefault state = " + _default);
-			SetState(_default);
-            print("Default state set.");
+		private void OnEnable()
+		{
+            state.ChangedControlState += SwitchState;
         }
 
-        public bool test = false;
-
-        void Update()
+		private void OnDisable()
         {
-            // Lets me change the current state with boolean test
-            StartCoroutine(state.Move());
-			
-            if(test)
+            state.ChangedControlState -= SwitchState;
+        }
+
+        public bool changeState = false;
+        public int count = 0;
+
+		void Update()
+        {
+            Debug.Log("Calling the state.HandleInput()");
+            StartCoroutine(state.HandleInput());
+            
+            if (changeState && count == 0)
 			{
-                SetState(_minigame);
+                SwitchState();
+                ++count;
 			}
-
         }
-    }
+
+        private void SwitchState()
+        {
+            Debug.Log("Changing state to minigame");
+
+            if (state == _default) SetState(_ringtoss);
+            else if (state == _ringtoss) SetState(_default);
+        }
+
+		public void SwitchStateDefault()
+		{
+            SetState(_default);
+		}
+	}
 }

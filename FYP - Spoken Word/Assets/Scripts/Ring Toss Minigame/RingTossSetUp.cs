@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class RingTossSetUp : MonoBehaviour
 {
@@ -20,7 +21,8 @@ public class RingTossSetUp : MonoBehaviour
     private List<Ring> rings = new List<Ring>();
 
     public ParticleSystem bubbles;
-    //public GameObject forceBar;
+    
+    private GameObject exitButton;
 
     // Start is called before the first frame update, (awake does not work here, resultls in null reference exception)
     // here the specified amount of rings is instantiated and placed in the scene accordingly.
@@ -29,8 +31,10 @@ public class RingTossSetUp : MonoBehaviour
         // Firstly, stop the particles from playing before the fire button is pressed.
         bubbles.Stop();
 
+        exitButton = GameObject.FindGameObjectWithTag("RT Exit");
+
         // Then calculate and position the rings based on the number of rings specified.
-        if(numberOfRings > 0)
+        if (numberOfRings > 0)
 		{
             defRingPos = defaultRingPosition.transform.position;
             nextRingPos = nextRingPosition.transform.position;
@@ -74,7 +78,12 @@ public class RingTossSetUp : MonoBehaviour
             if (rings.Count > 0 && rings[0] && rings[0].GetInPlace() == false) // Check if the next ring exists and if it's in place
             {
                 StartCoroutine(PrepareRing());
-            }
+            } 
+            else // If no next ring exists, highlight the exit button.
+			{
+                Debug.Log("No more rings, exit the game.");
+                EventSystem.current.SetSelectedGameObject(exitButton);
+			}
         }
 	}
 

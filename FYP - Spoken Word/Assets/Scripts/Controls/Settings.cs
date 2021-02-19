@@ -3,11 +3,14 @@ using UnityEngine.AI;
 
 namespace Control
 {
+    // This should become a singleton at some point.
 	public class Settings
 	{
-        public Settings(CharacterController characterController, AgentMovement agentMovement, 
+        public Settings(GameObject player, PlayerPhysics playerPhysics, CharacterController characterController, AgentMovement agentMovement, 
             NavMeshAgent navMeshAgent, float speed, float sens, Camera main, PlayerControls controls, PlayerUISetUp ui)
 		{
+            this.player = player;
+            this.playerPhysics = playerPhysics;
             this.characterController = characterController;
             this.agentMovement = agentMovement;
             this.navMeshAgent = navMeshAgent;
@@ -19,6 +22,7 @@ namespace Control
 
             // Log the created settings:
             Debug.Log("The following settings have been created:\n"
+                + "gameObject: " + this.player + ",\n"
                 + "characterController: " + this.characterController + ",\n"
                 + "agentMovement: " + this.agentMovement + ",\n"
                 + "navMeshAgent: " + this.navMeshAgent + ",\n"
@@ -28,7 +32,8 @@ namespace Control
                 + "sensitivity: " + this.sensitivity + ",\n"
                 + "cam: " + this.cam + ",\n");
 		}
-
+        public GameObject player { get; }
+        public PlayerPhysics playerPhysics { get; }
         public CharacterController characterController { get; }
         public AgentMovement agentMovement { get; }
         public NavMeshAgent navMeshAgent { get; }

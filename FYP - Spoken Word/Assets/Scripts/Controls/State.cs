@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 
 namespace Control
@@ -7,21 +8,12 @@ namespace Control
 	{
 		protected Settings settings;
 
+		public delegate void StateEventHandler();
+		public event StateEventHandler ChangedControlState;
+
 		public State(Settings settings)
 		{
-			Debug.Log("Configuring state settings");
 			this.settings = settings;
-
-			Debug.Log("Previously created settings have been set for this state.\n" +
-				"The following settings have been created:\n"
-				+ "characterController: " + this.settings.characterController + ",\n"
-				+ "agentMovement: " + this.settings.agentMovement + ",\n"
-				+ "navMeshAgent: " + this.settings.navMeshAgent + ",\n"
-				+ "playerUI: " + this.settings.playerUI + ",\n"
-				+ "playerControls: " + this.settings.playerControls + ",\n"
-				+ "runSpeed: " + this.settings.runSpeed + ",\n"
-				+ "sensitivity: " + this.settings.sensitivity + ",\n"
-				+ "cam: " + this.settings.cam + ",\n");
 
 			return;
 		}
@@ -31,20 +23,20 @@ namespace Control
 			return;
 		}
 
-		public virtual IEnumerator Move()
+		public virtual IEnumerator HandleInput()
 		{
 			yield break;
 		}
 
-		/*
-		public virtual IEnumerator Look()
+		protected virtual void Interact()
 		{
-			yield break;
+			Debug.Log("Base, State.Interact(): Not yet implemented.");
 		}
-		*/
-		public virtual IEnumerator Interact()
+
+		protected virtual void SendStateChangeEvent()
 		{
-			yield break;
+
+			ChangedControlState.Invoke();
 		}
 	}
 }

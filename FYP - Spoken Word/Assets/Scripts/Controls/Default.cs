@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 
 namespace Control
@@ -15,7 +16,7 @@ namespace Control
 
 		public override void Start()
 		{
-            Debug.Log("Hey I'm in the Start function");
+
             // Movement & Look
             settings.playerControls.DefaultGameplay.Move.performed += ctx => move = ctx.ReadValue<Vector2>();
             settings.playerControls.DefaultGameplay.Move.canceled += ctx => move = Vector2.zero;
@@ -23,35 +24,28 @@ namespace Control
             settings.playerControls.DefaultGameplay.Look.performed += ctx => look = ctx.ReadValue<Vector2>();
             settings.playerControls.DefaultGameplay.Look.canceled += ctx => look = Vector2.zero;
 
+            // Jump
+            settings.playerControls.DefaultGameplay.Jump.performed += ctx => Jump();
+
             // Interaction
             settings.playerControls.DefaultGameplay.Interact.performed += ctx => Interact();
-            Debug.Log("The controls should have been set.");
-            Debug.Log("Now executing the rest of the start method...");
+
+            // Disable the navMeshAgent component and enable the default gameplay action map
             settings.navMeshAgent.enabled = false;
+
+            settings.playerControls.RingToss.Disable();
             settings.playerControls.DefaultGameplay.Enable();
 		}
 
-        public override IEnumerator Move()
+		public override IEnumerator HandleInput()
 		{
             if (settings.characterController.enabled == true)
             {
-                // The below could potentially be extracted into its own method?
-                if (move != Vector2.zero)
-                {
-                    // Map the 2D joystick input to a Vector3 for movement
-                    // Here, we're using move.y as the z value of the Vector3
-                    Vector3 m = Vector3.right * move.x + Vector3.forward * move.y;
-
-                    settings.characterController.Move(m * settings.runSpeed * Time.deltaTime);
-                }
-                if (look != Vector2.zero)
-                {
-                    Vector2 r = new Vector2(-look.y, look.x) * settings.sensitivity * Time.deltaTime;
-                    settings.cam.GetComponent<MouseLook>().HandleInput(r);
-                }
+                MoveAndLook();
             }
+
             // TODO: If player input is disabled, and input has been detected from the player,
-            else if (settings.characterController.enabled == false)// && input detected
+            else if (settings.characterController.enabled == false /* && player input detected */)
             {
                 // TODO: Disable the navMeshAgent, destroy the target
                 // TODO: Enable the character & player controller and proceed to handle input
@@ -95,31 +89,42 @@ namespace Control
                 */
             }
 
-            yield break;
+            return base.HandleInput();
+		}
+
+		protected void MoveAndLook()
+		{
+            if (move != Vector2.zero)
+            {
+                // Map the 2D joystick input to a Vector3 for movement
+                // Here, we're using move.y as the z value of the Vector3
+                Vector3 m = settings.player.transform.right * move.x + settings.player.transform.forward * move.y;
+
+                settings.characterController.Move(m * settings.runSpeed * Time.deltaTime);
+            }
+            if (look != Vector2.zero)
+            {
+                Vector2 r = new Vector2(-look.y, look.x) * settings.sensitivity * Time.deltaTime;
+                settings.cam.GetComponent<MouseLook>().HandleInput(r);
+            }
         }
 
-		public override IEnumerator Interact()
+        private void Jump()
 		{
-            if (settings.playerControls.DefaultGameplay.enabled)
-            {
-                // TODO: call method in ui set up, or move that code here i.e. cast the ray from here,
-                // if true move cam in ui set up.
-                var (hitObjective, hit) = settings.playerUI.FireRay();
-                if (hitObjective)
-                {
-                    // Disable the default player controls
-                    settings.playerControls.DefaultGameplay.Disable();
+            settings.playerPhysics.Jump();
+        }
 
-                    // Enable the controls for the corresponding objective (in this case, ring toss) - use the hit variable returned
-                    settings.playerControls.RingToss.Enable();
-                }
-            }
-            else if (settings.playerControls.RingToss.enabled)
+		protected override void Interact()
+		{
+            Debug.Log("default.interact");
+            // TODO: call method in ui set up, or move that code here i.e. cast the ray from here,
+            // if true move cam in ui set up.
+            var (hitObjective, hit) = settings.playerUI.FireRay();
+            if (hitObjective)
             {
-                Debug.Log("Gamepad South registered");
+                // Switch state
+                SendStateChangeEvent();
             }
-
-            yield break;
         }
 	}
 }

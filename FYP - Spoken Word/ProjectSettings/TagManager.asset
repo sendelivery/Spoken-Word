@@ -10,6 +10,8 @@ TagManager:
   - PlayerCamPos
   - WaypointCamPos
   - RT Exit
+  - RT Fire
+  - Pause Canvas
   layers:
   - Default
   - TransparentFX
