@@ -29,10 +29,13 @@ namespace Control
         {
             PlayerControls controls = new PlayerControls();
 
+            // Start and Select (Pause and Options)
             controls.Pause.Enable();
-            controls.Pause.Pause.performed += ctx => GameManager.Pause();
+            controls.Pause.Pause.performed += ctx => Pause(controls);
+            controls.Pause.Options.performed += ctx => Options(controls);
 
-            // _settings contains references to any objects or components needed by each state to move the character for example.
+            // _settings contains references to any objects or components needed by each state
+            // to move the character for example.
             _settings = new Settings(this.gameObject, playerPhysics, characterController, agentMovement, navMeshAgent,
                 runSpeed, sensitivity, Camera.main, controls, playerUI);
 
@@ -41,6 +44,20 @@ namespace Control
 
             SetState(_default);
         }
+
+		private void Options(PlayerControls c)
+		{
+            if (c.Pause.Pause.enabled) c.Pause.Pause.Disable();
+            else c.Pause.Pause.Enable();
+            GameManager.Options();
+        }
+
+		private void Pause(PlayerControls c)
+		{
+            if (c.Pause.Options.enabled) c.Pause.Options.Disable();
+            else c.Pause.Options.Enable();
+            GameManager.Pause();
+		}
 
 		private void OnEnable()
 		{
@@ -57,7 +74,6 @@ namespace Control
 
 		void Update()
         {
-            Debug.Log("Calling the state.HandleInput()");
             StartCoroutine(state.HandleInput());
             
             if (changeState && count == 0)

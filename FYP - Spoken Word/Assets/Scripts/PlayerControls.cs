@@ -25,6 +25,14 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Options"",
+                    ""type"": ""Button"",
+                    ""id"": ""5d006c97-349c-4ed9-b3ad-bad39d9b0f87"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -58,6 +66,28 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""processors"": """",
                     ""groups"": ""Keyboard and Mouse"",
                     ""action"": ""Pause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f26216d8-7ed0-4257-872b-bcc3140cdd1e"",
+                    ""path"": ""<Keyboard>/tab"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard and Mouse"",
+                    ""action"": ""Options"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e4253c24-a997-4c80-aef1-65790e22b57d"",
+                    ""path"": ""<Gamepad>/select"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Options"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -455,6 +485,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         // Pause
         m_Pause = asset.FindActionMap("Pause", throwIfNotFound: true);
         m_Pause_Pause = m_Pause.FindAction("Pause", throwIfNotFound: true);
+        m_Pause_Options = m_Pause.FindAction("Options", throwIfNotFound: true);
         // DefaultGameplay
         m_DefaultGameplay = asset.FindActionMap("DefaultGameplay", throwIfNotFound: true);
         m_DefaultGameplay_Move = m_DefaultGameplay.FindAction("Move", throwIfNotFound: true);
@@ -516,11 +547,13 @@ public class @PlayerControls : IInputActionCollection, IDisposable
     private readonly InputActionMap m_Pause;
     private IPauseActions m_PauseActionsCallbackInterface;
     private readonly InputAction m_Pause_Pause;
+    private readonly InputAction m_Pause_Options;
     public struct PauseActions
     {
         private @PlayerControls m_Wrapper;
         public PauseActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
         public InputAction @Pause => m_Wrapper.m_Pause_Pause;
+        public InputAction @Options => m_Wrapper.m_Pause_Options;
         public InputActionMap Get() { return m_Wrapper.m_Pause; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -533,6 +566,9 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @Pause.started -= m_Wrapper.m_PauseActionsCallbackInterface.OnPause;
                 @Pause.performed -= m_Wrapper.m_PauseActionsCallbackInterface.OnPause;
                 @Pause.canceled -= m_Wrapper.m_PauseActionsCallbackInterface.OnPause;
+                @Options.started -= m_Wrapper.m_PauseActionsCallbackInterface.OnOptions;
+                @Options.performed -= m_Wrapper.m_PauseActionsCallbackInterface.OnOptions;
+                @Options.canceled -= m_Wrapper.m_PauseActionsCallbackInterface.OnOptions;
             }
             m_Wrapper.m_PauseActionsCallbackInterface = instance;
             if (instance != null)
@@ -540,6 +576,9 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @Pause.started += instance.OnPause;
                 @Pause.performed += instance.OnPause;
                 @Pause.canceled += instance.OnPause;
+                @Options.started += instance.OnOptions;
+                @Options.performed += instance.OnOptions;
+                @Options.canceled += instance.OnOptions;
             }
         }
     }
@@ -671,6 +710,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
     public interface IPauseActions
     {
         void OnPause(InputAction.CallbackContext context);
+        void OnOptions(InputAction.CallbackContext context);
     }
     public interface IDefaultGameplayActions
     {
