@@ -128,6 +128,30 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""TriggerRun"",
+                    ""type"": ""Button"",
+                    ""id"": ""3b4225d8-8f0a-42d2-b0eb-99e5bc98de7f"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Zoom Hold"",
+                    ""type"": ""Button"",
+                    ""id"": ""fbafe1e7-859c-44c0-8a62-44b4dbf61161"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Zoom Tap"",
+                    ""type"": ""Button"",
+                    ""id"": ""6cc571bf-5ce2-45a1-91b9-53a19dd471d9"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -260,6 +284,61 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""processors"": """",
                     ""groups"": ""Keyboard and Mouse"",
                     ""action"": ""Interact"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8bb15b6c-983f-4f3d-937c-a1cc952d5325"",
+                    ""path"": ""<Gamepad>/leftStickPress"",
+                    ""interactions"": ""Press(behavior=2)"",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""TriggerRun"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""04899b65-97f9-4008-9f6d-71b09839814b"",
+                    ""path"": ""<Keyboard>/leftShift"",
+                    ""interactions"": ""Hold"",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard and Mouse"",
+                    ""action"": ""TriggerRun"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ef0b2002-b0cf-4dc1-80ad-2655d84dd64f"",
+                    ""path"": ""<Gamepad>/leftTrigger"",
+                    ""interactions"": ""Hold(pressPoint=0.9)"",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Zoom Hold"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2bc3d111-9526-4bc4-a0fb-e13008c1f4ca"",
+                    ""path"": ""<Gamepad>/rightTrigger"",
+                    ""interactions"": ""Tap(duration=5)"",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Zoom Tap"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""63c4b147-db1b-4c46-aa92-85402a21af03"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard and Mouse"",
+                    ""action"": ""Zoom Tap"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -492,6 +571,9 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         m_DefaultGameplay_Look = m_DefaultGameplay.FindAction("Look", throwIfNotFound: true);
         m_DefaultGameplay_Jump = m_DefaultGameplay.FindAction("Jump", throwIfNotFound: true);
         m_DefaultGameplay_Interact = m_DefaultGameplay.FindAction("Interact", throwIfNotFound: true);
+        m_DefaultGameplay_TriggerRun = m_DefaultGameplay.FindAction("TriggerRun", throwIfNotFound: true);
+        m_DefaultGameplay_ZoomHold = m_DefaultGameplay.FindAction("Zoom Hold", throwIfNotFound: true);
+        m_DefaultGameplay_ZoomTap = m_DefaultGameplay.FindAction("Zoom Tap", throwIfNotFound: true);
         // RingToss
         m_RingToss = asset.FindActionMap("RingToss", throwIfNotFound: true);
         m_RingToss_Confirm = m_RingToss.FindAction("Confirm", throwIfNotFound: true);
@@ -591,6 +673,9 @@ public class @PlayerControls : IInputActionCollection, IDisposable
     private readonly InputAction m_DefaultGameplay_Look;
     private readonly InputAction m_DefaultGameplay_Jump;
     private readonly InputAction m_DefaultGameplay_Interact;
+    private readonly InputAction m_DefaultGameplay_TriggerRun;
+    private readonly InputAction m_DefaultGameplay_ZoomHold;
+    private readonly InputAction m_DefaultGameplay_ZoomTap;
     public struct DefaultGameplayActions
     {
         private @PlayerControls m_Wrapper;
@@ -599,6 +684,9 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         public InputAction @Look => m_Wrapper.m_DefaultGameplay_Look;
         public InputAction @Jump => m_Wrapper.m_DefaultGameplay_Jump;
         public InputAction @Interact => m_Wrapper.m_DefaultGameplay_Interact;
+        public InputAction @TriggerRun => m_Wrapper.m_DefaultGameplay_TriggerRun;
+        public InputAction @ZoomHold => m_Wrapper.m_DefaultGameplay_ZoomHold;
+        public InputAction @ZoomTap => m_Wrapper.m_DefaultGameplay_ZoomTap;
         public InputActionMap Get() { return m_Wrapper.m_DefaultGameplay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -620,6 +708,15 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @Interact.started -= m_Wrapper.m_DefaultGameplayActionsCallbackInterface.OnInteract;
                 @Interact.performed -= m_Wrapper.m_DefaultGameplayActionsCallbackInterface.OnInteract;
                 @Interact.canceled -= m_Wrapper.m_DefaultGameplayActionsCallbackInterface.OnInteract;
+                @TriggerRun.started -= m_Wrapper.m_DefaultGameplayActionsCallbackInterface.OnTriggerRun;
+                @TriggerRun.performed -= m_Wrapper.m_DefaultGameplayActionsCallbackInterface.OnTriggerRun;
+                @TriggerRun.canceled -= m_Wrapper.m_DefaultGameplayActionsCallbackInterface.OnTriggerRun;
+                @ZoomHold.started -= m_Wrapper.m_DefaultGameplayActionsCallbackInterface.OnZoomHold;
+                @ZoomHold.performed -= m_Wrapper.m_DefaultGameplayActionsCallbackInterface.OnZoomHold;
+                @ZoomHold.canceled -= m_Wrapper.m_DefaultGameplayActionsCallbackInterface.OnZoomHold;
+                @ZoomTap.started -= m_Wrapper.m_DefaultGameplayActionsCallbackInterface.OnZoomTap;
+                @ZoomTap.performed -= m_Wrapper.m_DefaultGameplayActionsCallbackInterface.OnZoomTap;
+                @ZoomTap.canceled -= m_Wrapper.m_DefaultGameplayActionsCallbackInterface.OnZoomTap;
             }
             m_Wrapper.m_DefaultGameplayActionsCallbackInterface = instance;
             if (instance != null)
@@ -636,6 +733,15 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @Interact.started += instance.OnInteract;
                 @Interact.performed += instance.OnInteract;
                 @Interact.canceled += instance.OnInteract;
+                @TriggerRun.started += instance.OnTriggerRun;
+                @TriggerRun.performed += instance.OnTriggerRun;
+                @TriggerRun.canceled += instance.OnTriggerRun;
+                @ZoomHold.started += instance.OnZoomHold;
+                @ZoomHold.performed += instance.OnZoomHold;
+                @ZoomHold.canceled += instance.OnZoomHold;
+                @ZoomTap.started += instance.OnZoomTap;
+                @ZoomTap.performed += instance.OnZoomTap;
+                @ZoomTap.canceled += instance.OnZoomTap;
             }
         }
     }
@@ -718,6 +824,9 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         void OnLook(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
         void OnInteract(InputAction.CallbackContext context);
+        void OnTriggerRun(InputAction.CallbackContext context);
+        void OnZoomHold(InputAction.CallbackContext context);
+        void OnZoomTap(InputAction.CallbackContext context);
     }
     public interface IRingTossActions
     {

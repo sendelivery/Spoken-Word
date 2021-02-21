@@ -115,6 +115,30 @@
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
+                },
+                {
+                    "name": "TriggerRun",
+                    "type": "Button",
+                    "id": "3b4225d8-8f0a-42d2-b0eb-99e5bc98de7f",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Zoom Hold",
+                    "type": "Button",
+                    "id": "fbafe1e7-859c-44c0-8a62-44b4dbf61161",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Zoom Tap",
+                    "type": "Button",
+                    "id": "6cc571bf-5ce2-45a1-91b9-53a19dd471d9",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -247,6 +271,61 @@
                     "processors": "",
                     "groups": "Keyboard and Mouse",
                     "action": "Interact",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8bb15b6c-983f-4f3d-937c-a1cc952d5325",
+                    "path": "<Gamepad>/leftStickPress",
+                    "interactions": "Press(behavior=2)",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "TriggerRun",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "04899b65-97f9-4008-9f6d-71b09839814b",
+                    "path": "<Keyboard>/leftShift",
+                    "interactions": "Hold",
+                    "processors": "",
+                    "groups": "Keyboard and Mouse",
+                    "action": "TriggerRun",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ef0b2002-b0cf-4dc1-80ad-2655d84dd64f",
+                    "path": "<Gamepad>/leftTrigger",
+                    "interactions": "Hold(pressPoint=0.9)",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Zoom Hold",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "2bc3d111-9526-4bc4-a0fb-e13008c1f4ca",
+                    "path": "<Gamepad>/rightTrigger",
+                    "interactions": "Tap(duration=5)",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Zoom Tap",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "63c4b147-db1b-4c46-aa92-85402a21af03",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard and Mouse",
+                    "action": "Zoom Tap",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

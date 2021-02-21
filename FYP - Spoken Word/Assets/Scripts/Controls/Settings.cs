@@ -46,5 +46,9 @@ namespace Control
 
         public Camera cam { get; }
         public Transform target { get; set; }
+
+        // Recently implemented settings:
+        public float zoomedFOV = 30f;
+        public float defaultFOV = 70f;
     }
 }
