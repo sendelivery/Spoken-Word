@@ -7,15 +7,18 @@ using UnityEngine.UI;
 public class Oscillator2 : MonoBehaviour
 {
     private RingTossSetUp ringTossSetUp;
-    public Slider forceBar;
-    private float multiplier;
 
-    private bool pause = false;
+    public Slider forceBar;
+    public Button forceButton;
 
     [Tooltip("Controls the speed of one 'cycle' up and down the bar. Higher is faster, lower is slower.")]
     public float period = 1f;
 
-    public Button forceButton;
+    [Tooltip("Scales the raw 0-1 value of the slider by this factor.")]
+    public float scaleFactor = 5f;
+
+    private float multiplier;
+    private bool pause = false;
 
     // Start is called before the first frame update
     void Start()
@@ -66,7 +69,7 @@ public class Oscillator2 : MonoBehaviour
     {
         // On button click, pause the force bar oscillation, set the multiplier value, play the bubbles particle system.
         PauseForceBar();
-        multiplier = forceBar.value;
+        multiplier = forceBar.value * scaleFactor;
         ringTossSetUp.bubbles.Play();
 
         // Finally, disbable the fire button.

@@ -6,20 +6,28 @@ namespace Control
 {
 	public class Default : State
 	{
-        Vector2 move;
-        Vector2 look;
-        bool run = false;
-        float speed;
+        private Vector2 move;
+        private Vector2 look;
+        private bool run = false;
+        private float speed;
 
-        bool zoom;
+        private bool zoom;
 
-        public Default(Settings settings) : base(settings)
+        private Transform target;
+
+        public enum TargetState { NONE, SET, REACHED }
+        public TargetState targetState = TargetState.NONE;
+
+        public Default(ref Settings settings) : base(ref settings)
         {
             return;
         }
 
-		public override void Start()
+		public override void Initialise()
 		{
+            // Disable previous action map
+            settings.playerControls.RingToss.Disable();
+
             // Movement
             settings.playerControls.DefaultGameplay.Move.performed += ctx => move = ctx.ReadValue<Vector2>();
             settings.playerControls.DefaultGameplay.Move.canceled += _ => move = Vector2.zero;
@@ -33,6 +41,7 @@ namespace Control
             settings.playerControls.DefaultGameplay.ZoomHold.performed += _ => zoom = true;
             settings.playerControls.DefaultGameplay.ZoomHold.canceled += _ => zoom = false;
             settings.playerControls.DefaultGameplay.ZoomTap.performed += _ => zoom = !zoom;
+            zoom = false;
 
             // Jump
             settings.playerControls.DefaultGameplay.Jump.performed += _ => Jump();
@@ -40,69 +49,74 @@ namespace Control
             // Interaction
             settings.playerControls.DefaultGameplay.Interact.performed += _ => Interact();
 
+            // Listen for C# Event
+
+
             // Disable the navMeshAgent component and enable the default gameplay action map
             settings.navMeshAgent.enabled = false;
 
-            settings.playerControls.RingToss.Disable();
+            // Enable the default action map
             settings.playerControls.DefaultGameplay.Enable();
 		}
 
-		public override IEnumerator HandleInput()
+		public override void HandleInput()
 		{
+            // TODO: If player input is disabled, and input has been detected from the player,
+            //else if (settings.characterController.enabled == false && move != Vector2.zero)
+            //{
+                //Debug.Log("Agent navigation cancelled.");
+                // TODO: Disable the navMeshAgent, destroy the target
+                // TODO: Enable the character & player controller and proceed to handle input
+                // characterController.enabled = true;
+            //}
+
+            if (target) // If we set a target to pathfind to:
+            {
+                if (settings.navMeshAgent.enabled == false) settings.navMeshAgent.enabled = true; // Enable the navMeshAgent
+
+                // Checks if the agent can find a valid path to the target
+                if (settings.agentMovement.CheckTarget(settings.navMeshAgent, target))
+                {
+                    Debug.Log("Valid target found.");
+
+                    // Disable the player control components and set the destination for the navMeshAgent to pathfind to:
+                    settings.characterController.enabled = false;
+                    settings.navMeshAgent.enabled = true;
+
+                    settings.navMeshAgent.SetDestination(target.position);
+
+                    float dist = settings.navMeshAgent.remainingDistance;
+                    Debug.Log(dist);
+
+                    // Once the target has been reached, destroy the target, 
+                    // re enable the player controller and disable the agent
+                    if (dist != 0 && dist <= settings.goalRadius)
+					{
+                        target = null;
+                        targetState = TargetState.REACHED;
+                        settings.characterController.enabled = true;
+                        settings.navMeshAgent.enabled = false;
+					}
+                }
+                else
+                {
+                    settings.navMeshAgent.enabled = false;
+                    settings.characterController.enabled = true;
+                    ResetTarget();
+                    Debug.Log("Invalid target. \nDouble check the target's y coord is above or on the terrain" +
+                        "\nand x and z coords are on the nav mesh.");
+                }
+            }
+
             if (settings.characterController.enabled == true)
             {
                 MoveAndLook();
             }
 
-            // TODO: If player input is disabled, and input has been detected from the player,
-            else if (settings.characterController.enabled == false /* && player input detected */)
-            {
-                // TODO: Disable the navMeshAgent, destroy the target
-                // TODO: Enable the character & player controller and proceed to handle input
-                // playerController.enabled = true;
-                // characterController.enabled = true;
-                // playerController.HandleInput();
-            }
-
-            if (settings.target) // If we set a target to pathfind to:
-            {
-                /* TODO: Give the Testing-02 scene a nav mesh
-                if (navMeshAgent.enabled == false) navMeshAgent.enabled = true; // Enable the navMeshAgent
-
-                // Checks if the agent can find a valid path to the target
-                if (agentMovement.CheckTarget(navMeshAgent, target))
-                {
-                    // Disable the player control components and set the destination for the navMeshAgent to pathfind to:
-                    playerController.enabled = false;
-                    characterController.enabled = false;
-                    navMeshAgent.SetDestination(target.position);
-
-                    float dist = navMeshAgent.remainingDistance;
-
-                    // Once the target has been reached, destroy the target, re enable the player controller and disable the agent
-                    if (dist != Mathf.Infinity && dist != 0 && navMeshAgent.pathStatus == NavMeshPathStatus.PathComplete && dist <= goalRadius)
-                    {
-                        target = null; // TODO destroy the target
-
-                        playerController.enabled = true;
-                        characterController.enabled = true;
-
-                        navMeshAgent.enabled = false;
-                    }
-                }
-                else
-                {
-                    navMeshAgent.enabled = false;
-                    playerController.enabled = true;
-                    characterController.enabled = true;
-                }
-                */
-            }
-
-            return base.HandleInput();
+            base.HandleInput();
 		}
 
-        protected void MoveAndLook()
+		protected void MoveAndLook()
         {
             if (move != Vector2.zero)
             {
@@ -130,7 +144,7 @@ namespace Control
 
             float currentFOV = settings.cam.fieldOfView;
 
-            if (currentFOV > settings.zoomedFOV && zoom) // If current fov is > 30 and we want to zoom
+            if (currentFOV > settings.zoomedFOV && zoom) // If current fov is greater than 30 and we want to zoom
             {
                 Zoom(currentFOV, settings.zoomedFOV);
             }
@@ -143,6 +157,13 @@ namespace Control
         private void Zoom(float currentFOV, float targetFOV)
         {
             settings.cam.fieldOfView = Mathf.Lerp(currentFOV, targetFOV, 8f * Time.deltaTime);
+
+            // Set the FOV to 30 after it reaches below 30.5
+            // this is so we have an earlier definite end to the zoom function call
+            if (zoom && settings.cam.fieldOfView < 30.5f) settings.cam.fieldOfView = settings.zoomedFOV;
+
+            // Same as above but for zoom out, set FOV to 70 if it's above 69.5
+            else if (!zoom && settings.cam.fieldOfView > 69.5f) settings.cam.fieldOfView = settings.defaultFOV;
         }
 
 		private void Jump()
@@ -150,9 +171,8 @@ namespace Control
             settings.playerPhysics.Jump();
         }
 
-		protected override void Interact()
-		{
-            Debug.Log("default.interact");
+        protected override void Interact()
+        {
             // TODO: call method in ui set up, or move that code here i.e. cast the ray from here,
             // if true move cam in ui set up.
             var (hitObjective, hit) = settings.playerUI.FireRay();
@@ -162,5 +182,17 @@ namespace Control
                 SendStateChangeEvent();
             }
         }
-	}
+
+        public void SetTarget(Transform t)
+		{
+            target = t;
+            targetState = TargetState.SET;
+		}
+
+        public void ResetTarget()
+		{
+            target = null;
+            targetState = TargetState.NONE;
+		}
+    }
 }

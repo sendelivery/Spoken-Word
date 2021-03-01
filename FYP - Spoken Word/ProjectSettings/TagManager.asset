@@ -13,6 +13,7 @@ TagManager:
   - RT Fire
   - Pause Canvas
   - Options Canvas
+  - Target
   layers:
   - Default
   - TransparentFX

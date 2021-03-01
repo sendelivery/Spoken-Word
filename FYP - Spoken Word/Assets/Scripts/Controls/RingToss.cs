@@ -6,11 +6,11 @@ namespace Control
 {
 	public class RingToss : Minigame
 	{
-		public RingToss(Settings settings) : base(settings)
+		public RingToss(ref Settings settings) : base(ref settings)
 		{
 		}
 
-		public override void Start()
+		public override void Initialise()
 		{
 			// On face buttons press
 			settings.playerControls.RingToss.Confirm.performed += ctx => Confirm();
@@ -30,11 +30,11 @@ namespace Control
 			settings.playerUI.RTExitTaskOnClick();
 		}
 
-		public override IEnumerator HandleInput()
+		public override void HandleInput()
 		{
 			Debug.Log("RingToss.HandleInput()");
 
-			return base.HandleInput();
+			base.HandleInput();
 		}
 	}
 }

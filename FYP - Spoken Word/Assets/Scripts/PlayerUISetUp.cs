@@ -57,6 +57,10 @@ public class PlayerUISetUp : MonoBehaviour
 			mainCamera.transform.position = Vector3.Lerp
 				(mainCamera.transform.position, desiredCameraPosition.position, 8f * Time.deltaTime);
 
+			// Zoom
+			if (mainCamera.fieldOfView < 70f)
+				mainCamera.fieldOfView = Mathf.Lerp(mainCamera.fieldOfView, 70f, 8f * Time.deltaTime);
+
 			// Check if reached desired location
 			if (mainCamera.transform.position == desiredCameraPosition.position)
 			{

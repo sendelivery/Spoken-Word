@@ -5,7 +5,7 @@ namespace Control
 {
 	public class Minigame : State
 	{
-		public Minigame(Settings settings) : base(settings)
+		public Minigame(ref Settings settings) : base(ref settings)
 		{
 		}
 	}

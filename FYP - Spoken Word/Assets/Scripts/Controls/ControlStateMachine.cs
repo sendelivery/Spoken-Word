@@ -9,7 +9,12 @@
 		public void SetState(State incomingState)
 		{
 			this.state = incomingState;
-			this.state.Start();
+			this.state.Initialise();
+		}
+
+		public void ChangeState(State incomingState)
+		{
+			this.state = incomingState;
 		}
 	}
 }

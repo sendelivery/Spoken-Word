@@ -1,4 +1,4 @@
-// GENERATED AUTOMATICALLY FROM 'Assets/PlayerControls.inputactions'
+// GENERATED AUTOMATICALLY FROM 'Assets/Input/PlayerControls.inputactions'
 
 using System;
 using System.Collections;
@@ -302,7 +302,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""name"": """",
                     ""id"": ""04899b65-97f9-4008-9f6d-71b09839814b"",
                     ""path"": ""<Keyboard>/leftShift"",
-                    ""interactions"": ""Hold"",
+                    ""interactions"": ""Hold(duration=0.1)"",
                     ""processors"": """",
                     ""groups"": ""Keyboard and Mouse"",
                     ""action"": ""TriggerRun"",

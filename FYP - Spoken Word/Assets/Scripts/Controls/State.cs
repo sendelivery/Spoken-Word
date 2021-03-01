@@ -11,31 +11,30 @@ namespace Control
 		public delegate void StateEventHandler();
 		public event StateEventHandler ChangedControlState;
 
-		public State(Settings settings)
+		public State(ref Settings settings)
 		{
 			this.settings = settings;
 
 			return;
 		}
 
-		public virtual void Start()
+		public virtual void Initialise()
 		{
 			return;
 		}
 
-		public virtual IEnumerator HandleInput()
+		public virtual void HandleInput()
 		{
-			yield break;
+			return;
 		}
 
 		protected virtual void Interact()
 		{
-			Debug.Log("Base, State.Interact(): Not yet implemented.");
+			return;
 		}
 
 		protected virtual void SendStateChangeEvent()
 		{
-
 			ChangedControlState.Invoke();
 		}
 	}

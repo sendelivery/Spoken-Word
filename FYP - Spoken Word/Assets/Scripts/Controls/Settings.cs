@@ -6,8 +6,8 @@ namespace Control
     // This should become a singleton at some point.
 	public class Settings
 	{
-        public Settings(GameObject player, PlayerPhysics playerPhysics, CharacterController characterController, AgentMovement agentMovement, 
-            NavMeshAgent navMeshAgent, float speed, float sens, Camera main, PlayerControls controls, PlayerUISetUp ui)
+        public Settings(GameObject player, PlayerPhysics playerPhysics, ref CharacterController characterController, AgentMovement agentMovement, 
+            ref NavMeshAgent navMeshAgent, float speed, float sens, Camera main, PlayerControls controls, PlayerUISetUp ui)
 		{
             this.player = player;
             this.playerPhysics = playerPhysics;
@@ -26,11 +26,11 @@ namespace Control
                 + "characterController: " + this.characterController + ",\n"
                 + "agentMovement: " + this.agentMovement + ",\n"
                 + "navMeshAgent: " + this.navMeshAgent + ",\n"
-                + "playerUI: " + this.playerUI + ",\n"
-                + "playerControls: " + this.playerControls + ",\n"
-                + "runSpeed: " + this.runSpeed + ",\n"
-                + "sensitivity: " + this.sensitivity + ",\n"
-                + "cam: " + this.cam + ",\n");
+                + "playerUI: " + playerUI + ",\n"
+                + "playerControls: " + playerControls + ",\n"
+                + "runSpeed: " + runSpeed + ",\n"
+                + "sensitivity: " + sensitivity + ",\n"
+                + "cam: " + cam + ",\n");
 		}
         public GameObject player { get; }
         public PlayerPhysics playerPhysics { get; }
@@ -45,10 +45,10 @@ namespace Control
         public float sensitivity { get; set; }
 
         public Camera cam { get; }
-        public Transform target { get; set; }
 
         // Recently implemented settings:
         public float zoomedFOV = 30f;
         public float defaultFOV = 70f;
+        public float goalRadius = 1f;
     }
 }
