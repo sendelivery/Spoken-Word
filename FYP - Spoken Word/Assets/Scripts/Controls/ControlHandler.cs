@@ -48,7 +48,7 @@ namespace Control
                 _ringtoss = new RingToss(ref _settings);
 			}
 
-            SetState(_default);
+            InitialiseState(_default);
         }
 
 		private void OnEnable()
@@ -112,14 +112,14 @@ namespace Control
         {
             if (c.Pause.Pause.enabled) c.Pause.Pause.Disable();
             else c.Pause.Pause.Enable();
-            GameManager.Options();
+            SpokenWord.GameManager.Options();
         }
 
         private void Pause(PlayerControls c)
         {
             if (c.Pause.Options.enabled) c.Pause.Options.Disable();
             else c.Pause.Options.Enable();
-            GameManager.Pause();
+            SpokenWord.GameManager.Pause();
         }
 
         private void SwitchState()
@@ -133,6 +133,11 @@ namespace Control
 		public void SwitchStateDefault()
 		{
             ChangeState(_default);
+		}
+
+        internal void HandleIntent(string intent)
+		{
+            state.HandleIntent(intent);
 		}
 
         [ContextMenu("Autofill Fields")]

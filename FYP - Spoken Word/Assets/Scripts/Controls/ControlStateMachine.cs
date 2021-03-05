@@ -6,7 +6,7 @@
 	{
 		protected State state;
 
-		public void SetState(State incomingState)
+		public void InitialiseState(State incomingState)
 		{
 			this.state = incomingState;
 			this.state.Initialise();

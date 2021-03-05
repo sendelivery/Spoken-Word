@@ -25,7 +25,10 @@ namespace Control
 
 		public override void Initialise()
 		{
-            // Disable previous action map
+            // Set voice commands actions
+            actions.Add("jump", () => Jump());
+
+            // Disable other action maps - don't think i need this
             settings.playerControls.RingToss.Disable();
 
             // Movement
@@ -48,9 +51,6 @@ namespace Control
 
             // Interaction
             settings.playerControls.DefaultGameplay.Interact.performed += _ => Interact();
-
-            // Listen for C# Event
-
 
             // Disable the navMeshAgent component and enable the default gameplay action map
             settings.navMeshAgent.enabled = false;
@@ -114,6 +114,13 @@ namespace Control
             }
 
             base.HandleInput();
+		}
+
+        public override void HandleIntent(string intent)
+		{
+            actions[intent]();
+
+            //base.HandleIntent(intent);
 		}
 
 		protected void MoveAndLook()

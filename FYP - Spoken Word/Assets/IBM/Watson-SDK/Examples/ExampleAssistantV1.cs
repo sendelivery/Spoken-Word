@@ -107,16 +107,16 @@ namespace IBM.Watson.Examples
         private IEnumerator CreateService()
         {
 
-            IamAuthenticator authenticator = new IamAuthenticator(apikey: "{iamApikey}");
+            IamAuthenticator authenticator = new IamAuthenticator(apikey: "9Az7c6aj2kKhH31OROZ_cIlaYXo8HT8ut248Q8CXx_qq");
 
             //  Wait for tokendata
             while (!authenticator.CanAuthenticate())
                 yield return null;
 
             service = new AssistantService("2019-02-18", authenticator);
-            service.SetServiceUrl("{serviceUrl}");
+            service.SetServiceUrl("https://api.eu-gb.assistant.watson.cloud.ibm.com/instances/f53fde36-02ed-4410-a49b-d18c6566f0bc");
 
-            workspaceId = Environment.GetEnvironmentVariable("CONVERSATION_WORKSPACE_ID");
+            workspaceId = "00235722-3eeb-4034-bca8-ba3b2d78045e"; // Environment.GetEnvironmentVariable("CONVERSATION_WORKSPACE_ID");
             Runnable.Run(Examples());
         }
 
@@ -135,7 +135,7 @@ namespace IBM.Watson.Examples
 
             //  Get Workspace
             Log.Debug("ExampleAssistantV1", "Attempting to GetWorkspace...");
-            service.GetWorkspace(callback: OnGetWorkspace, workspaceId: createdWorkspaceId);
+            service.GetWorkspace(callback: OnGetWorkspace, workspaceId: "00235722-3eeb-4034-bca8-ba3b2d78045e");
             while (!getWorkspaceTested)
                 yield return null;
 
@@ -188,7 +188,7 @@ namespace IBM.Watson.Examples
 
             //  List Intents
             Log.Debug("ExampleAssistantV1", "Attempting to ListIntents...");
-            service.ListIntents(callback: OnListIntents, workspaceId: createdWorkspaceId);
+            service.ListIntents(callback: OnListIntents, workspaceId: "00235722-3eeb-4034-bca8-ba3b2d78045e");
             while (!listIntentsTested)
                 yield return null;
 

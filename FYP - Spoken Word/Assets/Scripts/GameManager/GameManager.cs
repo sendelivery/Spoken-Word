@@ -5,80 +5,83 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public static class GameManager
+namespace SpokenWord
 {
-	#region Pause Canvas Members
-	private static GameObject pauseCanvas = GameObject.FindGameObjectWithTag("Pause Canvas");
-	private static AdjustTimeScale timeSlider = pauseCanvas.GetComponentInChildren<AdjustTimeScale>();
-
-	private static float newTimeScale;
-
-	private static GameObject tempSelected;
-	private static CursorLockMode tempCursorState;
-	#endregion
-
-	#region Options Canvas Members
-	private static GameObject optionsCanvas = GameObject.FindGameObjectWithTag("Options Canvas");
-	private static float tempTime;
-	#endregion
-
-	public static void Pause()
+	public static class GameManager
 	{
-		if (Time.timeScale == 0f) // Unpause
+		#region Pause Canvas Members
+		private static GameObject pauseCanvas = GameObject.FindGameObjectWithTag("Pause Canvas");
+		private static AdjustTimeScale timeSlider = pauseCanvas.GetComponentInChildren<AdjustTimeScale>();
+
+		private static float newTimeScale;
+
+		private static GameObject tempSelected;
+		private static CursorLockMode tempCursorState;
+		#endregion
+
+		#region Options Canvas Members
+		private static GameObject optionsCanvas = GameObject.FindGameObjectWithTag("Options Canvas");
+		private static float tempTime;
+		#endregion
+
+		public static void Pause()
 		{
-			// Min slider value is 0.1f, time scale will not be set to 0 outside of the pause screen.
-			if (newTimeScale > 0 && newTimeScale < 1) Time.timeScale = newTimeScale;
-			else Time.timeScale = 1f;
-			
-			timeSlider.TimeScaleChanged -= SetTimeScale;
-			pauseCanvas.GetComponent<Canvas>().enabled = false;
+			if (Time.timeScale == 0f) // Unpause
+			{
+				// Min slider value is 0.1f, time scale will not be set to 0 outside of the pause screen.
+				if (newTimeScale > 0 && newTimeScale < 1) Time.timeScale = newTimeScale;
+				else Time.timeScale = 1f;
 
-			EventSystem.current.SetSelectedGameObject(tempSelected);
+				timeSlider.TimeScaleChanged -= SetTimeScale;
+				pauseCanvas.GetComponent<Canvas>().enabled = false;
 
-			Cursor.lockState = tempCursorState;
-		} 
-		else // Pause
-		{
-			Time.timeScale = 0;
-			timeSlider.TimeScaleChanged += SetTimeScale;
+				EventSystem.current.SetSelectedGameObject(tempSelected);
 
-			pauseCanvas.GetComponent<Canvas>().enabled = true;
+				Cursor.lockState = tempCursorState;
+			}
+			else // Pause
+			{
+				Time.timeScale = 0;
+				timeSlider.TimeScaleChanged += SetTimeScale;
 
-			tempSelected = EventSystem.current.currentSelectedGameObject;
-			EventSystem.current.SetSelectedGameObject(timeSlider.gameObject);
+				pauseCanvas.GetComponent<Canvas>().enabled = true;
 
-			tempCursorState = Cursor.lockState;
-			Cursor.lockState = CursorLockMode.Confined;
-		}
-	}
+				tempSelected = EventSystem.current.currentSelectedGameObject;
+				EventSystem.current.SetSelectedGameObject(timeSlider.gameObject);
 
-	public static void Options()
-	{ 
-		Canvas canvas = optionsCanvas.GetComponent<Canvas>();
-
-		if (canvas.enabled == false)
-		{
-			canvas.enabled = true;
-		}
-		else
-		{
-			canvas.enabled = false;
-		}
-
-		if (Time.timeScale > 0)
-		{
-			tempTime = Time.timeScale;
-			Time.timeScale = 0;
-		}
-		else
-		{
-			Time.timeScale = tempTime;
+				tempCursorState = Cursor.lockState;
+				Cursor.lockState = CursorLockMode.Confined;
+			}
 		}
 
-	}
+		public static void Options()
+		{
+			Canvas canvas = optionsCanvas.GetComponent<Canvas>();
 
-	private static void SetTimeScale()
-	{
-		newTimeScale = timeSlider.GetComponent<Slider>().value;
+			if (canvas.enabled == false)
+			{
+				canvas.enabled = true;
+			}
+			else
+			{
+				canvas.enabled = false;
+			}
+
+			if (Time.timeScale > 0)
+			{
+				tempTime = Time.timeScale;
+				Time.timeScale = 0;
+			}
+			else
+			{
+				Time.timeScale = tempTime;
+			}
+
+		}
+
+		private static void SetTimeScale()
+		{
+			newTimeScale = timeSlider.GetComponent<Slider>().value;
+		}
 	}
 }

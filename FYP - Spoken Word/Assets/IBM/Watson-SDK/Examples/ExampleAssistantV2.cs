@@ -103,11 +103,11 @@ namespace IBM.Watson.Examples
                 yield return null;
             }
 
-            Log.Debug("ExampleAssistantV2.RunExample()", "Are you open on Christmas?");
+            Log.Debug("ExampleAssistantV2.RunExample()", "Jump.");
 
             var input1 = new MessageInput()
             {
-                Text = "Are you open on Christmas?",
+                Text = "Jump.",
                 Options = new MessageInputOptions()
                 {
                     ReturnContext = true
@@ -121,11 +121,11 @@ namespace IBM.Watson.Examples
                 yield return null;
             }
 
-            Log.Debug("ExampleAssistantV2.RunExample()", "What are your hours?");
+            Log.Debug("ExampleAssistantV2.RunExample()", "Move left.");
 
             var input2 = new MessageInput()
             {
-                Text = "What are your hours?",
+                Text = "Move left.",
                 Options = new MessageInputOptions()
                 {
                     ReturnContext = true
@@ -220,20 +220,25 @@ namespace IBM.Watson.Examples
 
         private void OnMessage0(DetailedResponse<MessageResponse> response, IBMError error)
         {
-            Log.Debug("ExampleAssistantV2.OnMessage0()", "response: {0}", response.Result.Output.Generic[0].Text);
+            Debug.Log("Yo, here");
+            Log.Debug("ExampleAssistantV2.OnMessage0()", "response: {0}", response.Result.Output.Intents);
+            var intents = response.Result.Output.Intents.ToArray();
+            foreach (var intent in  intents)
+                Debug.Log("Intent = " + intent);
+            Debug.Log("foreach over");
             messageTested0 = true;
         }
 
         private void OnMessage1(DetailedResponse<MessageResponse> response, IBMError error)
         {
-            Log.Debug("ExampleAssistantV2.OnMessage1()", "response: {0}", response.Result.Output.Generic[0].Text);
+            Log.Debug("ExampleAssistantV2.OnMessage1()", "response: {0}", response.Result.Output.Intents.ToString());
 
             messageTested1 = true;
         }
 
         private void OnMessage2(DetailedResponse<MessageResponse> response, IBMError error)
         {
-            Log.Debug("ExampleAssistantV2.OnMessage2()", "response: {0}", response.Result.Output.Generic[0].Text);
+            Log.Debug("ExampleAssistantV2.OnMessage2()", "response: {0}", response.Result.Output.Intents.ToString());
             messageTested2 = true;
         }
 

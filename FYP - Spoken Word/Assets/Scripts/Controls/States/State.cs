@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Control
 {
 	public abstract class State
 	{
+		protected Dictionary<string, Action> actions = new Dictionary<string, Action>();
+
 		protected Settings settings;
 
 		public delegate void StateEventHandler();
@@ -24,6 +27,11 @@ namespace Control
 		}
 
 		public virtual void HandleInput()
+		{
+			return;
+		}
+
+		public virtual void HandleIntent(string intent)
 		{
 			return;
 		}
