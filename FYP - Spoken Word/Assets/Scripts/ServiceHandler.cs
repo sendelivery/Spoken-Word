@@ -35,6 +35,10 @@ namespace SpokenWord.IBM
         [Tooltip("The Model to use. This defaults to en-US_BroadbandModel")]
         [SerializeField]
         private string _recognizeModel;
+        [Tooltip("Speech to text confidence threshold, will only send a message to the assistant if above this value")]
+        [Range(0f,0.9f)]
+        [SerializeField]
+        private float _sttConfidence;
 
         [Header("Watson Assistant")]
         [Tooltip("The service URL (optional). This defaults to \"https://gateway.watsonplatform.net/assistant/api\"")]
@@ -52,6 +56,11 @@ namespace SpokenWord.IBM
         [Tooltip("The IAM url used to authenticate the apikey (optional). This defaults to \"https://iam.bluemix.net/identity/token\".")]
         [SerializeField]
         private string _assistantIamUrl;
+        [Header("Speech To Text Parameters")]
+        [Tooltip("Intent confidence threshold, used to execute actions that are above threshold and disambiguation between high confidence intents.")]
+        [Range(0f, 0.9f)]
+        [SerializeField]
+        private float _intentConfidence;
 
         #endregion
 
@@ -201,7 +210,8 @@ namespace SpokenWord.IBM
                         Log.Debug("ExampleStreaming.OnRecognize()", text);
                         resultsField.text = text;
 
-                        if (res.final && alt.confidence > 0.5)
+                        // Send message if stt confidence is above a certain threshold
+                        if (res.final && alt.confidence >= _sttConfidence)
                         {
                             string utterance = alt.transcript;
                             Debug.Log("Sending message: " + utterance + " with confidence: " + alt.confidence);
@@ -253,9 +263,16 @@ namespace SpokenWord.IBM
             {
                 for (int i = 0; i < resp.Result.Intents.Count; i++)
 				{
-                    Debug.Log("received intent: " + resp.Result.Intents[i].Intent);
+                    Debug.Log("Received Intent: " + resp.Result.Intents[i].Intent);
+                    Debug.Log("Received Entities: " + resp.Result.Entities[i].Entity);
+                    Debug.Log("Received Entiites Value: " + resp.Result.Entities[i].Value);
                 }
-                player.GetComponent<Control.ControlHandler>().HandleIntent(resp.Result.Intents[0].Intent);
+                player.GetComponent<Control.ControlHandler>().HandleIntent
+                    (
+                        resp.Result.Intents,
+                        resp.Result.Entities,
+                        _intentConfidence
+                    );
                 
             }
             else

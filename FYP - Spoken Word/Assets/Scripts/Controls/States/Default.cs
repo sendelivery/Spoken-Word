@@ -1,5 +1,7 @@
-﻿using System;
+﻿using IBM.Watson.Assistant.V1.Model;
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Control
@@ -25,11 +27,12 @@ namespace Control
 
 		public override void Initialise()
 		{
-            // Set voice commands actions
-            actions.Add("jump", () => Jump());
+            VoiceCommands voiceCommands = settings.voiceCommands;
 
-            // Disable other action maps - don't think i need this
-            settings.playerControls.RingToss.Disable();
+            // Set voice commands actions
+            _voiceActions.Add("move", () => voiceCommands.StartCoroutine(voiceCommands.Move(incomingEntities)));
+            _voiceActions.Add("look", () => voiceCommands.Look(incomingEntities));
+            _voiceActions.Add("jump", () => Jump());
 
             // Movement
             settings.playerControls.DefaultGameplay.Move.performed += ctx => move = ctx.ReadValue<Vector2>();
@@ -55,9 +58,12 @@ namespace Control
             // Disable the navMeshAgent component and enable the default gameplay action map
             settings.navMeshAgent.enabled = false;
 
+            // Disable other action maps - don't think i need this
+            settings.playerControls.RingToss.Disable();
+
             // Enable the default action map
             settings.playerControls.DefaultGameplay.Enable();
-		}
+        }
 
 		public override void HandleInput()
 		{
@@ -116,15 +122,14 @@ namespace Control
             base.HandleInput();
 		}
 
-        public override void HandleIntent(string intent)
-		{
-            actions[intent]();
-
-            //base.HandleIntent(intent);
-		}
+        //public override void HandleIntent(string intent, List<RuntimeEntity> entities)
+		//{
+        //    base.HandleIntent(intent, entities);
+		//}
 
 		protected void MoveAndLook()
         {
+            // Move
             if (move != Vector2.zero)
             {
                 // Map the 2D joystick input to a Vector3 for movement
@@ -138,17 +143,20 @@ namespace Control
             }
             else
             {
+                // Reset speed to non running speed
                 if (!run)
                 {
                     speed = settings.runSpeed;
                 }
             }
+            // Look
             if (look != Vector2.zero)
             {
                 Vector2 r = new Vector2(-look.y, look.x) * settings.sensitivity * Time.deltaTime;
                 settings.cam.GetComponent<MouseLook>().HandleInput(r);
             }
 
+            // Zoom
             float currentFOV = settings.cam.fieldOfView;
 
             if (currentFOV > settings.zoomedFOV && zoom) // If current fov is greater than 30 and we want to zoom
@@ -201,5 +209,5 @@ namespace Control
             target = null;
             targetState = TargetState.NONE;
 		}
-    }
+	}
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using IBM.Watson.Assistant.V1.Model;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,7 +8,8 @@ namespace Control
 {
 	public abstract class State
 	{
-		protected Dictionary<string, Action> actions = new Dictionary<string, Action>();
+		protected Dictionary<string, Action> _voiceActions = new Dictionary<string, Action>();
+		protected List<RuntimeEntity> incomingEntities;
 
 		protected Settings settings;
 
@@ -31,7 +33,14 @@ namespace Control
 			return;
 		}
 
-		public virtual void HandleIntent(string intent)
+		public virtual void HandleIntent(string intent, List<RuntimeEntity> entities)
+		{
+			incomingEntities = entities;
+			_voiceActions[intent]();
+			incomingEntities.Clear();
+		}
+
+		public virtual void HandleMultipleIntents(string[] intentOutput, List<RuntimeEntity> entities)
 		{
 			return;
 		}

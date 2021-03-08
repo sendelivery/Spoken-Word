@@ -1,4 +1,7 @@
-﻿using System;
+﻿using IBM.Watson.Assistant.V1.Model;
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -15,7 +18,7 @@ namespace Control
         [SerializeField] AgentMovement agentMovement;
         [SerializeField] NavMeshAgent navMeshAgent;
 
-        [Header("Other Player Settings")] // Organise this in a way that makes sense please.
+        [Header("Other Player Settings")]
         [SerializeField] float runSpeed;
         [SerializeField] float sensitivity;
         [SerializeField] PlayerUISetUp playerUI;
@@ -24,6 +27,7 @@ namespace Control
         [SerializeField] public Transform target;
         #endregion
 
+        private static VoiceCommands voiceCommands;
         private static Settings _settings;
         private static State _default;
         private static State _ringtoss;
@@ -37,19 +41,27 @@ namespace Control
             controls.Pause.Pause.performed += ctx => Pause(controls);
             controls.Pause.Options.performed += ctx => Options(controls);
 
+            SetUpVoiceCommands();
+
             // _settings contains references to any objects or components needed by each state
-            // to move the character for example.
-            _settings = new Settings(this.gameObject, playerPhysics, ref characterController, agentMovement, ref navMeshAgent,
+            _settings = new Settings(this.gameObject, ref voiceCommands, playerPhysics, ref characterController, agentMovement, ref navMeshAgent,
                 runSpeed, sensitivity, Camera.main, controls, playerUI);
 
             if (_default == null || _ringtoss == null)
 			{
                 _default = new Default(ref _settings);
                 _ringtoss = new RingToss(ref _settings);
-			}
+            }
 
             InitialiseState(_default);
         }
+
+		private void SetUpVoiceCommands()
+		{
+            GameObject obj = new GameObject("Voice Commands");
+            obj.AddComponent<VoiceCommands>();
+            voiceCommands = obj.GetComponent<VoiceCommands>();
+		}
 
 		private void OnEnable()
 		{
@@ -135,10 +147,26 @@ namespace Control
             ChangeState(_default);
 		}
 
-        internal void HandleIntent(string intent)
-		{
-            state.HandleIntent(intent);
-		}
+        internal void HandleIntent(List<RuntimeIntent> intents, List<RuntimeEntity> entities, float confThreshold)
+        {
+            // If there is more than one intent
+            if (intents.Count > 1)
+			{
+                string[] intentOutput = new string[2];
+
+                // Get only the top 2 intents that are above the confidence threshold
+                for (int i = 0; i < 2; i++)
+                {
+                    intentOutput[i] = intents[i].Confidence >= confThreshold ? intents[i].Intent : null;
+                }
+                state.HandleMultipleIntents(intentOutput, entities);
+            }
+            else
+			{
+                string intent = intents[0].Intent;
+                state.HandleIntent(intent, entities);
+			}
+        }
 
         [ContextMenu("Autofill Fields")]
         void AutofillFields()
@@ -153,5 +181,5 @@ namespace Control
             runSpeed = 5f;
             sensitivity = 100f;
         }
-	}
+    }
 }

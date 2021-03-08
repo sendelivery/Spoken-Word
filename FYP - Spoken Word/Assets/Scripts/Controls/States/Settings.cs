@@ -6,10 +6,11 @@ namespace Control
     // This should become a singleton at some point.
 	public class Settings
 	{
-        public Settings(GameObject player, PlayerPhysics playerPhysics, ref CharacterController characterController, AgentMovement agentMovement, 
+        public Settings(GameObject player, ref VoiceCommands voiceCommands, PlayerPhysics playerPhysics, ref CharacterController characterController, AgentMovement agentMovement, 
             ref NavMeshAgent navMeshAgent, float speed, float sens, Camera main, PlayerControls controls, PlayerUISetUp ui)
 		{
             this.player = player;
+            this.voiceCommands = voiceCommands;
             this.playerPhysics = playerPhysics;
             this.characterController = characterController;
             this.agentMovement = agentMovement;
@@ -33,6 +34,7 @@ namespace Control
                 + "cam: " + cam + ",\n");
 		}
         public GameObject player { get; }
+        public VoiceCommands voiceCommands { get; }
         public PlayerPhysics playerPhysics { get; }
         public CharacterController characterController { get; }
         public AgentMovement agentMovement { get; }
