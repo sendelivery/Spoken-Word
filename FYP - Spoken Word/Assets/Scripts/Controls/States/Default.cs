@@ -30,9 +30,11 @@ namespace Control
             VoiceCommands voiceCommands = settings.voiceCommands;
 
             // Set voice commands actions
-            _voiceActions.Add("move", () => voiceCommands.StartCoroutine(voiceCommands.Move(incomingEntities)));
-            _voiceActions.Add("look", () => voiceCommands.Look(incomingEntities));
+            _voiceActions.Add("move", () => voiceCommands.Move(incomingEntities));
+            _voiceActions.Add("look", () => voiceCommands.Look(incomingEntities, inputText));
+            _voiceActions.Add("zoom", () => VoiceZoom(incomingEntities));
             _voiceActions.Add("jump", () => Jump());
+            _voiceActions.Add("interact", () => Interact());
 
             // Movement
             settings.playerControls.DefaultGameplay.Move.performed += ctx => move = ctx.ReadValue<Vector2>();
@@ -122,11 +124,6 @@ namespace Control
             base.HandleInput();
 		}
 
-        //public override void HandleIntent(string intent, List<RuntimeEntity> entities)
-		//{
-        //    base.HandleIntent(intent, entities);
-		//}
-
 		protected void MoveAndLook()
         {
             // Move
@@ -180,6 +177,25 @@ namespace Control
             // Same as above but for zoom out, set FOV to 70 if it's above 69.5
             else if (!zoom && settings.cam.fieldOfView > 69.5f) settings.cam.fieldOfView = settings.defaultFOV;
         }
+
+        private void VoiceZoom(List<RuntimeEntity> incomingEntities)
+		{
+            if (incomingEntities.Count > 0)
+			{
+                if (incomingEntities[0].Value == "forward")
+                {
+                    zoom = true;
+                }
+                else if (incomingEntities[0].Value == "back")
+                {
+                    zoom = false;
+                }
+            }
+            else
+			{
+                zoom = !zoom;
+			}
+		}
 
 		private void Jump()
 		{

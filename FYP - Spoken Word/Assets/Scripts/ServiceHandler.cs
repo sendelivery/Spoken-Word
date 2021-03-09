@@ -208,6 +208,7 @@ namespace SpokenWord.IBM
                     {
                         string text = string.Format("{0} ({1}, {2:0.00})\n", alt.transcript, res.final ? "Final" : "Interim", alt.confidence);
                         Log.Debug("ExampleStreaming.OnRecognize()", text);
+                        resultsField.GetComponent<AutoScroll>().ChangeScrollState();
                         resultsField.text = text;
 
                         // Send message if stt confidence is above a certain threshold
@@ -259,18 +260,32 @@ namespace SpokenWord.IBM
 
         void OnMessage(DetailedResponse<MessageResponse> resp, IBMError error)
         {
+            // Going to have to rework this completely if I want to handle multiple intents and entities
+            // think about intents that may have multiple entities attached:
+            //  - how will I know that the first 2 entities correspond to the first intent in a case where i receive
+            //    two intents and two entities for example
+            // at the moment all i'm doing is iterating through the intents and printing out the intent and entity that
+            // is at the same index as that intent if there is one.
             if (resp != null && resp.Result.Intents.Count != 0)
             {
                 for (int i = 0; i < resp.Result.Intents.Count; i++)
 				{
                     Debug.Log("Received Intent: " + resp.Result.Intents[i].Intent);
-                    Debug.Log("Received Entities: " + resp.Result.Entities[i].Entity);
-                    Debug.Log("Received Entiites Value: " + resp.Result.Entities[i].Value);
+                    if (resp.Result.Entities.Count > 0)
+					{
+                        Debug.Log("Received Entities: " + resp.Result.Entities[i].Entity);
+                        Debug.Log("Received Entiites Value: " + resp.Result.Entities[i].Value);
+                    } else
+					{
+                        Debug.Log("No entities received");
+					}
                 }
+
                 player.GetComponent<Control.ControlHandler>().HandleIntent
                     (
                         resp.Result.Intents,
                         resp.Result.Entities,
+                        resp.Result.Input.Text,
                         _intentConfidence
                     );
                 
@@ -319,7 +334,10 @@ namespace SpokenWord.IBM
             // Speech to Text Service Credentials
             _speechToTextServiceUrl = "https://api.eu-gb.speech-to-text.watson.cloud.ibm.com/instances/6ea3ab50-9420-476c-a7bd-d7fefa31f4b3";
             _speechToTextIamApikey = "pABoHA5QFyGO6ZCZpB9p96eEEQf5xMv3bkH5HvPfqODT";
-            _recognizeModel = "en-GB_BroadbandModel";
+
+            // https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-models#models
+            // Smart formatting only works with the en-US model, not en-GB
+            _recognizeModel = "en-US_BroadbandModel";
 
             // Assistant Credentials
             _workspaceId = "00235722-3eeb-4034-bca8-ba3b2d78045e";

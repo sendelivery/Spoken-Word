@@ -76,36 +76,38 @@ namespace Control
 		void Update()
         {
             state.HandleInput();
-			switch (((Default)_default).targetState) // Downcast to access Default.cs members of _default
+            if (target)
 			{
-				case Default.TargetState.NONE:
-                    Debug.Log("case: NONE");
-                    if (target)
-					{
-                        Debug.Log("Target set");
-                        // target = AdjustPosition(target); // Adjust pos so that it's on top of the terrain. (if not using the target game object in the hierarchy)
+                switch (((Default)_default).targetState) // Downcast to access Default.cs members of _default
+                {
+                    case Default.TargetState.NONE:
+                        if (target)
+                        {
+                            Debug.Log("Target set");
+                            // target = AdjustPosition(target); // Adjust pos so that it's on top of the terrain. (if not using the target game object in the hierarchy)
 
-                        ((Default)_default).SetTarget(target);
-                    }
-                    break;
+                            ((Default)_default).SetTarget(target);
+                        }
+                        break;
 
-                case Default.TargetState.SET:
-                    Debug.Log("case: SET");
-                    break;
+                    case Default.TargetState.SET:
+                        Debug.Log("case: SET");
+                        break;
 
-                case Default.TargetState.REACHED:
-                    Debug.Log("case: REACHED");
-                    // If we have a target but it's been reached: set it to null, and reset the target state inside _default.
-                    if (target)
-                    {
-                        target = null;
-                        ((Default)_default).targetState = Default.TargetState.NONE;
-                    }
-                    break;
+                    case Default.TargetState.REACHED:
+                        Debug.Log("case: REACHED");
+                        // If we have a target but it's been reached: set it to null, and reset the target state inside _default.
+                        if (target)
+                        {
+                            target = null;
+                            ((Default)_default).targetState = Default.TargetState.NONE;
+                        }
+                        break;
 
-                default:
-					break;
-			}
+                    default:
+                        break;
+                }
+            }
 		}
 
         private Transform AdjustPosition(Transform t)
@@ -147,7 +149,7 @@ namespace Control
             ChangeState(_default);
 		}
 
-        internal void HandleIntent(List<RuntimeIntent> intents, List<RuntimeEntity> entities, float confThreshold)
+        internal void HandleIntent(List<RuntimeIntent> intents, List<RuntimeEntity> entities, string text, float confThreshold)
         {
             // If there is more than one intent
             if (intents.Count > 1)
@@ -164,7 +166,7 @@ namespace Control
             else
 			{
                 string intent = intents[0].Intent;
-                state.HandleIntent(intent, entities);
+                state.HandleIntent(intent, entities, text);
 			}
         }
 

@@ -10,6 +10,7 @@ namespace Control
 	{
 		protected Dictionary<string, Action> _voiceActions = new Dictionary<string, Action>();
 		protected List<RuntimeEntity> incomingEntities;
+		protected string inputText;
 
 		protected Settings settings;
 
@@ -33,9 +34,10 @@ namespace Control
 			return;
 		}
 
-		public virtual void HandleIntent(string intent, List<RuntimeEntity> entities)
+		public virtual void HandleIntent(string intent, List<RuntimeEntity> entities, string text)
 		{
 			incomingEntities = entities;
+			inputText = text;
 			_voiceActions[intent]();
 			incomingEntities.Clear();
 		}

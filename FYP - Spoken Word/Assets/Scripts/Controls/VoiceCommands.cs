@@ -27,10 +27,10 @@ namespace Control
             }
         }
 
-        public IEnumerator Move(List<RuntimeEntity> incomingEntities)
+        public void Move(List<RuntimeEntity> incomingEntities)
 		{
-            float timeElapsed = 0f;
             string direction = "";
+            float duration = 2f;
 
             for (int i = 0; i < incomingEntities.Count; i++)
             {
@@ -45,108 +45,102 @@ namespace Control
             {
                 case "forward":
                     Debug.Log("Forward, Move " + direction);
-                    while (timeElapsed < 5f)
-                    {
-                        MoveCharacter(Vector3.forward);
-                        timeElapsed += Time.deltaTime;
-
-                        yield return null;
-                    }
+                    StartCoroutine(MoveCharacter(Vector3.forward, duration));
                     break;
                 case "back":
                     Debug.Log("Back, Move " + direction);
-                    while (timeElapsed < 5f)
-                    {
-                        MoveCharacter(Vector3.back);
-                        timeElapsed += Time.deltaTime;
-
-                        yield return null;
-                    }
+                    StartCoroutine(MoveCharacter(Vector3.back, duration));
                     break;
                 case "right":
                     Debug.Log("Right, Move " + direction);
-                    while (timeElapsed < 5f)
-                    {
-                        MoveCharacter(Vector3.right);
-                        timeElapsed += Time.deltaTime;
-
-                        yield return null;
-                    }
+                    StartCoroutine(MoveCharacter(Vector3.right, duration));
                     break;
                 case "left":
                     Debug.Log("Left, Move " + direction);
-                    while (timeElapsed < 5f)
-                    {
-                        MoveCharacter(Vector3.left);
-                        timeElapsed += Time.deltaTime;
-
-                        yield return null;
-                    }
+                    StartCoroutine(MoveCharacter(Vector3.left, duration));
                     break;
                 default:
                     Debug.Log("Default, Move " + direction + ", default = forward");
-                    while (timeElapsed < 5f)
-                    {
-                        MoveCharacter(Vector3.forward);
-                        timeElapsed += Time.deltaTime;
-
-                        yield return null; // wait for the next frame
-                    }
+                    StartCoroutine(MoveCharacter(Vector3.forward, duration));
                     break;
             }
         }
 
-		private void MoveCharacter(Vector3 direction)
+		private IEnumerator MoveCharacter(Vector3 direction, float duration)
 		{
-			player.GetComponent<CharacterController>().Move(direction * 5f * Time.deltaTime);
+            float timeElapsed = 0f;
+
+            Vector3 m = player.transform.right * direction.x + player.transform.forward * direction.z;
+
+            while (timeElapsed < duration)
+            {
+
+                player.GetComponent<CharacterController>().Move(m * 5f * Time.deltaTime);
+                timeElapsed += Time.deltaTime;
+
+                yield return null; // wait for the next frame
+            }
 		}
 
-        public void Look(List<RuntimeEntity> incomingEntities)
+        public void Look(List<RuntimeEntity> incomingEntities, string inputText)
         {
-            float duration = 2f;
             string direction = "";
+            float angle = 45f;
+            float duration = 1f;
 
             for (int i = 0; i < incomingEntities.Count; i++)
             {
                 if (incomingEntities[i].Entity == "Direction")
                 {
                     direction = incomingEntities[i].Value;
-                    break;
                 }
+                if (incomingEntities[i].Entity == "Angle")
+				{
+                    int start = (int)incomingEntities[i].Location[0];
+                    int end = (int)incomingEntities[i].Location[1];
+
+                    string temp = inputText.Substring(start, (end - start));
+                    angle = float.Parse(temp);
+				}
+
+                foreach (var item in incomingEntities[i].Location)
+				{
+                    Debug.Log(item);
+				}
             }
 
             switch (direction)
             {
                 case "above":
-                    Debug.Log("Up, Look " + direction);
-                    StartCoroutine(LookTo(Vector3.up, duration));
+                    Debug.Log("Up, Look " + direction + " " + angle);
+                    StartCoroutine(LookTo(new Vector3(-1, 0, 0), duration, angle));
                     break;
                 case "below":
-                    Debug.Log("Down, Look " + direction);
-                    StartCoroutine(LookTo(Vector3.down, duration));
+                    Debug.Log("Down, Look " + direction + " " + angle);
+                    StartCoroutine(LookTo(new Vector3(1, 0, 0), duration, angle));
                     break;
                 case "right":
-                    Debug.Log("Right, Look " + direction);
-                    StartCoroutine(LookTo(Vector3.right, duration));
+                    Debug.Log("Right, Look " + direction + " " + angle);
+                    StartCoroutine(LookTo(new Vector3(0, 1, 0), duration, angle));
                     break;
                 case "left":
-                    Debug.Log("Left, Look " + direction);
-                    StartCoroutine(LookTo(Vector3.left, duration));
+                    Debug.Log("Left, Look " + direction + " " + angle);
+                    StartCoroutine(LookTo(new Vector3(0, -1, 0), duration, angle));
                     break;
             }
         }
 
-        private IEnumerator LookTo(Vector3 direction, float duration)
+        private IEnumerator LookTo(Vector3 direction, float duration, float angle)
         {
-            var fromAngle = player.transform.rotation;
-            var toAngle = Quaternion.Euler(player.transform.eulerAngles + (direction * 90));
+            Quaternion fromAngle = player.transform.rotation;
+            Quaternion toAngle = Quaternion.Euler(player.transform.eulerAngles + (direction * angle));
 
             for (var t = 0f; t < 1; t += Time.deltaTime / duration)
             {
                 Debug.Log("rotating");
-                transform.rotation = Quaternion.Lerp(fromAngle, toAngle, t);
+                player.transform.rotation = Quaternion.Lerp(fromAngle, toAngle, t);
                 yield return null;
-            }
+            }           
         }
     }
 }
