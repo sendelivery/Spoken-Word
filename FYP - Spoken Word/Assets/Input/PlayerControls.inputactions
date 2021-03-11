@@ -332,21 +332,51 @@
             ]
         },
         {
+            "name": "Minigame",
+            "id": "6d24293b-7f02-4449-bce4-989cb147d5e3",
+            "actions": [
+                {
+                    "name": "Back",
+                    "type": "Button",
+                    "id": "e508d9e8-0820-4cfd-9fc7-5b8d13e00255",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "b99fa5d5-d33f-47de-93d2-bee97ca4d5dc",
+                    "path": "<Gamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Back",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "04facd1b-4110-4911-87c8-a25fe96af1a4",
+                    "path": "<Keyboard>/x",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard and Mouse",
+                    "action": "Back",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
             "name": "RingToss",
             "id": "c15d2805-b0e1-4917-84fe-46f277667afa",
             "actions": [
                 {
-                    "name": "Confirm",
+                    "name": "Fire",
                     "type": "Button",
                     "id": "85f39895-d295-4521-8ac9-fe8d5b2e0cf5",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": ""
-                },
-                {
-                    "name": "Back",
-                    "type": "Button",
-                    "id": "302ec662-1520-4631-8c8c-be2027e2fe11",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
@@ -364,22 +394,11 @@
                 {
                     "name": "",
                     "id": "aa64b2ee-03f5-4eec-8dd6-a9a6089a2394",
-                    "path": "<Gamepad>/buttonSouth",
+                    "path": "<Gamepad>/buttonWest",
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
-                    "action": "Confirm",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "ae2a18bf-a433-4f82-b382-c80176708150",
-                    "path": "<Mouse>/leftButton",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard and Mouse",
-                    "action": "Confirm",
+                    "action": "Fire",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -492,28 +511,6 @@
                     "action": "Navigate",
                     "isComposite": false,
                     "isPartOfComposite": true
-                },
-                {
-                    "name": "",
-                    "id": "92de1e2f-18f9-4089-bcf4-fabd4a9c89c2",
-                    "path": "<Gamepad>/buttonEast",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Gamepad",
-                    "action": "Back",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "817e57b4-50fa-4783-b693-c899afcb21f1",
-                    "path": "<Keyboard>/x",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard and Mouse",
-                    "action": "Back",
-                    "isComposite": false,
-                    "isPartOfComposite": false
                 }
             ]
         }

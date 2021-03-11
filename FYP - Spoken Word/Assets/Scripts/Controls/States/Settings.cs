@@ -19,7 +19,11 @@ namespace Control
 
             playerControls = controls;
 
-            runSpeed = speed; sensitivity = sens; cam = main;
+            // Other settings
+            this.navMeshAgent.speed = speed; 
+            runSpeed = speed; 
+            sensitivity = sens; 
+            cam = main;
 
             // Log the created settings:
             Debug.Log("The following settings have been created:\n"

@@ -27,10 +27,12 @@ namespace Control
 
 		public override void Initialise()
 		{
+            base.Initialise();
+
             VoiceCommands voiceCommands = settings.voiceCommands;
 
             // Set voice commands actions
-            _voiceActions.Add("move", () => voiceCommands.Move(incomingEntities));
+            _voiceActions.Add("move", () => voiceCommands.Move(incomingEntities, inputText));
             _voiceActions.Add("look", () => voiceCommands.Look(incomingEntities, inputText));
             _voiceActions.Add("zoom", () => VoiceZoom(incomingEntities));
             _voiceActions.Add("jump", () => Jump());
@@ -60,11 +62,41 @@ namespace Control
             // Disable the navMeshAgent component and enable the default gameplay action map
             settings.navMeshAgent.enabled = false;
 
-            // Disable other action maps - don't think i need this
-            settings.playerControls.RingToss.Disable();
-
             // Enable the default action map
             settings.playerControls.DefaultGameplay.Enable();
+        }
+
+		public override void Enable()
+		{
+			base.Enable();
+
+            settings.playerControls.DefaultGameplay.Enable();
+		}
+
+		private void test()
+		{
+            RuntimeEntity testEntity = new RuntimeEntity();
+            RuntimeEntity secondTestEntity = new RuntimeEntity();
+
+            long start = 0;
+            long length = 2;
+
+            string testText = "10";
+
+            testEntity.Entity = "Number";
+            testEntity.Location = new List<long?>();
+            testEntity.Location.Add(start);
+            testEntity.Location.Add(length);
+
+            secondTestEntity.Entity = "Direction";
+            secondTestEntity.Value = "forward";
+
+            incomingEntities = new List<RuntimeEntity>();
+
+            incomingEntities.Add(testEntity);
+            incomingEntities.Add(secondTestEntity);
+
+            settings.voiceCommands.Move(incomingEntities, testText);
         }
 
 		public override void HandleInput()

@@ -345,21 +345,51 @@ public class @PlayerControls : IInputActionCollection, IDisposable
             ]
         },
         {
+            ""name"": ""Minigame"",
+            ""id"": ""6d24293b-7f02-4449-bce4-989cb147d5e3"",
+            ""actions"": [
+                {
+                    ""name"": ""Back"",
+                    ""type"": ""Button"",
+                    ""id"": ""e508d9e8-0820-4cfd-9fc7-5b8d13e00255"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""b99fa5d5-d33f-47de-93d2-bee97ca4d5dc"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Back"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""04facd1b-4110-4911-87c8-a25fe96af1a4"",
+                    ""path"": ""<Keyboard>/x"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard and Mouse"",
+                    ""action"": ""Back"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
+        },
+        {
             ""name"": ""RingToss"",
             ""id"": ""c15d2805-b0e1-4917-84fe-46f277667afa"",
             ""actions"": [
                 {
-                    ""name"": ""Confirm"",
+                    ""name"": ""Fire"",
                     ""type"": ""Button"",
                     ""id"": ""85f39895-d295-4521-8ac9-fe8d5b2e0cf5"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """"
-                },
-                {
-                    ""name"": ""Back"",
-                    ""type"": ""Button"",
-                    ""id"": ""302ec662-1520-4631-8c8c-be2027e2fe11"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
@@ -377,22 +407,11 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""aa64b2ee-03f5-4eec-8dd6-a9a6089a2394"",
-                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""path"": ""<Gamepad>/buttonWest"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
-                    ""action"": ""Confirm"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""ae2a18bf-a433-4f82-b382-c80176708150"",
-                    ""path"": ""<Mouse>/leftButton"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard and Mouse"",
-                    ""action"": ""Confirm"",
+                    ""action"": ""Fire"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -505,28 +524,6 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""action"": ""Navigate"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""92de1e2f-18f9-4089-bcf4-fabd4a9c89c2"",
-                    ""path"": ""<Gamepad>/buttonEast"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""Back"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""817e57b4-50fa-4783-b693-c899afcb21f1"",
-                    ""path"": ""<Keyboard>/x"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard and Mouse"",
-                    ""action"": ""Back"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -574,10 +571,12 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         m_DefaultGameplay_TriggerRun = m_DefaultGameplay.FindAction("TriggerRun", throwIfNotFound: true);
         m_DefaultGameplay_ZoomHold = m_DefaultGameplay.FindAction("Zoom Hold", throwIfNotFound: true);
         m_DefaultGameplay_ZoomTap = m_DefaultGameplay.FindAction("Zoom Tap", throwIfNotFound: true);
+        // Minigame
+        m_Minigame = asset.FindActionMap("Minigame", throwIfNotFound: true);
+        m_Minigame_Back = m_Minigame.FindAction("Back", throwIfNotFound: true);
         // RingToss
         m_RingToss = asset.FindActionMap("RingToss", throwIfNotFound: true);
-        m_RingToss_Confirm = m_RingToss.FindAction("Confirm", throwIfNotFound: true);
-        m_RingToss_Back = m_RingToss.FindAction("Back", throwIfNotFound: true);
+        m_RingToss_Fire = m_RingToss.FindAction("Fire", throwIfNotFound: true);
         m_RingToss_Navigate = m_RingToss.FindAction("Navigate", throwIfNotFound: true);
     }
 
@@ -747,18 +746,49 @@ public class @PlayerControls : IInputActionCollection, IDisposable
     }
     public DefaultGameplayActions @DefaultGameplay => new DefaultGameplayActions(this);
 
+    // Minigame
+    private readonly InputActionMap m_Minigame;
+    private IMinigameActions m_MinigameActionsCallbackInterface;
+    private readonly InputAction m_Minigame_Back;
+    public struct MinigameActions
+    {
+        private @PlayerControls m_Wrapper;
+        public MinigameActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Back => m_Wrapper.m_Minigame_Back;
+        public InputActionMap Get() { return m_Wrapper.m_Minigame; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(MinigameActions set) { return set.Get(); }
+        public void SetCallbacks(IMinigameActions instance)
+        {
+            if (m_Wrapper.m_MinigameActionsCallbackInterface != null)
+            {
+                @Back.started -= m_Wrapper.m_MinigameActionsCallbackInterface.OnBack;
+                @Back.performed -= m_Wrapper.m_MinigameActionsCallbackInterface.OnBack;
+                @Back.canceled -= m_Wrapper.m_MinigameActionsCallbackInterface.OnBack;
+            }
+            m_Wrapper.m_MinigameActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @Back.started += instance.OnBack;
+                @Back.performed += instance.OnBack;
+                @Back.canceled += instance.OnBack;
+            }
+        }
+    }
+    public MinigameActions @Minigame => new MinigameActions(this);
+
     // RingToss
     private readonly InputActionMap m_RingToss;
     private IRingTossActions m_RingTossActionsCallbackInterface;
-    private readonly InputAction m_RingToss_Confirm;
-    private readonly InputAction m_RingToss_Back;
+    private readonly InputAction m_RingToss_Fire;
     private readonly InputAction m_RingToss_Navigate;
     public struct RingTossActions
     {
         private @PlayerControls m_Wrapper;
         public RingTossActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
-        public InputAction @Confirm => m_Wrapper.m_RingToss_Confirm;
-        public InputAction @Back => m_Wrapper.m_RingToss_Back;
+        public InputAction @Fire => m_Wrapper.m_RingToss_Fire;
         public InputAction @Navigate => m_Wrapper.m_RingToss_Navigate;
         public InputActionMap Get() { return m_Wrapper.m_RingToss; }
         public void Enable() { Get().Enable(); }
@@ -769,12 +799,9 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         {
             if (m_Wrapper.m_RingTossActionsCallbackInterface != null)
             {
-                @Confirm.started -= m_Wrapper.m_RingTossActionsCallbackInterface.OnConfirm;
-                @Confirm.performed -= m_Wrapper.m_RingTossActionsCallbackInterface.OnConfirm;
-                @Confirm.canceled -= m_Wrapper.m_RingTossActionsCallbackInterface.OnConfirm;
-                @Back.started -= m_Wrapper.m_RingTossActionsCallbackInterface.OnBack;
-                @Back.performed -= m_Wrapper.m_RingTossActionsCallbackInterface.OnBack;
-                @Back.canceled -= m_Wrapper.m_RingTossActionsCallbackInterface.OnBack;
+                @Fire.started -= m_Wrapper.m_RingTossActionsCallbackInterface.OnFire;
+                @Fire.performed -= m_Wrapper.m_RingTossActionsCallbackInterface.OnFire;
+                @Fire.canceled -= m_Wrapper.m_RingTossActionsCallbackInterface.OnFire;
                 @Navigate.started -= m_Wrapper.m_RingTossActionsCallbackInterface.OnNavigate;
                 @Navigate.performed -= m_Wrapper.m_RingTossActionsCallbackInterface.OnNavigate;
                 @Navigate.canceled -= m_Wrapper.m_RingTossActionsCallbackInterface.OnNavigate;
@@ -782,12 +809,9 @@ public class @PlayerControls : IInputActionCollection, IDisposable
             m_Wrapper.m_RingTossActionsCallbackInterface = instance;
             if (instance != null)
             {
-                @Confirm.started += instance.OnConfirm;
-                @Confirm.performed += instance.OnConfirm;
-                @Confirm.canceled += instance.OnConfirm;
-                @Back.started += instance.OnBack;
-                @Back.performed += instance.OnBack;
-                @Back.canceled += instance.OnBack;
+                @Fire.started += instance.OnFire;
+                @Fire.performed += instance.OnFire;
+                @Fire.canceled += instance.OnFire;
                 @Navigate.started += instance.OnNavigate;
                 @Navigate.performed += instance.OnNavigate;
                 @Navigate.canceled += instance.OnNavigate;
@@ -828,10 +852,13 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         void OnZoomHold(InputAction.CallbackContext context);
         void OnZoomTap(InputAction.CallbackContext context);
     }
+    public interface IMinigameActions
+    {
+        void OnBack(InputAction.CallbackContext context);
+    }
     public interface IRingTossActions
     {
-        void OnConfirm(InputAction.CallbackContext context);
-        void OnBack(InputAction.CallbackContext context);
+        void OnFire(InputAction.CallbackContext context);
         void OnNavigate(InputAction.CallbackContext context);
     }
 }

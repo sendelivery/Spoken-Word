@@ -19,7 +19,8 @@ public class PlayerUISetUp : MonoBehaviour
 	private bool waypointSelected;
 	private bool backOut;
 
-	private Button rtExitButton;
+	private Button ExitButton;
+	private Button PositiveButton;
 
 	private GameObject player;
 
@@ -37,8 +38,9 @@ public class PlayerUISetUp : MonoBehaviour
 		player = GameObject.FindGameObjectWithTag("Player");
 
 		// Get the exit button, then listen for TaskOnClick
-		rtExitButton = GameObject.FindGameObjectWithTag("RT Exit").GetComponent<UnityEngine.UI.Button>();
-		rtExitButton.onClick.AddListener(RTExitTaskOnClick);
+		ExitButton = GameObject.FindGameObjectWithTag("RT Exit").GetComponent<Button>();
+		ExitButton.onClick.AddListener(ExitButtonTaskOnClick);
+		PositiveButton = GameObject.FindGameObjectWithTag("RT Fire").GetComponent<Button>();
 	}
 
 	private void Update()
@@ -66,7 +68,7 @@ public class PlayerUISetUp : MonoBehaviour
 			{
 				waypointSelected = false;
 				Cursor.lockState = CursorLockMode.Confined;
-				EventSystem.current.SetSelectedGameObject(rtExitButton.gameObject);
+				EventSystem.current.SetSelectedGameObject(ExitButton.gameObject);
 			}
 		}
 
@@ -82,6 +84,7 @@ public class PlayerUISetUp : MonoBehaviour
 			mainCamera.transform.position = Vector3.Lerp
 				(mainCamera.transform.position, defaultCameraPostion.transform.position, 8f * Time.deltaTime);
 
+			Debug.Log("Hey, I'm trying to reach the default camera pos!");
 			// Check if reached desired location
 			if (mainCamera.transform.position == defaultCameraPostion.transform.position)
 			{
@@ -90,6 +93,7 @@ public class PlayerUISetUp : MonoBehaviour
 				mainCamera.GetComponent<MouseLook>().enabled = true;
 				Cursor.lockState = CursorLockMode.Locked;
 
+				Debug.Log("Finally reached it! Switching state back to default");
 				// Set controls back to default controls
 				player.GetComponent<Control.ControlHandler>().SwitchStateDefault();
 			}
@@ -111,10 +115,15 @@ public class PlayerUISetUp : MonoBehaviour
 		return (false, hit);
 	}
 
-	public void RTExitTaskOnClick()
+	public void ExitButtonTaskOnClick()
 	{
 		// Starts moving the camera back towards the original position inside the player on the next frame.
 		backOut = true;
 		EventSystem.current.SetSelectedGameObject(null);
+	}
+
+	public void TriggerPositive()
+	{
+		PositiveButton.onClick.Invoke();
 	}
 }

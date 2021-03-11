@@ -17,6 +17,8 @@ namespace Control
 		public delegate void StateEventHandler();
 		public event StateEventHandler ChangedControlState;
 
+		public bool firstSwitch = true;
+
 		public State(ref Settings settings)
 		{
 			this.settings = settings;
@@ -26,7 +28,18 @@ namespace Control
 
 		public virtual void Initialise()
 		{
-			return;
+			// Disable all action maps
+			settings.playerControls.DefaultGameplay.Disable();
+			settings.playerControls.Minigame.Disable();
+			settings.playerControls.RingToss.Disable();
+		}
+
+		public virtual void Enable()
+		{
+			// Disable all action maps
+			settings.playerControls.DefaultGameplay.Disable();
+			settings.playerControls.Minigame.Disable();
+			settings.playerControls.RingToss.Disable();
 		}
 
 		public virtual void HandleInput()
@@ -38,7 +51,14 @@ namespace Control
 		{
 			incomingEntities = entities;
 			inputText = text;
-			_voiceActions[intent]();
+
+			if (_voiceActions.ContainsKey(intent))
+				_voiceActions[intent]();
+			else
+			{
+				Debug.LogError("Couldn't find an action tied to the following intent: " + intent);
+			}
+
 			incomingEntities.Clear();
 		}
 

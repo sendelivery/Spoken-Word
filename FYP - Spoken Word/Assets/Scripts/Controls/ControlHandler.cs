@@ -53,7 +53,7 @@ namespace Control
                 _ringtoss = new RingToss(ref _settings);
             }
 
-            InitialiseState(_default);
+            SetState(_default);
         }
 
 		private void SetUpVoiceCommands()
@@ -140,13 +140,13 @@ namespace Control
         {
             Debug.Log("Changing state to minigame");
 
-            if (state == _default) ChangeState(_ringtoss);
-            else if (state == _ringtoss) ChangeState(_default);
+            if (state == _default) SetState(_ringtoss);
+            else if (state == _ringtoss) SetState(_default);
         }
 
 		public void SwitchStateDefault()
 		{
-            ChangeState(_default);
+            SetState(_default);
 		}
 
         internal void HandleIntent(List<RuntimeIntent> intents, List<RuntimeEntity> entities, string text, float confThreshold)

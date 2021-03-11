@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
+using UnityEngine.InputSystem;
 
 namespace Control
 {
@@ -12,29 +13,32 @@ namespace Control
 
 		public override void Initialise()
 		{
-			// On face buttons press
-			settings.playerControls.RingToss.Confirm.performed += ctx => Confirm();
-			settings.playerControls.RingToss.Back.performed += ctx => Back();
+			base.Initialise();
 
-			settings.playerControls.DefaultGameplay.Disable();
+			Debug.Log("Created a move voice action inside RingToss, minigame");
+			_voiceActions.Add("fire", () => Fire());
+
+			// On face buttons press
+			settings.playerControls.RingToss.Fire.performed += ctx => Fire();
+
+			settings.playerControls.Minigame.Enable();
 			settings.playerControls.RingToss.Enable();
 		}
 
-		private void Confirm()
+		public override void Enable()
 		{
-			
+			base.Enable();
+
+			settings.playerControls.Minigame.Enable();
+			settings.playerControls.RingToss.Enable();
 		}
 
-		private void Back()
+		private void Fire()
 		{
-			settings.playerUI.RTExitTaskOnClick();
-		}
-
-		public override void HandleInput()
-		{
-			Debug.Log("RingToss.HandleInput()");
-
-			base.HandleInput();
+			// process time spent from saying fire to reaching here,
+			// adjust forcebar to go back that time spent,
+			// then:
+			settings.playerUI.TriggerPositive();
 		}
 	}
 }

@@ -17,7 +17,7 @@ public class RingTossSetUp : MonoBehaviour
     public Vector3 defaultRingRotation;
 
     // Desired number of rings
-    public int numberOfRings;
+    public int numberOfRings = 1;
     private List<Ring> rings = new List<Ring>();
 
     public ParticleSystem bubbles;

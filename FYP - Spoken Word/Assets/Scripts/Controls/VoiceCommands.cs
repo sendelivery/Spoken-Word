@@ -11,6 +11,7 @@ namespace Control
         private static VoiceCommands _instance;
 
         private GameObject player;
+        private Transform target;
 
         public static VoiceCommands Instance { get { return _instance; } }
 
@@ -24,62 +25,62 @@ namespace Control
             {
                 _instance = this;
                 player = GameObject.Find("Player w Pathfind");
+                target = GameObject.FindGameObjectWithTag("Target").transform;
             }
         }
 
-        public void Move(List<RuntimeEntity> incomingEntities)
+        public void Move(List<RuntimeEntity> incomingEntities, string inputText)
 		{
-            string direction = "";
-            float duration = 2f;
+            string direction = "forward";
+            float distance = 5f;
 
             for (int i = 0; i < incomingEntities.Count; i++)
             {
                 if (incomingEntities[i].Entity == "Direction")
                 {
                     direction = incomingEntities[i].Value;
-                    break;
+                }
+                if (incomingEntities[i].Entity == "Number")
+                {
+                    int start = (int)incomingEntities[i].Location[0];
+                    int end = (int)incomingEntities[i].Location[1];
+
+                    string temp = inputText.Substring(start, (end - start));
+                    distance = float.Parse(temp);
                 }
             }
 
             switch (direction)
             {
                 case "forward":
-                    Debug.Log("Forward, Move " + direction);
-                    StartCoroutine(MoveCharacter(Vector3.forward, duration));
+                    Debug.Log("Forward, Move " + direction + "by "  + distance);
+                    SetTarget(Vector3.forward, distance);
                     break;
                 case "back":
-                    Debug.Log("Back, Move " + direction);
-                    StartCoroutine(MoveCharacter(Vector3.back, duration));
+                    Debug.Log("Back, Move " + direction + "by " + distance);
+                    SetTarget(Vector3.back, distance);
                     break;
                 case "right":
-                    Debug.Log("Right, Move " + direction);
-                    StartCoroutine(MoveCharacter(Vector3.right, duration));
+                    Debug.Log("Right, Move " + direction + "by " + distance);
+                    SetTarget(Vector3.right, distance);
                     break;
                 case "left":
-                    Debug.Log("Left, Move " + direction);
-                    StartCoroutine(MoveCharacter(Vector3.left, duration));
+                    Debug.Log("Left, Move " + direction + "by " + distance);
+                    SetTarget(Vector3.left, distance);
                     break;
                 default:
-                    Debug.Log("Default, Move " + direction + ", default = forward");
-                    StartCoroutine(MoveCharacter(Vector3.forward, duration));
+                    Debug.Log("Default, Move " + direction + "by " + distance + ", default = forward");
+                    SetTarget(Vector3.forward, distance);
                     break;
             }
         }
 
-		private IEnumerator MoveCharacter(Vector3 direction, float duration)
+		private void SetTarget(Vector3 direction, float distance)
 		{
-            float timeElapsed = 0f;
+            // place the target by distance:
+            target.position = player.transform.position + player.transform.TransformDirection(direction * distance);
 
-            Vector3 m = player.transform.right * direction.x + player.transform.forward * direction.z;
-
-            while (timeElapsed < duration)
-            {
-
-                player.GetComponent<CharacterController>().Move(m * 5f * Time.deltaTime);
-                timeElapsed += Time.deltaTime;
-
-                yield return null; // wait for the next frame
-            }
+            player.GetComponent<ControlHandler>().target = target;
 		}
 
         public void Look(List<RuntimeEntity> incomingEntities, string inputText)
@@ -94,7 +95,7 @@ namespace Control
                 {
                     direction = incomingEntities[i].Value;
                 }
-                if (incomingEntities[i].Entity == "Angle")
+                if (incomingEntities[i].Entity == "Number")
 				{
                     int start = (int)incomingEntities[i].Location[0];
                     int end = (int)incomingEntities[i].Location[1];

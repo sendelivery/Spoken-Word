@@ -6,15 +6,18 @@
 	{
 		protected State state;
 
-		public void InitialiseState(State incomingState)
+		public void SetState(State incomingState)
 		{
 			this.state = incomingState;
-			this.state.Initialise();
-		}
-
-		public void ChangeState(State incomingState)
-		{
-			this.state = incomingState;
+			if (this.state.firstSwitch)
+			{
+				this.state.Initialise();
+				this.state.firstSwitch = false;
+			}
+			else
+			{
+				this.state.Enable();
+			}
 		}
 	}
 }
