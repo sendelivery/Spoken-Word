@@ -33,6 +33,9 @@ namespace IBM.Watson.SpeechToText.V1
 {
     public partial class SpeechToTextService : BaseService
     {
+        public delegate void TakeSnapshotEvent();
+        public event TakeSnapshotEvent SendTakeSnapshot;
+
         #region Constants
         /// <summary>
         /// How often to send a message to the web socket to keep it alive.
@@ -400,6 +403,7 @@ namespace IBM.Watson.SpeechToText.V1
                 {
                     if (_listenActive)
                     {
+                        SendTakeSnapshot.Invoke();
                         _listenSocket.Send(new WSConnector.BinaryMessage(AudioClipUtil.GetL16(clip.Clip)));
                         _audioSent = true;
                         audioSentOrEnqueued = true;

@@ -1,17 +1,29 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
 namespace SpokenWord
 {
-	public static class GameManager
+	public class GameManager : MonoBehaviour
 	{
+		[SerializeField]
+		private GameObject _player;
+		public static GameObject player;
+
+		public static Snapshot snapshot;
+
+		[Header("Minigame References")]
+
+		#region Ring Toss Members
+		[Header("Ring Toss")]
+		public GameObject forceBar;
+		[HideInInspector]
+		public static Oscillator2 osc;
+		#endregion
+
 		#region Pause Canvas Members
-		private static GameObject pauseCanvas = GameObject.FindGameObjectWithTag("Pause Canvas");
-		private static AdjustTimeScale timeSlider = pauseCanvas.GetComponentInChildren<AdjustTimeScale>();
+		private static GameObject pauseCanvas;
+		private static AdjustTimeScale timeSlider;
 
 		private static float newTimeScale;
 
@@ -20,9 +32,25 @@ namespace SpokenWord
 		#endregion
 
 		#region Options Canvas Members
-		private static GameObject optionsCanvas = GameObject.FindGameObjectWithTag("Options Canvas");
+		private static GameObject optionsCanvas;
 		private static float tempTime;
 		#endregion
+
+		private void Awake()
+		{
+			player = _player;
+			osc = forceBar.GetComponent<Oscillator2>();
+
+			pauseCanvas = GameObject.FindGameObjectWithTag("Pause Canvas");
+			timeSlider = pauseCanvas.GetComponentInChildren<AdjustTimeScale>();
+
+			optionsCanvas = GameObject.FindGameObjectWithTag("Options Canvas");
+	}
+
+		public static void TakeSnapshot()
+		{
+			snapshot = new Snapshot();
+		}
 
 		public static void Pause()
 		{

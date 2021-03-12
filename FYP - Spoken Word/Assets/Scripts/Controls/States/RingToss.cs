@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using SpokenWord;
 using System.Collections;
 using System;
 using UnityEngine.InputSystem;
@@ -15,8 +16,7 @@ namespace Control
 		{
 			base.Initialise();
 
-			Debug.Log("Created a move voice action inside RingToss, minigame");
-			_voiceActions.Add("fire", () => Fire());
+			_voiceActions.Add("fire", () => VoiceFire());
 
 			// On face buttons press
 			settings.playerControls.RingToss.Fire.performed += ctx => Fire();
@@ -35,9 +35,12 @@ namespace Control
 
 		private void Fire()
 		{
-			// process time spent from saying fire to reaching here,
-			// adjust forcebar to go back that time spent,
-			// then:
+			settings.playerUI.TriggerPositive();
+		}
+
+		private void VoiceFire()
+		{
+			GameManager.osc.SetValue(GameManager.snapshot.forceSliderValue);
 			settings.playerUI.TriggerPositive();
 		}
 	}

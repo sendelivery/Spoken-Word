@@ -65,6 +65,21 @@ public class Oscillator2 : MonoBehaviour
         forceBar.value = movementFactor; // Set the bar value to the movementFactor (0 - forceBar max value)
     }
 
+    public void SetValue(float val)
+	{
+        forceBar.value = val;
+	}
+
+    public float GetValue()
+	{
+        return forceBar.value;
+	}
+
+    public float GetMaxValue()
+	{
+        return forceBar.maxValue;
+	}
+
     void TaskOnClick()
     {
         // On button click, pause the force bar oscillation, set the multiplier value, play the bubbles particle system.

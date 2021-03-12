@@ -26,7 +26,7 @@ namespace Control
             cam = main;
 
             // Log the created settings:
-            Debug.Log("The following settings have been created:\n"
+            /*Debug.Log("The following settings have been created:\n"
                 + "gameObject: " + this.player + ",\n"
                 + "characterController: " + this.characterController + ",\n"
                 + "agentMovement: " + this.agentMovement + ",\n"
@@ -35,7 +35,7 @@ namespace Control
                 + "playerControls: " + playerControls + ",\n"
                 + "runSpeed: " + runSpeed + ",\n"
                 + "sensitivity: " + sensitivity + ",\n"
-                + "cam: " + cam + ",\n");
+                + "cam: " + cam + ",\n");*/
 		}
         public GameObject player { get; }
         public VoiceCommands voiceCommands { get; }

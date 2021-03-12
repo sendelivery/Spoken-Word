@@ -138,8 +138,6 @@ namespace Control
 
         private void SwitchState()
         {
-            Debug.Log("Changing state to minigame");
-
             if (state == _default) SetState(_ringtoss);
             else if (state == _ringtoss) SetState(_default);
         }

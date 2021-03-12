@@ -72,7 +72,7 @@ namespace SpokenWord.IBM
 
         void Start()
         {
-            player = GameObject.Find("Player w Pathfind");
+            player = GameManager.player;
 
             LogSystem.InstallDefaultReactors();
             Runnable.Run(CreateServices());
@@ -100,6 +100,8 @@ namespace SpokenWord.IBM
             _speechToTextService.StreamMultipart = true;
 
             Active = true;
+
+            _speechToTextService.SendTakeSnapshot += () => GameManager.TakeSnapshot();
 
             // Creating Assistant Service ---------------------------------------------------------------------------------------------------------------------
             IamAuthenticator assistantAuthenticator = new IamAuthenticator(apikey: "9Az7c6aj2kKhH31OROZ_cIlaYXo8HT8ut248Q8CXx_qq");
@@ -207,7 +209,7 @@ namespace SpokenWord.IBM
                     foreach (var alt in res.alternatives)
                     {
                         string text = string.Format("{0} ({1}, {2:0.00})\n", alt.transcript, res.final ? "Final" : "Interim", alt.confidence);
-                        Log.Debug("ExampleStreaming.OnRecognize()", text);
+                        Log.Debug("ExampleStreaming.OnRecognize()", text); // I need to take a snapshot well before this line
                         resultsField.GetComponent<AutoScroll>().ChangeScrollState();
                         resultsField.text = text;
 
