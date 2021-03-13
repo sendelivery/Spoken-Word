@@ -44,8 +44,8 @@ namespace Control
             SetUpVoiceCommands();
 
             // _settings contains references to any objects or components needed by each state
-            _settings = new Settings(this.gameObject, ref voiceCommands, playerPhysics, ref characterController, agentMovement, ref navMeshAgent,
-                runSpeed, sensitivity, Camera.main, controls, playerUI);
+            _settings = new Settings(this.gameObject, ref voiceCommands, playerPhysics, ref characterController,
+                agentMovement, ref navMeshAgent, runSpeed, sensitivity, Camera.main, controls, playerUI);
 
             if (_default == null || _ringtoss == null)
 			{
@@ -108,18 +108,6 @@ namespace Control
                         break;
                 }
             }
-		}
-
-        private Transform AdjustPosition(Transform t)
-		{
-            Vector3 pos = t.position; // Get the selected target's position
-
-            // Get the gameobject called Target and give it the selected target's world position.
-            GameObject temp = GameObject.FindGameObjectWithTag("Target");
-            temp.transform.position = pos;
-            temp.GetComponent<TargetPlacement>().PlaceOnTerrain();
-
-            return temp.transform;
 		}
 
 		private void Options(PlayerControls c)

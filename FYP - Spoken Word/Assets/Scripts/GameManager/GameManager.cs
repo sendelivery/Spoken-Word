@@ -21,6 +21,12 @@ namespace SpokenWord
 		public static Oscillator2 osc;
 		#endregion
 
+		#region
+		[Header("Tilt Shrine")]
+		public GameObject arena;
+		public static GameObject activeArena;
+		#endregion
+
 		#region Pause Canvas Members
 		private static GameObject pauseCanvas;
 		private static AdjustTimeScale timeSlider;
@@ -40,11 +46,12 @@ namespace SpokenWord
 		{
 			player = _player;
 			osc = forceBar.GetComponent<Oscillator2>();
+			activeArena = arena;
 
-			pauseCanvas = GameObject.FindGameObjectWithTag("Pause Canvas");
-			timeSlider = pauseCanvas.GetComponentInChildren<AdjustTimeScale>();
+			//pauseCanvas = GameObject.FindGameObjectWithTag("Pause Canvas");
+			//timeSlider = pauseCanvas.GetComponentInChildren<AdjustTimeScale>();
 
-			optionsCanvas = GameObject.FindGameObjectWithTag("Options Canvas");
+			//optionsCanvas = GameObject.FindGameObjectWithTag("Options Canvas");
 	}
 
 		public static void TakeSnapshot()

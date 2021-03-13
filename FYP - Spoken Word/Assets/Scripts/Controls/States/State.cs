@@ -32,6 +32,7 @@ namespace Control
 			settings.playerControls.DefaultGameplay.Disable();
 			settings.playerControls.Minigame.Disable();
 			settings.playerControls.RingToss.Disable();
+			settings.playerControls.TiltShrine.Disable();
 		}
 
 		public virtual void Enable()

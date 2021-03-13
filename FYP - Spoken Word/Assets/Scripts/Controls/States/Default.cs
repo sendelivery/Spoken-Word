@@ -152,8 +152,6 @@ namespace Control
             {
                 MoveAndLook();
             }
-
-            base.HandleInput();
 		}
 
 		protected void MoveAndLook()

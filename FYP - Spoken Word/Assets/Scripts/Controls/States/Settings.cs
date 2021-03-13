@@ -6,6 +6,18 @@ namespace Control
     // This should become a singleton at some point.
 	public class Settings
 	{
+        // Simplified constructor
+        /// <summary>
+        /// Simplified constructor only requiring the camera and player controls.
+        /// Used only for prototyping control states for new minigames.
+        /// </summary>
+        public Settings(Camera main, PlayerControls controls)
+		{
+            cam = main;
+            playerControls = controls;
+		}
+
+        // Complete constructor
         public Settings(GameObject player, ref VoiceCommands voiceCommands, PlayerPhysics playerPhysics, ref CharacterController characterController, AgentMovement agentMovement, 
             ref NavMeshAgent navMeshAgent, float speed, float sens, Camera main, PlayerControls controls, PlayerUISetUp ui)
 		{

@@ -526,6 +526,118 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""isPartOfComposite"": true
                 }
             ]
+        },
+        {
+            ""name"": ""TiltShrine"",
+            ""id"": ""41f8a46f-ab78-4abf-8c46-f19f33aaa17a"",
+            ""actions"": [
+                {
+                    ""name"": ""Tilt"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""75b3fdf2-dddb-433f-acea-a5a6a5f42eea"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Rotate"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""44bb39a4-4aa0-4c68-bc26-d5fe2593fd67"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""fce37e95-48cf-4572-be54-012b8af7e9ce"",
+                    ""path"": ""<Gamepad>/leftStick"",
+                    ""interactions"": """",
+                    ""processors"": ""StickDeadzone"",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Tilt"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2c7d649a-3126-46b1-ba63-2a1e5541d64b"",
+                    ""path"": ""<Mouse>/delta"",
+                    ""interactions"": """",
+                    ""processors"": ""ScaleVector2(x=0.1,y=0.1)"",
+                    ""groups"": ""Keyboard and Mouse"",
+                    ""action"": ""Tilt"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""54c1ed27-898b-418d-8247-ec8e30ea028d"",
+                    ""path"": ""<Gamepad>/rightStick"",
+                    ""interactions"": """",
+                    ""processors"": ""StickDeadzone"",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Rotate"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""2D Vector"",
+                    ""id"": ""e5cb832f-33bd-479b-83c8-f368dcc63c79"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Rotate"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""21f50eb4-c29e-4106-bf47-848cbf3d5ca9"",
+                    ""path"": ""<Keyboard>/w"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard and Mouse"",
+                    ""action"": ""Rotate"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""ed687a7e-86f6-402f-b94c-60e5edbd3d03"",
+                    ""path"": ""<Keyboard>/s"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard and Mouse"",
+                    ""action"": ""Rotate"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""6f6cf7d0-2526-473a-9782-f7b29ab8837a"",
+                    ""path"": ""<Keyboard>/a"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard and Mouse"",
+                    ""action"": ""Rotate"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""0ecbf4d0-0047-4e4c-b102-3e6ddf4d92cd"",
+                    ""path"": ""<Keyboard>/d"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard and Mouse"",
+                    ""action"": ""Rotate"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                }
+            ]
         }
     ],
     ""controlSchemes"": [
@@ -578,6 +690,10 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         m_RingToss = asset.FindActionMap("RingToss", throwIfNotFound: true);
         m_RingToss_Fire = m_RingToss.FindAction("Fire", throwIfNotFound: true);
         m_RingToss_Navigate = m_RingToss.FindAction("Navigate", throwIfNotFound: true);
+        // TiltShrine
+        m_TiltShrine = asset.FindActionMap("TiltShrine", throwIfNotFound: true);
+        m_TiltShrine_Tilt = m_TiltShrine.FindAction("Tilt", throwIfNotFound: true);
+        m_TiltShrine_Rotate = m_TiltShrine.FindAction("Rotate", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -819,6 +935,47 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         }
     }
     public RingTossActions @RingToss => new RingTossActions(this);
+
+    // TiltShrine
+    private readonly InputActionMap m_TiltShrine;
+    private ITiltShrineActions m_TiltShrineActionsCallbackInterface;
+    private readonly InputAction m_TiltShrine_Tilt;
+    private readonly InputAction m_TiltShrine_Rotate;
+    public struct TiltShrineActions
+    {
+        private @PlayerControls m_Wrapper;
+        public TiltShrineActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Tilt => m_Wrapper.m_TiltShrine_Tilt;
+        public InputAction @Rotate => m_Wrapper.m_TiltShrine_Rotate;
+        public InputActionMap Get() { return m_Wrapper.m_TiltShrine; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(TiltShrineActions set) { return set.Get(); }
+        public void SetCallbacks(ITiltShrineActions instance)
+        {
+            if (m_Wrapper.m_TiltShrineActionsCallbackInterface != null)
+            {
+                @Tilt.started -= m_Wrapper.m_TiltShrineActionsCallbackInterface.OnTilt;
+                @Tilt.performed -= m_Wrapper.m_TiltShrineActionsCallbackInterface.OnTilt;
+                @Tilt.canceled -= m_Wrapper.m_TiltShrineActionsCallbackInterface.OnTilt;
+                @Rotate.started -= m_Wrapper.m_TiltShrineActionsCallbackInterface.OnRotate;
+                @Rotate.performed -= m_Wrapper.m_TiltShrineActionsCallbackInterface.OnRotate;
+                @Rotate.canceled -= m_Wrapper.m_TiltShrineActionsCallbackInterface.OnRotate;
+            }
+            m_Wrapper.m_TiltShrineActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @Tilt.started += instance.OnTilt;
+                @Tilt.performed += instance.OnTilt;
+                @Tilt.canceled += instance.OnTilt;
+                @Rotate.started += instance.OnRotate;
+                @Rotate.performed += instance.OnRotate;
+                @Rotate.canceled += instance.OnRotate;
+            }
+        }
+    }
+    public TiltShrineActions @TiltShrine => new TiltShrineActions(this);
     private int m_GamepadSchemeIndex = -1;
     public InputControlScheme GamepadScheme
     {
@@ -860,5 +1017,10 @@ public class @PlayerControls : IInputActionCollection, IDisposable
     {
         void OnFire(InputAction.CallbackContext context);
         void OnNavigate(InputAction.CallbackContext context);
+    }
+    public interface ITiltShrineActions
+    {
+        void OnTilt(InputAction.CallbackContext context);
+        void OnRotate(InputAction.CallbackContext context);
     }
 }
