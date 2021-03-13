@@ -208,15 +208,15 @@ namespace Control
             else if (!zoom && settings.cam.fieldOfView > 69.5f) settings.cam.fieldOfView = settings.defaultFOV;
         }
 
-        private void VoiceZoom(List<RuntimeEntity> incomingEntities)
+        private void VoiceZoom(List<RuntimeEntity> incomingEntitiesTwo)
 		{
-            if (incomingEntities.Count > 0)
+            if (incomingEntitiesTwo.Count > 0)
 			{
-                if (incomingEntities[0].Value == "forward")
+                if (incomingEntitiesTwo[0].Value == "forward")
                 {
                     zoom = true;
                 }
-                else if (incomingEntities[0].Value == "back")
+                else if (incomingEntitiesTwo[0].Value == "back")
                 {
                     zoom = false;
                 }

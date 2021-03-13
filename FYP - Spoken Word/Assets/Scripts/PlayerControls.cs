@@ -546,6 +546,14 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Test"",
+                    ""type"": ""Button"",
+                    ""id"": ""c1cba77e-aef4-43f9-8117-48331778bc4f"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -636,6 +644,17 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""action"": ""Rotate"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""628aa063-eb96-46ea-996c-60d41769c2c1"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard and Mouse"",
+                    ""action"": ""Test"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -694,6 +713,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         m_TiltShrine = asset.FindActionMap("TiltShrine", throwIfNotFound: true);
         m_TiltShrine_Tilt = m_TiltShrine.FindAction("Tilt", throwIfNotFound: true);
         m_TiltShrine_Rotate = m_TiltShrine.FindAction("Rotate", throwIfNotFound: true);
+        m_TiltShrine_Test = m_TiltShrine.FindAction("Test", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -941,12 +961,14 @@ public class @PlayerControls : IInputActionCollection, IDisposable
     private ITiltShrineActions m_TiltShrineActionsCallbackInterface;
     private readonly InputAction m_TiltShrine_Tilt;
     private readonly InputAction m_TiltShrine_Rotate;
+    private readonly InputAction m_TiltShrine_Test;
     public struct TiltShrineActions
     {
         private @PlayerControls m_Wrapper;
         public TiltShrineActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
         public InputAction @Tilt => m_Wrapper.m_TiltShrine_Tilt;
         public InputAction @Rotate => m_Wrapper.m_TiltShrine_Rotate;
+        public InputAction @Test => m_Wrapper.m_TiltShrine_Test;
         public InputActionMap Get() { return m_Wrapper.m_TiltShrine; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -962,6 +984,9 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @Rotate.started -= m_Wrapper.m_TiltShrineActionsCallbackInterface.OnRotate;
                 @Rotate.performed -= m_Wrapper.m_TiltShrineActionsCallbackInterface.OnRotate;
                 @Rotate.canceled -= m_Wrapper.m_TiltShrineActionsCallbackInterface.OnRotate;
+                @Test.started -= m_Wrapper.m_TiltShrineActionsCallbackInterface.OnTest;
+                @Test.performed -= m_Wrapper.m_TiltShrineActionsCallbackInterface.OnTest;
+                @Test.canceled -= m_Wrapper.m_TiltShrineActionsCallbackInterface.OnTest;
             }
             m_Wrapper.m_TiltShrineActionsCallbackInterface = instance;
             if (instance != null)
@@ -972,6 +997,9 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @Rotate.started += instance.OnRotate;
                 @Rotate.performed += instance.OnRotate;
                 @Rotate.canceled += instance.OnRotate;
+                @Test.started += instance.OnTest;
+                @Test.performed += instance.OnTest;
+                @Test.canceled += instance.OnTest;
             }
         }
     }
@@ -1022,5 +1050,6 @@ public class @PlayerControls : IInputActionCollection, IDisposable
     {
         void OnTilt(InputAction.CallbackContext context);
         void OnRotate(InputAction.CallbackContext context);
+        void OnTest(InputAction.CallbackContext context);
     }
 }

@@ -18,9 +18,7 @@ namespace Control
 
 			_voiceActions.Add("fire", () => VoiceFire());
 
-			// On face buttons press
 			settings.playerControls.RingToss.Fire.performed += ctx => Fire();
-
 			settings.playerControls.Minigame.Enable();
 			settings.playerControls.RingToss.Enable();
 		}

@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using SpokenWord;
 
 namespace Control
 {
@@ -24,7 +25,9 @@ namespace Control
             else
             {
                 _instance = this;
-                player = GameObject.Find("Player w Pathfind");
+                player = GameManager.player;
+
+                // Doesn't work in the tilt shrine scene and that's ok :)
                 target = GameObject.FindGameObjectWithTag("Target").transform;
             }
         }
@@ -142,6 +145,126 @@ namespace Control
                 player.transform.rotation = Quaternion.Lerp(fromAngle, toAngle, t);
                 yield return null;
             }           
+        }
+
+        public void TiltShrineRotate(List<RuntimeEntity> incomingEntities, string inputText, Transform camera)
+		{
+            string direction = "";
+            float angle = 90f;
+            float duration = 1f;
+
+            for (int i = 0; i < incomingEntities.Count; i++)
+            {
+                if (incomingEntities[i].Entity == "Direction")
+                {
+                    direction = incomingEntities[i].Value;
+                }
+                if (incomingEntities[i].Entity == "Number")
+                {
+                    int start = (int)incomingEntities[i].Location[0];
+                    int end = (int)incomingEntities[i].Location[1];
+
+                    string temp = inputText.Substring(start, (end - start));
+                    angle = float.Parse(temp);
+                }
+            }
+
+            switch (direction)
+            {
+                case "right":
+                    Debug.Log("Right, Look " + direction + " " + angle);
+                    StartCoroutine(RotateArena(new Vector3(0f, -1f, 0f), duration, angle, camera));
+                    break;
+                case "left":
+                    Debug.Log("Left, Look " + direction + " " + angle);
+                    StartCoroutine(RotateArena(new Vector3(0f, 1f, 0f), duration, angle, camera));
+                    break;
+            }
+        }
+
+        private IEnumerator RotateArena(Vector3 direction, float duration, float targetAngle, Transform camera)
+		{
+            Quaternion fromAngle = camera.rotation;
+            Quaternion toAngle = Quaternion.Euler(camera.eulerAngles + (direction * targetAngle));
+
+            for (float t = 0f; t < 1; t += Time.deltaTime / duration)
+            {
+                Debug.Log("rotating");
+                camera.rotation = Quaternion.Lerp(fromAngle, toAngle, t);
+                yield return null;
+            }
+
+            camera.rotation = toAngle;
+        }
+
+        public void TiltShrineTilt(List<RuntimeEntity> incomingEntities, string inputText, Transform camera)
+        {
+            string direction = "";
+            string amount = "neutral";
+            float angle = 30f;
+            float duration = 1f;
+
+            // An acceptable input, for example: "intent:[tilt] to the direction:[left] a amount:[little]"
+            for (int i = 0; i < incomingEntities.Count; i++)
+            {
+                if (incomingEntities[i].Entity == "Direction")
+                {
+                    direction = incomingEntities[i].Value;
+                }
+                if (incomingEntities[i].Entity == "Amount")
+                {
+                    amount = incomingEntities[i].Value;
+                }
+            }
+
+            if (amount == "small")
+                angle = 15f;
+            else if (amount == "large")
+                angle = 45f;
+
+            switch (direction)
+            {
+                case "above":
+                    Debug.Log("Up, Look " + direction + " " + amount);
+                    StartCoroutine(TiltArena(camera, camera.forward, angle, duration));
+                    break;
+                case "forward":
+                    Debug.Log("Forward, Look " + direction + " " + amount);
+                    StartCoroutine(TiltArena(camera, camera.forward, angle, duration));
+                    break;
+                case "below":
+                    Debug.Log("Down, Look " + direction + " " + amount);
+                    StartCoroutine(TiltArena(camera, camera.forward, angle, duration));
+                    break;
+                case "back":
+                    Debug.Log("Up, Look " + direction + " " + amount);
+                    StartCoroutine(TiltArena(camera, camera.forward, angle, duration));
+                    break;
+                case "right":
+                    Debug.Log("Right, Look " + direction + " " + amount);
+                    StartCoroutine(TiltArena(camera, camera.right, angle, duration));
+                    break;
+                case "left":
+                    Debug.Log("Left, Look " + direction + " " + amount);
+                    StartCoroutine(TiltArena(camera, camera.right, angle, duration));
+                    break;
+            }
+        }
+
+        private IEnumerator TiltArena(Transform relativeTo, Vector3 axis, float targetAngle, float duration)
+        {
+            Transform temp = GameManager.activeArena.transform;
+            float angleChange;
+
+            for (float t = 0f; t < 1; t += Time.deltaTime / duration)
+            {
+                angleChange = targetAngle * Time.deltaTime;
+                temp.RotateAround(relativeTo.position, axis, angleChange);
+                yield return null;
+            }
+
+            GameManager.activeArena.transform.rotation =
+                    new Quaternion(temp.rotation.x, 0f, temp.rotation.z, temp.rotation.w);
         }
     }
 }

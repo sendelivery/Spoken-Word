@@ -56,7 +56,9 @@ namespace Control
             SetState(_default);
         }
 
-		private void SetUpVoiceCommands()
+        // Need to attach voice commands to an object because
+        // coroutines can only be called if attached to an object, 
+        private void SetUpVoiceCommands()
 		{
             GameObject obj = new GameObject("Voice Commands");
             obj.AddComponent<VoiceCommands>();

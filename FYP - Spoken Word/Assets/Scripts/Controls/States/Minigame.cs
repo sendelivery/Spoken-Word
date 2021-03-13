@@ -14,9 +14,7 @@ namespace Control
 			base.Initialise();
 
 			_voiceActions.Add("exit", () => Exit());
-
 			settings.playerControls.Minigame.Back.performed += ctx => Exit();
-
 			settings.playerControls.Minigame.Enable();
 		}
 

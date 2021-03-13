@@ -12,8 +12,6 @@ namespace SpokenWord
 
 		public static Snapshot snapshot;
 
-		[Header("Minigame References")]
-
 		#region Ring Toss Members
 		[Header("Ring Toss")]
 		public GameObject forceBar;
@@ -27,7 +25,10 @@ namespace SpokenWord
 		public static GameObject activeArena;
 		#endregion
 
+		[Header("Pause / Options")]
 		#region Pause Canvas Members
+		[SerializeField]
+		private GameObject _pauseCanvas;
 		private static GameObject pauseCanvas;
 		private static AdjustTimeScale timeSlider;
 
@@ -38,6 +39,8 @@ namespace SpokenWord
 		#endregion
 
 		#region Options Canvas Members
+		[SerializeField]
+		private GameObject _optionsCanvas;
 		private static GameObject optionsCanvas;
 		private static float tempTime;
 		#endregion
@@ -48,11 +51,14 @@ namespace SpokenWord
 			osc = forceBar.GetComponent<Oscillator2>();
 			activeArena = arena;
 
-			//pauseCanvas = GameObject.FindGameObjectWithTag("Pause Canvas");
-			//timeSlider = pauseCanvas.GetComponentInChildren<AdjustTimeScale>();
+			pauseCanvas = _pauseCanvas;
+			optionsCanvas = _optionsCanvas;
 
-			//optionsCanvas = GameObject.FindGameObjectWithTag("Options Canvas");
-	}
+			if (pauseCanvas.TryGetComponent(out AdjustTimeScale t))
+			{
+				timeSlider = t;
+			}
+		}
 
 		public static void TakeSnapshot()
 		{

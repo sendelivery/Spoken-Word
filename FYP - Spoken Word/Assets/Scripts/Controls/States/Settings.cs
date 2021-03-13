@@ -11,10 +11,12 @@ namespace Control
         /// Simplified constructor only requiring the camera and player controls.
         /// Used only for prototyping control states for new minigames.
         /// </summary>
-        public Settings(Camera main, PlayerControls controls)
+        public Settings(Camera main, PlayerControls controls, ref VoiceCommands voiceCommands)
 		{
             cam = main;
             playerControls = controls;
+            this.voiceCommands = voiceCommands;
+
 		}
 
         // Complete constructor
