@@ -2,9 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using TMPro;
 
 public class RingTossSetUp : MonoBehaviour
 {
+    [SerializeField]
+    private TextMeshProUGUI completedText;
+    [SerializeField]
+    private GameObject waypoint;
+
     // Position variables
     public GameObject defaultRingPosition;
     public GameObject nextRingPosition;
@@ -26,6 +32,12 @@ public class RingTossSetUp : MonoBehaviour
 
     // Start is called before the first frame update, (awake does not work here, resultls in null reference exception)
     // here the specified amount of rings is instantiated and placed in the scene accordingly.
+
+    private void Awake()
+    {
+        completedText.enabled = false;
+    }
+
     void Start()
     {
         // Firstly, stop the particles from playing before the fire button is pressed.
@@ -81,7 +93,8 @@ public class RingTossSetUp : MonoBehaviour
             } 
             else // If no next ring exists, highlight the exit button.
 			{
-                Debug.Log("No more rings, exit the game.");
+                completedText.enabled = true;
+                waypoint.GetComponentInChildren<WaypointLight>().MarkComplete();
                 EventSystem.current.SetSelectedGameObject(exitButton);
 			}
         }

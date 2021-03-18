@@ -15,7 +15,9 @@ namespace Control
 		protected Settings settings;
 
 		public delegate void StateEventHandler();
-		public event StateEventHandler ChangedControlState;
+		public event StateEventHandler ChangeStateDefault;
+		public event StateEventHandler ChangeStateTiltShrine;
+		public event StateEventHandler ChangeStateRingToss;
 
 		public bool firstSwitch = true;
 
@@ -33,11 +35,14 @@ namespace Control
 			settings.playerControls.Minigame.Disable();
 			settings.playerControls.RingToss.Disable();
 			settings.playerControls.TiltShrine.Disable();
+
+			//_voiceActions.Add("pause", () => settings.player.GetComponent<ControlHandler>().Pause(settings.playerControls));
+			//_voiceActions.Add("options", () => settings.player.GetComponent<ControlHandler>().Options(settings.playerControls));
 		}
 
 		public virtual void Enable()
 		{
-			// Disable all action maps
+			// Disable all action maps - enable the one(s) you want in the derived state
 			settings.playerControls.DefaultGameplay.Disable();
 			settings.playerControls.Minigame.Disable();
 			settings.playerControls.RingToss.Disable();
@@ -75,7 +80,24 @@ namespace Control
 
 		protected virtual void SendStateChangeEvent()
 		{
-			ChangedControlState.Invoke();
+			ChangeStateDefault.Invoke();
+		}
+
+		protected virtual void SendStateChangeEvent(string minigame)
+		{
+			switch (minigame)
+			{
+				case "RingToss":
+					ChangeStateRingToss.Invoke();
+					break;
+				case "TiltShrine":
+					ChangeStateTiltShrine.Invoke();
+					break;
+				default:
+					ChangeStateDefault.Invoke();
+					Debug.LogWarning(minigame + " control state doesn't exist.");
+					break;
+			}
 		}
 	}
 }

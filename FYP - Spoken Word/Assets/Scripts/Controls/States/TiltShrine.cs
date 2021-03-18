@@ -13,7 +13,7 @@ namespace Control
         private Vector2 rotate;
 
 		private Transform camera;
-		private Transform temp;
+		public Transform temp;
 
         public TiltShrine(ref Settings settings) : base(ref settings)
 		{
@@ -22,9 +22,8 @@ namespace Control
 		public override void Initialise()
 		{
 			base.Initialise();
-			
-			// Change this line when imported into a scene with multiple cameras!!!!!!!!
-			camera = settings.cam.GetComponentsInParent<Transform>()[1];
+
+			camera = GameManager.tiltCamera.GetComponentsInParent<Transform>()[1];
 			temp = GameManager.activeArena.transform;
 
 			VoiceCommands voiceCommands = settings.voiceCommands;
@@ -39,9 +38,6 @@ namespace Control
             // Rotate
             settings.playerControls.TiltShrine.Rotate.performed += ctx => rotate = ctx.ReadValue<Vector2>();
             settings.playerControls.TiltShrine.Rotate.canceled += _ => rotate = Vector2.zero;
-
-			// Test - Delete -------------------------!!!!!!!!!!!!!!!!!!!!!!!-----------------------
-			settings.playerControls.TiltShrine.Test.performed += _ => testTilt();
 
 			Enable();
         }
@@ -97,35 +93,34 @@ namespace Control
 		{
 			base.Enable();
 
+			Cursor.lockState = CursorLockMode.Locked;
 			settings.playerControls.Minigame.Enable();
 			settings.playerControls.TiltShrine.Enable();
 		}
 
+		public void Disable()
+		{
+			settings.playerControls.TiltShrine.Disable();
+		}
+
 		public override void HandleInput()
 		{
+			Debug.Log("Inside tilt HandleInput");
 			if (tilt != Vector2.zero)
 			{
+				Debug.Log("Should be rotating");
 				temp.RotateAround(camera.position, camera.forward, -tilt.x);
 				temp.RotateAround(camera.position, camera.right, tilt.y);
-
+				Debug.Log(GameManager.activeArena);
+				Debug.Log(camera);
 				// Discard yaw rotations then set rotation to the environment :)
 				GameManager.activeArena.transform.rotation = 
 					new Quaternion(temp.rotation.x, 0f, temp.rotation.z, temp.rotation.w);
 			}
 			if(rotate != Vector2.zero)
 			{
-				camera.Rotate(0, rotate.x * Time.deltaTime * 50f, 0);
+				camera.Rotate(0f, rotate.x * Time.deltaTime * 50f, 0f);
 			}
-		}
-
-		private void VoiceTilt()
-		{
-			throw new NotImplementedException();
-		}
-
-		private void VoiceRotate()
-		{
-			throw new NotImplementedException();
 		}
 	}
 }

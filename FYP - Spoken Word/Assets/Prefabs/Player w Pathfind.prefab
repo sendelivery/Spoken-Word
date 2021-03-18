@@ -1759,9 +1759,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 319df41f187b68d46ac41073f44a27e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  reticle: {fileID: 0}
   playerUICanvas: {fileID: 1027845916}
   reticleShader: {fileID: 0}
   clickDistance: 1.5
+  defaultCameraPostion: {fileID: 0}
 --- !u!1 &2023012655
 GameObject:
   m_ObjectHideFlags: 0
@@ -2053,8 +2055,7 @@ MonoBehaviour:
   runSpeed: 4
   sensitivity: 100
   playerUI: {fileID: 1905434311}
-  changeState: 0
-  count: 0
+  target: {fileID: 0}
 --- !u!114 &4678127607467661046
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2217,6 +2218,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mouseSensitivity: 300
+  verticalRange: 75
   playerBody: {fileID: 2762741298164844698}
   defaultCamPos: {fileID: 1606222239}
 --- !u!114 &1735785081
@@ -2226,7 +2228,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4678127605903665835}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 646b5bc27a658f447b1d929fd5ffbd70, type: 3}
   m_Name: 

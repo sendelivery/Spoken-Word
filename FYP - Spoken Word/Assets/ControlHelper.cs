@@ -36,4 +36,21 @@ public class ControlHelper : MonoBehaviour
         obj.AddComponent<VoiceCommands>();
         voiceCommands = obj.GetComponent<VoiceCommands>();
     }
+
+    public void DisableControls()
+    {
+        if (true)
+        ((TiltShrine)_state).Disable();
+        }
+
+    public void EnableControls()
+    {
+        if (true)
+        ((TiltShrine)_state).Enable();
+    }
+
+    public void UpdateTiltTranformReference()
+	{
+        ((TiltShrine)_state).temp = SpokenWord.GameManager.activeArena.transform;
+	}
 }

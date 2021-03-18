@@ -63,13 +63,14 @@ namespace Control
             settings.navMeshAgent.enabled = false;
 
             // Enable the default action map
-            settings.playerControls.DefaultGameplay.Enable();
+            Enable();
         }
 
 		public override void Enable()
 		{
 			base.Enable();
 
+            Cursor.lockState = CursorLockMode.Locked;
             settings.playerControls.DefaultGameplay.Enable();
 		}
 
@@ -239,8 +240,9 @@ namespace Control
             var (hitObjective, hit) = settings.playerUI.FireRay();
             if (hitObjective)
             {
+                string minigame = hit.transform.gameObject.GetComponent<Waypoint>().wName;
                 // Switch state
-                SendStateChangeEvent();
+                SendStateChangeEvent(minigame);
             }
         }
 
@@ -255,5 +257,5 @@ namespace Control
             target = null;
             targetState = TargetState.NONE;
 		}
-	}
+    }
 }

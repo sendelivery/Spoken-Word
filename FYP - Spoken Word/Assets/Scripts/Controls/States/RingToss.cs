@@ -19,14 +19,15 @@ namespace Control
 			_voiceActions.Add("fire", () => VoiceFire());
 
 			settings.playerControls.RingToss.Fire.performed += ctx => Fire();
-			settings.playerControls.Minigame.Enable();
-			settings.playerControls.RingToss.Enable();
+
+			Enable();
 		}
 
 		public override void Enable()
 		{
 			base.Enable();
 
+			Cursor.lockState = CursorLockMode.Confined;
 			settings.playerControls.Minigame.Enable();
 			settings.playerControls.RingToss.Enable();
 		}

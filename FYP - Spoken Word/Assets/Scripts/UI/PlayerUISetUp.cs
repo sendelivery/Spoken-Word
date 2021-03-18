@@ -5,6 +5,7 @@ using UnityEngine.EventSystems;
 [ExecuteInEditMode]
 public class PlayerUISetUp : MonoBehaviour
 {
+	public GameObject reticle;
 	public Canvas playerUICanvas;
 	public Shader reticleShader;
 
@@ -13,7 +14,7 @@ public class PlayerUISetUp : MonoBehaviour
 
 	// Camera stuff, used to move the camera in and out of position when casting a ray on a waypoint
 	Camera mainCamera;
-	Transform defaultCameraPostion;
+	public Transform defaultCameraPostion;
 	Transform desiredCameraPosition;
 
 	private bool waypointSelected;
@@ -26,16 +27,11 @@ public class PlayerUISetUp : MonoBehaviour
 
 	private void Start()
 	{
-		// Get the desired camera position within the waypoint and the default camera position within the player game object
-		// Small CPU overhead, same with the rest, maybe cache?
-		// https://docs.unity3d.com/ScriptReference/Camera-main.html
-		// https://docs.unity3d.com/ScriptReference/Caching.html
-		mainCamera = Camera.main;
-		desiredCameraPosition = GameObject.FindGameObjectWithTag("WaypointCamPos").transform;
-		defaultCameraPostion = GameObject.FindGameObjectWithTag("PlayerCamPos").transform;
+		// Get the cached main camera
+		mainCamera = SpokenWord.GameManager.camera;
 
 		// Get the player, used to disable movement and mouse look when necessary
-		player = GameObject.FindGameObjectWithTag("Player");
+		player = SpokenWord.GameManager.player;
 
 		// Get the exit button, then listen for TaskOnClick
 		ExitButton = GameObject.FindGameObjectWithTag("RT Exit").GetComponent<Button>();
@@ -67,7 +63,6 @@ public class PlayerUISetUp : MonoBehaviour
 			if (mainCamera.transform.position == desiredCameraPosition.position)
 			{
 				waypointSelected = false;
-				Cursor.lockState = CursorLockMode.Confined;
 				EventSystem.current.SetSelectedGameObject(ExitButton.gameObject);
 			}
 		}
@@ -84,16 +79,13 @@ public class PlayerUISetUp : MonoBehaviour
 			mainCamera.transform.position = Vector3.Lerp
 				(mainCamera.transform.position, defaultCameraPostion.transform.position, 8f * Time.deltaTime);
 
-			Debug.Log("Hey, I'm trying to reach the default camera pos!");
 			// Check if reached desired location
 			if (mainCamera.transform.position == defaultCameraPostion.transform.position)
 			{
 				// Re-enable player control
 				backOut = false;
 				mainCamera.GetComponent<MouseLook>().enabled = true;
-				Cursor.lockState = CursorLockMode.Locked;
 
-				Debug.Log("Finally reached it! Switching state back to default");
 				// Set controls back to default controls
 				player.GetComponent<Control.ControlHandler>().SwitchStateDefault();
 			}
@@ -108,6 +100,8 @@ public class PlayerUISetUp : MonoBehaviour
 		bool hitObjective = Physics.Raycast(mainCamera.transform.position, mainCamera.transform.forward, out hit, 100f);
 		if (hitObjective && hit.transform.gameObject.GetComponent<Waypoint>() && hit.distance <= clickDistance)
 		{
+			desiredCameraPosition = hit.transform.gameObject.GetComponentsInChildren<Transform>()[1];
+				//GameObject.FindGameObjectWithTag("WaypointCamPos").transform;
 			waypointSelected = true;
 			// TODO: Set the desired camera pos to that of the specific waypoint selected.
 			return (true, hit);

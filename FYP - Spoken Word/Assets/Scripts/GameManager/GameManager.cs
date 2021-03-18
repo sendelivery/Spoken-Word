@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using System.Collections.Generic;
 
 namespace SpokenWord
 {
@@ -9,6 +10,12 @@ namespace SpokenWord
 		[SerializeField]
 		private GameObject _player;
 		public static GameObject player;
+
+		public static Camera camera;
+
+		[SerializeField]
+		private Camera _tiltCamera;
+		public static Camera tiltCamera;
 
 		public static Snapshot snapshot;
 
@@ -21,8 +28,10 @@ namespace SpokenWord
 
 		#region
 		[Header("Tilt Shrine")]
-		public GameObject arena;
+		public List<GameObject> arenas;
+		private static List<GameObject> staticArenas;
 		public static GameObject activeArena;
+		private static int arenaIndex = 0;
 		#endregion
 
 		[Header("Pause / Options")]
@@ -30,6 +39,8 @@ namespace SpokenWord
 		[SerializeField]
 		private GameObject _pauseCanvas;
 		private static GameObject pauseCanvas;
+		//[SerializeField]
+		//private AdjustTimeScale _timeSlider;
 		private static AdjustTimeScale timeSlider;
 
 		private static float newTimeScale;
@@ -48,16 +59,30 @@ namespace SpokenWord
 		private void Awake()
 		{
 			player = _player;
+
+			camera = Camera.main;
+			tiltCamera = _tiltCamera;
+
 			osc = forceBar.GetComponent<Oscillator2>();
-			activeArena = arena;
+			staticArenas = arenas;
+			activeArena = staticArenas[arenaIndex];
+			arenaIndex++;
 
 			pauseCanvas = _pauseCanvas;
 			optionsCanvas = _optionsCanvas;
 
-			if (pauseCanvas.TryGetComponent(out AdjustTimeScale t))
-			{
-				timeSlider = t;
-			}
+			timeSlider = pauseCanvas.GetComponentInChildren<AdjustTimeScale>();
+		}
+
+		public static bool NextArena()
+		{
+			return arenaIndex < staticArenas.Count ? true : false;
+		}
+
+		public static void SetNextArena()
+		{
+			activeArena = staticArenas[arenaIndex];
+			arenaIndex++;
 		}
 
 		public static void TakeSnapshot()

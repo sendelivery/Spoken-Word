@@ -31,6 +31,7 @@ namespace Control
         private static Settings _settings;
         private static State _default;
         private static State _ringtoss;
+        private static State _tilt;
 
         private void Awake()
         {
@@ -47,10 +48,11 @@ namespace Control
             _settings = new Settings(this.gameObject, ref voiceCommands, playerPhysics, ref characterController,
                 agentMovement, ref navMeshAgent, runSpeed, sensitivity, Camera.main, controls, playerUI);
 
-            if (_default == null || _ringtoss == null)
+            if (_default == null || _ringtoss == null || _tilt == null)
 			{
                 _default = new Default(ref _settings);
                 _ringtoss = new RingToss(ref _settings);
+                _tilt = new TiltShrine(ref _settings);
             }
 
             SetState(_default);
@@ -67,16 +69,23 @@ namespace Control
 
 		private void OnEnable()
 		{
-            state.ChangedControlState += SwitchState;
+            _tilt.ChangeStateDefault += SwitchStateDefault;
+            _ringtoss.ChangeStateDefault += SwitchStateDefault;
+            _default.ChangeStateTiltShrine += () => SwitchState("TiltShrine");
+            _default.ChangeStateRingToss += () => SwitchState("RingToss");
         }
 
 		private void OnDisable()
         {
-            state.ChangedControlState -= SwitchState;
+            _tilt.ChangeStateDefault -= SwitchStateDefault;
+            _ringtoss.ChangeStateDefault -= SwitchStateDefault;
+            _default.ChangeStateTiltShrine -= () => SwitchState("TiltShrine");
+            _default.ChangeStateRingToss -= () => SwitchState("RingToss");
         }
 
-		void Update()
+		void FixedUpdate()
         {
+            Debug.Log(state);
             state.HandleInput();
             if (target)
 			{
@@ -112,28 +121,41 @@ namespace Control
             }
 		}
 
-		private void Options(PlayerControls c)
+		public void Options(PlayerControls c)
         {
             if (c.Pause.Pause.enabled) c.Pause.Pause.Disable();
             else c.Pause.Pause.Enable();
             SpokenWord.GameManager.Options();
         }
 
-        private void Pause(PlayerControls c)
+        public void Pause(PlayerControls c)
         {
             if (c.Pause.Options.enabled) c.Pause.Options.Disable();
             else c.Pause.Options.Enable();
             SpokenWord.GameManager.Pause();
         }
 
-        private void SwitchState()
+        private void SwitchState(string v)
         {
-            if (state == _default) SetState(_ringtoss);
-            else if (state == _ringtoss) SetState(_default);
+            switch (v)
+            {
+                case "RingToss":
+                    playerUI.reticle.SetActive(false);
+                    SetState(_ringtoss);
+                    break;
+                case "TiltShrine":
+                    playerUI.reticle.SetActive(false);
+                    SetState(_tilt);
+                    break;
+                default:
+                    Debug.LogWarning("Unable to find a control state that matches: " + v);
+                    break;
+            }
         }
 
 		public void SwitchStateDefault()
 		{
+            playerUI.reticle.SetActive(true);
             SetState(_default);
 		}
 
@@ -156,6 +178,22 @@ namespace Control
                 string intent = intents[0].Intent;
                 state.HandleIntent(intent, entities, text);
 			}
+        }
+
+        // Tilt Shrine specific functions:
+        public void DisableControls()
+        {
+            ((TiltShrine)state).Disable();
+        }
+
+        public void EnableControls()
+        {
+            ((TiltShrine)state).Enable();
+        }
+
+        public void UpdateTiltTranformReference()
+        {
+            ((TiltShrine)state).temp = SpokenWord.GameManager.activeArena.transform;
         }
 
         [ContextMenu("Autofill Fields")]
