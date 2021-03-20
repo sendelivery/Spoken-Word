@@ -72,9 +72,24 @@ namespace Control
 			incomingEntities.Clear();
 		}
 
-		public virtual void HandleMultipleIntents(string[] intentOutput, List<RuntimeEntity> entities)
+		public virtual void HandleMultipleIntents(string[] intentOutput, List<RuntimeEntity> entities, string text)
 		{
-			return;
+			incomingEntities = entities;
+			inputText = text;
+
+			for(int i = 0; i < intentOutput.Length; i++)
+			{
+				if(_voiceActions.ContainsKey(intentOutput[i]))
+				{
+					_voiceActions[intentOutput[i]]();
+				}
+				else
+				{
+					Debug.LogError("Couldn't find an action tied to the following intent: " + intentOutput[i]);
+				}
+			}
+
+			incomingEntities.Clear();
 		}
 
 		protected virtual void Interact()

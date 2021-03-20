@@ -54,7 +54,7 @@ namespace Control
             zoom = false;
 
             // Jump
-            settings.playerControls.DefaultGameplay.Jump.performed += _ => Jump();
+            settings.playerControls.DefaultGameplay.Jump.performed += _ => TestVoiceCommand();//Jump();
 
             // Interaction
             settings.playerControls.DefaultGameplay.Interact.performed += _ => Interact();
@@ -74,11 +74,14 @@ namespace Control
             settings.playerControls.DefaultGameplay.Enable();
 		}
 
-		private void test()
+		private void TestVoiceCommand()
 		{
-            RuntimeEntity testEntity = new RuntimeEntity();
+            // RuntimeEntity testEntity = new RuntimeEntity();
             RuntimeEntity secondTestEntity = new RuntimeEntity();
 
+            string testText = "Go to waypoint 1";
+
+            /* For testing number entities
             long start = 0;
             long length = 2;
 
@@ -88,17 +91,23 @@ namespace Control
             testEntity.Location = new List<long?>();
             testEntity.Location.Add(start);
             testEntity.Location.Add(length);
+            */
 
-            secondTestEntity.Entity = "Direction";
-            secondTestEntity.Value = "forward";
+            secondTestEntity.Entity = "Waypoint";
+            secondTestEntity.Value = "ring toss";
 
             incomingEntities = new List<RuntimeEntity>();
 
-            incomingEntities.Add(testEntity);
+            //incomingEntities.Add(testEntity);
             incomingEntities.Add(secondTestEntity);
 
             settings.voiceCommands.Move(incomingEntities, testText);
         }
+
+        private void TestAnimation()
+		{
+            Score.Instance.MarkComplete();
+		}
 
 		public override void HandleInput()
 		{
@@ -153,6 +162,14 @@ namespace Control
             {
                 MoveAndLook();
             }
+		}
+
+        public IEnumerator LookAtTarget(Transform target)
+		{
+            // Maybe delete this function.
+            settings.player.transform.rotation = Quaternion.Slerp(settings.player.transform.rotation,
+                target.transform.rotation, 5f * Time.deltaTime);
+            yield return null;
 		}
 
 		protected void MoveAndLook()

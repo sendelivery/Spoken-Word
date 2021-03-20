@@ -11,7 +11,7 @@ namespace Control
     {
         private static VoiceCommands _instance;
 
-        private GameObject player;
+        public GameObject player;
         private Transform target;
 
         public static VoiceCommands Instance { get { return _instance; } }
@@ -25,7 +25,6 @@ namespace Control
             else
             {
                 _instance = this;
-                player = GameManager.player;
 
                 // Doesn't work in the tilt shrine scene and that's ok :)
                 target = GameObject.FindGameObjectWithTag("Target").transform;
@@ -34,14 +33,18 @@ namespace Control
 
         public void Move(List<RuntimeEntity> incomingEntities, string inputText)
 		{
-            string direction = "forward";
+            List<string> direction = new List<string>();
             float distance = 5f;
+            string objective = "";
 
+            // This for loop and the one in all the other methods could be extracted into it's own function.
+            // The only issue is that we set distance and direction in a lot of them so would have to split
+            // this block up into two functions.
             for (int i = 0; i < incomingEntities.Count; i++)
             {
                 if (incomingEntities[i].Entity == "Direction")
                 {
-                    direction = incomingEntities[i].Value;
+                    direction.Add(incomingEntities[i].Value);
                 }
                 if (incomingEntities[i].Entity == "Number")
                 {
@@ -51,32 +54,71 @@ namespace Control
                     string temp = inputText.Substring(start, (end - start));
                     distance = float.Parse(temp);
                 }
+                if (incomingEntities[i].Entity == "Waypoint")
+				{
+                    objective = incomingEntities[i].Value;
+                    break;
+				}
             }
 
-            switch (direction)
-            {
-                case "forward":
-                    Debug.Log("Forward, Move " + direction + "by "  + distance);
-                    SetTarget(Vector3.forward, distance);
-                    break;
-                case "back":
-                    Debug.Log("Back, Move " + direction + "by " + distance);
-                    SetTarget(Vector3.back, distance);
-                    break;
-                case "right":
-                    Debug.Log("Right, Move " + direction + "by " + distance);
-                    SetTarget(Vector3.right, distance);
-                    break;
-                case "left":
-                    Debug.Log("Left, Move " + direction + "by " + distance);
-                    SetTarget(Vector3.left, distance);
-                    break;
-                default:
-                    Debug.Log("Default, Move " + direction + "by " + distance + ", default = forward");
-                    SetTarget(Vector3.forward, distance);
-                    break;
+            if (objective != "")
+			{
+                Transform waypointTarget;
+                switch (objective)
+				{
+                    case "ring toss":
+                        waypointTarget =
+                            GameManager.rtWaypoint.GetComponentsInChildren<Transform>()[2];
+                        SetTarget(waypointTarget);
+                        break;
+                    case "tilt shrine":
+                        waypointTarget =
+                            GameManager.tsWaypoint.GetComponentsInChildren<Transform>()[2];
+                        SetTarget(waypointTarget);
+                        break;
+				}
+			}
+            else
+			{
+                for (int i = 0; i < direction.Count; i++)
+                {
+                    // break out of the for loop if i is 2, basically don't move in 3 directions at once
+                    if (i == 2) break;
+
+                    switch (direction[i])
+                    {
+                        case "forward":
+                            Debug.Log("Forward, Move " + direction + "by " + distance);
+                            SetTarget(Vector3.forward, distance);
+                            break;
+                        case "back":
+                            Debug.Log("Back, Move " + direction + "by " + distance);
+                            SetTarget(Vector3.back, distance);
+                            break;
+                        case "right":
+                            Debug.Log("Right, Move " + direction + "by " + distance);
+                            SetTarget(Vector3.right, distance);
+                            break;
+                        case "left":
+                            Debug.Log("Left, Move " + direction + "by " + distance);
+                            SetTarget(Vector3.left, distance);
+                            break;
+                        default:
+                            Debug.Log("Default, Move " + direction + "by " + distance + ", default = forward");
+                            SetTarget(Vector3.forward, distance);
+                            break;
+                    }
+                }
             }
         }
+
+        private void SetTarget(Transform waypointTarget)
+		{
+            Debug.Log("player: " + player);
+            Debug.Log("target: " + target);
+            target.position = waypointTarget.position;
+            player.GetComponent<ControlHandler>().target = target; ;
+		}
 
 		private void SetTarget(Vector3 direction, float distance)
 		{
@@ -88,7 +130,7 @@ namespace Control
 
         public void Look(List<RuntimeEntity> incomingEntities, string inputText)
         {
-            string direction = "";
+            List<string> direction = new List<string>();
             float angle = 45f;
             float duration = 1f;
 
@@ -96,7 +138,7 @@ namespace Control
             {
                 if (incomingEntities[i].Entity == "Direction")
                 {
-                    direction = incomingEntities[i].Value;
+                    direction.Add(incomingEntities[i].Value);
                 }
                 if (incomingEntities[i].Entity == "Number")
 				{
@@ -113,24 +155,30 @@ namespace Control
 				}
             }
 
-            switch (direction)
-            {
-                case "above":
-                    Debug.Log("Up, Look " + direction + " " + angle);
-                    StartCoroutine(LookTo(new Vector3(-1, 0, 0), duration, angle));
-                    break;
-                case "below":
-                    Debug.Log("Down, Look " + direction + " " + angle);
-                    StartCoroutine(LookTo(new Vector3(1, 0, 0), duration, angle));
-                    break;
-                case "right":
-                    Debug.Log("Right, Look " + direction + " " + angle);
-                    StartCoroutine(LookTo(new Vector3(0, 1, 0), duration, angle));
-                    break;
-                case "left":
-                    Debug.Log("Left, Look " + direction + " " + angle);
-                    StartCoroutine(LookTo(new Vector3(0, -1, 0), duration, angle));
-                    break;
+            for(int i = 0; i < direction.Count; i++)
+			{
+                // break out of the for loop if i is 2, basically don't look in 3 directions at once
+                if (i == 2) break;
+
+                switch (direction[i])
+                {
+                    case "above":
+                        Debug.Log("Up, Look " + direction + " " + angle);
+                        StartCoroutine(LookTo(new Vector3(-1, 0, 0), duration, angle));
+                        break;
+                    case "below":
+                        Debug.Log("Down, Look " + direction + " " + angle);
+                        StartCoroutine(LookTo(new Vector3(1, 0, 0), duration, angle));
+                        break;
+                    case "right":
+                        Debug.Log("Right, Look " + direction + " " + angle);
+                        StartCoroutine(LookTo(new Vector3(0, 1, 0), duration, angle));
+                        break;
+                    case "left":
+                        Debug.Log("Left, Look " + direction + " " + angle);
+                        StartCoroutine(LookTo(new Vector3(0, -1, 0), duration, angle));
+                        break;
+                }
             }
         }
 
@@ -154,7 +202,7 @@ namespace Control
             float duration = 1f;
 
             for (int i = 0; i < incomingEntities.Count; i++)
-            {
+			{
                 if (incomingEntities[i].Entity == "Direction")
                 {
                     direction = incomingEntities[i].Value;
@@ -199,7 +247,7 @@ namespace Control
 
         public void TiltShrineTilt(List<RuntimeEntity> incomingEntities, string inputText, Transform camera)
         {
-            string direction = "";
+            List<string> direction = new List<string>();
             string amount = "neutral";
             float angle = 30f;
             float duration = 1f;
@@ -209,7 +257,7 @@ namespace Control
             {
                 if (incomingEntities[i].Entity == "Direction")
                 {
-                    direction = incomingEntities[i].Value;
+                    direction.Add(incomingEntities[i].Value);
                 }
                 if (incomingEntities[i].Entity == "Amount")
                 {
@@ -222,32 +270,38 @@ namespace Control
             else if (amount == "large")
                 angle = 45f;
 
-            switch (direction)
-            {
-                case "above":
-                    Debug.Log("Up, Look " + direction + " " + amount);
-                    StartCoroutine(TiltArena(camera, camera.forward, angle, duration));
-                    break;
-                case "forward":
-                    Debug.Log("Forward, Look " + direction + " " + amount);
-                    StartCoroutine(TiltArena(camera, camera.forward, angle, duration));
-                    break;
-                case "below":
-                    Debug.Log("Down, Look " + direction + " " + amount);
-                    StartCoroutine(TiltArena(camera, camera.forward, angle, duration));
-                    break;
-                case "back":
-                    Debug.Log("Up, Look " + direction + " " + amount);
-                    StartCoroutine(TiltArena(camera, camera.forward, angle, duration));
-                    break;
-                case "right":
-                    Debug.Log("Right, Look " + direction + " " + amount);
-                    StartCoroutine(TiltArena(camera, camera.right, angle, duration));
-                    break;
-                case "left":
-                    Debug.Log("Left, Look " + direction + " " + amount);
-                    StartCoroutine(TiltArena(camera, camera.right, angle, duration));
-                    break;
+            for(int i = 0; i < direction.Count; i++)
+			{
+                // break out of the for loop if i is 2, basically don't tilt in 3 directions at once
+                if (i == 2) break;
+
+                switch (direction[i])
+                {
+                    case "above":
+                        Debug.Log("Up, Look " + direction + " " + amount);
+                        StartCoroutine(TiltArena(camera, camera.forward, angle, duration));
+                        break;
+                    case "forward":
+                        Debug.Log("Forward, Look " + direction + " " + amount);
+                        StartCoroutine(TiltArena(camera, camera.forward, angle, duration));
+                        break;
+                    case "below":
+                        Debug.Log("Down, Look " + direction + " " + amount);
+                        StartCoroutine(TiltArena(camera, camera.forward, angle, duration));
+                        break;
+                    case "back":
+                        Debug.Log("Up, Look " + direction + " " + amount);
+                        StartCoroutine(TiltArena(camera, camera.forward, angle, duration));
+                        break;
+                    case "right":
+                        Debug.Log("Right, Look " + direction + " " + amount);
+                        StartCoroutine(TiltArena(camera, camera.right, angle, duration));
+                        break;
+                    case "left":
+                        Debug.Log("Left, Look " + direction + " " + amount);
+                        StartCoroutine(TiltArena(camera, camera.right, angle, duration));
+                        break;
+                }
             }
         }
 

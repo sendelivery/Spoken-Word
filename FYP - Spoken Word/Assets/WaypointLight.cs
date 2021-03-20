@@ -14,5 +14,6 @@ public class WaypointLight : MonoBehaviour
     public void MarkComplete()
 	{
         gameObject.GetComponent<Renderer>().material = completedMaterial;
+        Score.Instance.MarkComplete();
 	}
 }

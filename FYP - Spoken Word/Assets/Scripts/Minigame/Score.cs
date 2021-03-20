@@ -6,6 +6,7 @@ public class Score : MonoBehaviour
     private static Score _instance;
     public Text scoreText;
     private int score;
+    private int completed = 0;
 
     public Animator animationUponGoal;
 
@@ -35,6 +36,12 @@ public class Score : MonoBehaviour
         score += amount;
         scoreText.text = score.ToString();
 
-        animationUponGoal.SetInteger("requiredScore", score);
+        //animationUponGoal.SetInteger("requiredScore", score);
     }
+
+    public void MarkComplete()
+	{
+        completed++;
+        animationUponGoal.SetInteger("completedGames", completed);
+	}
 }

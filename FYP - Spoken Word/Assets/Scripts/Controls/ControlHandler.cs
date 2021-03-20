@@ -66,6 +66,7 @@ namespace Control
             GameObject obj = new GameObject("Voice Commands");
             obj.AddComponent<VoiceCommands>();
             voiceCommands = obj.GetComponent<VoiceCommands>();
+            voiceCommands.player = this.gameObject;
 		}
 
 		private void OnEnable()
@@ -98,11 +99,12 @@ namespace Control
                             Debug.Log("Target set");
                             // target = AdjustPosition(target); // Adjust pos so that it's on top of the terrain. (if not using the target game object in the hierarchy)
 
-                            ((Default)_default).SetTarget(target);
+                            ((Default)state).SetTarget(target);
                         }
                         break;
 
                     case Default.TargetState.SET:
+                        transform.LookAt(target);
                         Debug.Log("case: SET");
                         break;
 
@@ -111,6 +113,7 @@ namespace Control
                         // If we have a target but it's been reached: set it to null, and reset the target state inside _default.
                         if (target)
                         {
+                            //StartCoroutine(((Default)state).LookAtTarget(target));
                             target = null;
                             ((Default)_default).targetState = Default.TargetState.NONE;
                         }
@@ -172,7 +175,7 @@ namespace Control
                 {
                     intentOutput[i] = intents[i].Confidence >= confThreshold ? intents[i].Intent : null;
                 }
-                state.HandleMultipleIntents(intentOutput, entities);
+                state.HandleMultipleIntents(intentOutput, entities, text);
             }
             else
 			{

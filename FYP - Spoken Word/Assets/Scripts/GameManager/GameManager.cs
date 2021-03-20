@@ -2,20 +2,20 @@
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
+using System.Collections;
 
 namespace SpokenWord
 {
 	public class GameManager : MonoBehaviour
 	{
+		[Header("Player")]
 		[SerializeField]
 		private GameObject _player;
 		public static GameObject player;
-
-		public static Camera camera;
-
 		[SerializeField]
-		private Camera _tiltCamera;
-		public static Camera tiltCamera;
+		private GameObject _fadeIn;
+		private static GameObject fadein;
+		public static Camera camera;
 
 		public static Snapshot snapshot;
 
@@ -32,6 +32,9 @@ namespace SpokenWord
 		[Header("Tilt Shrine")]
 		public Waypoint tiltShrine;
 		public static Waypoint tsWaypoint;
+		[SerializeField]
+		private Camera _tiltCamera;
+		public static Camera tiltCamera;
 		public List<GameObject> arenas;
 		private static List<GameObject> staticArenas;
 		public static GameObject activeArena;
@@ -63,6 +66,9 @@ namespace SpokenWord
 		private void Awake()
 		{
 			player = _player;
+			Debug.Log("Static player = " + player);
+			fadein = _fadeIn;
+			fadein.GetComponent<Image>().color = new Color(0, 0, 0, 1);
 
 			camera = Camera.main;
 			tiltCamera = _tiltCamera;
@@ -79,6 +85,25 @@ namespace SpokenWord
 			optionsCanvas = _optionsCanvas;
 
 			timeSlider = pauseCanvas.GetComponentInChildren<AdjustTimeScale>();
+		}
+
+		private void Start()
+		{
+			StartCoroutine(FadeIntoView());
+		}
+
+		private IEnumerator FadeIntoView()
+		{
+			float t = 3f;
+			Color col = fadein.GetComponent<Image>().color;
+
+			for (float i = 0f; i < 1f; i += Time.deltaTime / t)
+			{
+				col.a -= Time.deltaTime / t;
+				fadein.GetComponent<Image>().color = col;
+				yield return null;
+			}
+			Destroy(fadein);
 		}
 
 		public static bool NextArena()
