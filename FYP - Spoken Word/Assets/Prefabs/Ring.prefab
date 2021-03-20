@@ -415,7 +415,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 670224309865224971, guid: 6a69c501396b4be44be3757b9c87e4ae, type: 3}
+  - {fileID: 2100000, guid: ebd8802cccf040a43ae70069d3f3add7, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -466,7 +466,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ringNum: 0
   part: {fileID: 0}
-  force: {x: 100, y: 100, z: 0}
+  force: {x: 110, y: 110, z: 0}
 --- !u!135 &5583769751896018165
 SphereCollider:
   m_ObjectHideFlags: 0

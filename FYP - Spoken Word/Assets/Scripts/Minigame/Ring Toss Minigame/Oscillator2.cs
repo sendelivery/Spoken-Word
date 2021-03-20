@@ -57,8 +57,8 @@ public class Oscillator2 : MonoBehaviour
     private void AdjustForceBar()
     {
         // Could use forceBar.getMaxValue() instead of a length of 1f, but because the rate is the same,
-        // the effect on the forceBar is much slower. Using a shorter length and then multiplying by the max value
-        // had a more desired default speed.
+        // the effect on the forceBar is much slower. Using a shorter length and then multiplying by the
+        // max value had a more desired default speed.
         float movementFactor = Mathf.PingPong(Time.time * period, 1f);
         movementFactor = movementFactor * forceBar.maxValue;
 

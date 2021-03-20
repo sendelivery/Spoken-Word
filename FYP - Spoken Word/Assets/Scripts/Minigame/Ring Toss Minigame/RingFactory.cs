@@ -13,10 +13,11 @@ public class RingFactory : MonoBehaviour
 	}
 
 	public static Ring CreateRing(Vector3 ringPos, Quaternion rotation,
-		string name, bool isActive, bool inPlace, bool isLastRing)
+		string name, bool isActive, bool inPlace, bool isLastRing, Material mat)
 	{
 		GameObject ringObject = Object.Instantiate(instance.ring, ringPos, rotation);
 		ringObject.name = name;
+		ringObject.GetComponent<Renderer>().material = mat;
 		Ring ringScript = ringObject.GetComponentInChildren<Ring>();
 
 		ringScript.Initialize(isActive, inPlace, isLastRing);

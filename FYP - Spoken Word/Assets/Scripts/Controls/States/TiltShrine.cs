@@ -26,8 +26,8 @@ namespace Control
 			camera = GameManager.tiltCamera.GetComponentsInParent<Transform>()[1];
 			temp = GameManager.activeArena.transform;
 
+			// Set voice commands (functions) for relevant intents
 			VoiceCommands voiceCommands = settings.voiceCommands;
-
 			_voiceActions.Add("tilt", () => voiceCommands.TiltShrineTilt(incomingEntities, inputText, camera));
 			_voiceActions.Add("rotate", () => voiceCommands.TiltShrineRotate(incomingEntities, inputText, camera));
 
@@ -96,9 +96,11 @@ namespace Control
 			Cursor.lockState = CursorLockMode.Locked;
 			settings.playerControls.Minigame.Enable();
 			settings.playerControls.TiltShrine.Enable();
+
+
 		}
 
-		public void Disable()
+		public override void Disable()
 		{
 			settings.playerControls.TiltShrine.Disable();
 		}

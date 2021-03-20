@@ -47,7 +47,7 @@ public class Ring : MonoBehaviour
                 force.y + Random.Range(1f, 5f), 
                 force.z + Random.Range(1f, 2f)
             );
-            body.AddTorque(new Vector3(Random.Range(1f, 2f), Random.Range(1f, 2f), Random.Range(1f, 2f)));
+            body.AddTorque(new Vector3(Random.Range(1f, 2f), Random.Range(1f, 2f), Random.Range(-20f, -10f)));
             body.AddForce(forceApplied * forceMultiplier);
 
             isActive = false;

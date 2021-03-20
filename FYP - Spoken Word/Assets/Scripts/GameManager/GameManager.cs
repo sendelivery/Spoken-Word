@@ -21,6 +21,8 @@ namespace SpokenWord
 
 		#region Ring Toss Members
 		[Header("Ring Toss")]
+		public Waypoint ringToss;
+		public static Waypoint rtWaypoint;
 		public GameObject forceBar;
 		[HideInInspector]
 		public static Oscillator2 osc;
@@ -28,6 +30,8 @@ namespace SpokenWord
 
 		#region
 		[Header("Tilt Shrine")]
+		public Waypoint tiltShrine;
+		public static Waypoint tsWaypoint;
 		public List<GameObject> arenas;
 		private static List<GameObject> staticArenas;
 		public static GameObject activeArena;
@@ -63,6 +67,9 @@ namespace SpokenWord
 			camera = Camera.main;
 			tiltCamera = _tiltCamera;
 
+			rtWaypoint = ringToss;
+			tsWaypoint = tiltShrine;
+
 			osc = forceBar.GetComponent<Oscillator2>();
 			staticArenas = arenas;
 			activeArena = staticArenas[arenaIndex];
@@ -87,6 +94,7 @@ namespace SpokenWord
 
 		public static void TakeSnapshot()
 		{
+			Debug.LogWarning("Taking snapshot");
 			snapshot = new Snapshot();
 		}
 

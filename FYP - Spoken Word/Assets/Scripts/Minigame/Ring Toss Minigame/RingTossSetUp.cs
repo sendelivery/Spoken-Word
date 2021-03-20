@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using TMPro;
+using UnityEngine.UI;
 
 public class RingTossSetUp : MonoBehaviour
 {
@@ -25,10 +26,12 @@ public class RingTossSetUp : MonoBehaviour
     // Desired number of rings
     public int numberOfRings = 1;
     private List<Ring> rings = new List<Ring>();
+    public List<Material> ringMaterials;
 
     public ParticleSystem bubbles;
-    
-    private GameObject exitButton;
+
+    public GameObject fireButton;
+    public GameObject exitButton;
 
     // Start is called before the first frame update, (awake does not work here, resultls in null reference exception)
     // here the specified amount of rings is instantiated and placed in the scene accordingly.
@@ -43,7 +46,7 @@ public class RingTossSetUp : MonoBehaviour
         // Firstly, stop the particles from playing before the fire button is pressed.
         bubbles.Stop();
 
-        exitButton = GameObject.FindGameObjectWithTag("RT Exit");
+        fireButton.GetComponent<Button>().interactable = false;
 
         // Then calculate and position the rings based on the number of rings specified.
         if (numberOfRings > 0)
@@ -53,29 +56,35 @@ public class RingTossSetUp : MonoBehaviour
 
             Quaternion ringRotation = Quaternion.Euler(defaultRingRotation);
             string name = "Ring ";
+
+            System.Random rand = new System.Random();
+            int matIndex = rand.Next(0, 4);
+
             // Instantiate the first ring, then add it to the list.
             rings.Add(RingFactory.CreateRing(defRingPos, ringRotation,
-                name, true, true, false));
+                name, true, true, false, ringMaterials[matIndex]));
 
             // Add the specified number of rings to the list following the first one.
             for (int i = 1; i < numberOfRings; ++i)
             {
+                matIndex = rand.Next(0, 4);
+
                 if (i == numberOfRings - 1) // Check if we're on the last ring. Add it to the list as the last ring.
                 {
                     rings.Add(RingFactory.CreateRing(nextRingPos, ringRotation,
-                        name + i.ToString(), false, false, true));
+                        name + i.ToString(), false, false, true, ringMaterials[matIndex]));
                 }
                 else // Otherwise instantiate it and add it to the list as a middle ring.
                 {
                     rings.Add(RingFactory.CreateRing(nextRingPos, ringRotation,
-                        name + i.ToString(), false, false, false));
+                        name + i.ToString(), false, false, false, ringMaterials[matIndex]));
                     nextRingPos.y += posOffset;
                 }
             }
         }
         else
 		{
-            Debug.Log("Specify a nonzero, positive number of rings you would like to add.");
+            Debug.LogWarning("Specify a nonzero, positive number of rings you would like to add.");
 		}
     }
 

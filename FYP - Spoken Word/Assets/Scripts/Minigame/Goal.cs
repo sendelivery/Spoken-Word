@@ -6,5 +6,5 @@ public class Goal : MonoBehaviour
 {
 	public int pointsAwarded;
 	public int bonus;
-	public int bonusMultiplier;
+	public float bonusMultiplier;
 }

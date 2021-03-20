@@ -20,9 +20,6 @@ public class PlayerUISetUp : MonoBehaviour
 	private bool waypointSelected;
 	private bool backOut;
 
-	private Button ExitButton;
-	private Button PositiveButton;
-
 	private GameObject player;
 
 	private void Start()
@@ -32,11 +29,6 @@ public class PlayerUISetUp : MonoBehaviour
 
 		// Get the player, used to disable movement and mouse look when necessary
 		player = SpokenWord.GameManager.player;
-
-		// Get the exit button, then listen for TaskOnClick
-		ExitButton = GameObject.FindGameObjectWithTag("RT Exit").GetComponent<Button>();
-		ExitButton.onClick.AddListener(ExitButtonTaskOnClick);
-		PositiveButton = GameObject.FindGameObjectWithTag("RT Fire").GetComponent<Button>();
 	}
 
 	private void Update()
@@ -63,7 +55,6 @@ public class PlayerUISetUp : MonoBehaviour
 			if (mainCamera.transform.position == desiredCameraPosition.position)
 			{
 				waypointSelected = false;
-				EventSystem.current.SetSelectedGameObject(ExitButton.gameObject);
 			}
 		}
 
@@ -100,10 +91,10 @@ public class PlayerUISetUp : MonoBehaviour
 		bool hitObjective = Physics.Raycast(mainCamera.transform.position, mainCamera.transform.forward, out hit, 100f);
 		if (hitObjective && hit.transform.gameObject.GetComponent<Waypoint>() && hit.distance <= clickDistance)
 		{
+			// Get the desired camera position from the hit waypoint and set it in a local variable
+			// this transform is then used to set the camera's position from the next frame.
 			desiredCameraPosition = hit.transform.gameObject.GetComponentsInChildren<Transform>()[1];
-				//GameObject.FindGameObjectWithTag("WaypointCamPos").transform;
 			waypointSelected = true;
-			// TODO: Set the desired camera pos to that of the specific waypoint selected.
 			return (true, hit);
 		}
 		return (false, hit);
@@ -114,10 +105,5 @@ public class PlayerUISetUp : MonoBehaviour
 		// Starts moving the camera back towards the original position inside the player on the next frame.
 		backOut = true;
 		EventSystem.current.SetSelectedGameObject(null);
-	}
-
-	public void TriggerPositive()
-	{
-		PositiveButton.onClick.Invoke();
 	}
 }

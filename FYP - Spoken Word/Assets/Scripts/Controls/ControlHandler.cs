@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using SpokenWord;
 
 namespace Control
 {
@@ -183,12 +184,12 @@ namespace Control
         // Tilt Shrine specific functions:
         public void DisableControls()
         {
-            ((TiltShrine)state).Disable();
+            state.Disable();
         }
 
         public void EnableControls()
         {
-            ((TiltShrine)state).Enable();
+            state.Enable();
         }
 
         public void UpdateTiltTranformReference()

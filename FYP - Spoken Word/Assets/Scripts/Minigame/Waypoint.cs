@@ -13,4 +13,8 @@ public class Waypoint : MonoBehaviour
 	[Tooltip("Give each waypoint a unique name, this is how the player will navigate to it using voice control.")]
 	public string wName;
     public string description;
+
+	[Header("Buttons")]
+	public Button positiveAction = null;
+	public Button negativeAction = null;
 }

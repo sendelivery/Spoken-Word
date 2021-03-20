@@ -48,6 +48,10 @@ namespace Control
 			settings.playerControls.RingToss.Disable();
 		}
 
+		public virtual void Disable()
+		{
+		}
+
 		public virtual void HandleInput()
 		{
 			return;
