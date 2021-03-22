@@ -53,4 +53,9 @@ public class MouseLook : MonoBehaviour
 
         playerBody.Rotate(Vector3.up, y); // Vector3.up is shorthand for (0, 1, 0) then 1 is * by y
     }
+
+    public float GetCumulativeXAngle()
+	{
+        return cumulativeXAngle;
+	}
 }

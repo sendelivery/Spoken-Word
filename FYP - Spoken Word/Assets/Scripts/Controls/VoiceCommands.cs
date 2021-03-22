@@ -12,6 +12,7 @@ namespace Control
         private static VoiceCommands _instance;
 
         public GameObject player;
+        public Camera cam;
         private Transform target;
 
         public static VoiceCommands Instance { get { return _instance; } }
@@ -69,12 +70,12 @@ namespace Control
                     case "ring toss":
                         waypointTarget =
                             GameManager.rtWaypoint.GetComponentsInChildren<Transform>()[2];
-                        SetTarget(waypointTarget);
+                        SetTarget(waypointTarget, GameManager.rtWaypoint.transform);
                         break;
                     case "tilt shrine":
                         waypointTarget =
                             GameManager.tsWaypoint.GetComponentsInChildren<Transform>()[2];
-                        SetTarget(waypointTarget);
+                        SetTarget(waypointTarget, GameManager.tsWaypoint.transform);
                         break;
 				}
 			}
@@ -112,12 +113,12 @@ namespace Control
             }
         }
 
-        private void SetTarget(Transform waypointTarget)
+        private void SetTarget(Transform waypointTarget, Transform waypoint)
 		{
-            Debug.Log("player: " + player);
-            Debug.Log("target: " + target);
             target.position = waypointTarget.position;
-            player.GetComponent<ControlHandler>().target = target; ;
+            ControlHandler c = player.GetComponent<ControlHandler>();
+            c.target = target;
+            c.targetWaypoint = waypoint;
 		}
 
 		private void SetTarget(Vector3 direction, float distance)
@@ -149,10 +150,10 @@ namespace Control
                     angle = float.Parse(temp);
 				}
 
-                foreach (var item in incomingEntities[i].Location)
-				{
-                    Debug.Log(item);
-				}
+                //foreach (var item in incomingEntities[i].Location)
+				//{
+                //    Debug.Log(item);
+				//}
             }
 
             for(int i = 0; i < direction.Count; i++)
@@ -164,25 +165,25 @@ namespace Control
                 {
                     case "above":
                         Debug.Log("Up, Look " + direction + " " + angle);
-                        StartCoroutine(LookTo(new Vector3(-1, 0, 0), duration, angle));
+                        StartCoroutine(LookOnX(new Vector3(-1, 0, 0), duration, angle));
                         break;
                     case "below":
                         Debug.Log("Down, Look " + direction + " " + angle);
-                        StartCoroutine(LookTo(new Vector3(1, 0, 0), duration, angle));
+                        StartCoroutine(LookOnX(new Vector3(1, 0, 0), duration, angle));
                         break;
                     case "right":
                         Debug.Log("Right, Look " + direction + " " + angle);
-                        StartCoroutine(LookTo(new Vector3(0, 1, 0), duration, angle));
+                        StartCoroutine(LookOnY(new Vector3(0, 1, 0), duration, angle));
                         break;
                     case "left":
                         Debug.Log("Left, Look " + direction + " " + angle);
-                        StartCoroutine(LookTo(new Vector3(0, -1, 0), duration, angle));
+                        StartCoroutine(LookOnY(new Vector3(0, -1, 0), duration, angle));
                         break;
                 }
             }
         }
 
-        private IEnumerator LookTo(Vector3 direction, float duration, float angle)
+        private IEnumerator LookOnY(Vector3 direction, float duration, float angle)
         {
             Quaternion fromAngle = player.transform.rotation;
             Quaternion toAngle = Quaternion.Euler(player.transform.eulerAngles + (direction * angle));
@@ -193,6 +194,23 @@ namespace Control
                 player.transform.rotation = Quaternion.Lerp(fromAngle, toAngle, t);
                 yield return null;
             }           
+        }
+
+        private IEnumerator LookOnX(Vector3 direction, float duration, float angle)
+		{
+            MouseLook m = cam.GetComponent<MouseLook>();
+            float tempAngle;
+            float oldTempAngle = 0f;
+            float lerpChange;
+
+            for (var t = 0f; t < 1; t += Time.deltaTime / duration)
+            {
+                tempAngle = Mathf.Lerp(0, angle, t);
+                lerpChange = tempAngle - oldTempAngle;
+                m.HandleInput(new Vector2(lerpChange, 0f));
+                oldTempAngle = tempAngle;
+                yield return null;
+            }
         }
 
         public void TiltShrineRotate(List<RuntimeEntity> incomingEntities, string inputText, Transform camera)

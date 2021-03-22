@@ -54,7 +54,7 @@ namespace Control
             zoom = false;
 
             // Jump
-            settings.playerControls.DefaultGameplay.Jump.performed += _ => TestVoiceCommand();//Jump();
+            settings.playerControls.DefaultGameplay.Jump.performed += _ => Jump();
 
             // Interaction
             settings.playerControls.DefaultGameplay.Interact.performed += _ => Interact();
@@ -106,7 +106,7 @@ namespace Control
 
         private void TestAnimation()
 		{
-            Score.Instance.MarkComplete();
+            DoorOpen.Instance.MarkComplete();
 		}
 
 		public override void HandleInput()
@@ -136,7 +136,7 @@ namespace Control
                     settings.navMeshAgent.SetDestination(target.position);
 
                     float dist = settings.navMeshAgent.remainingDistance;
-                    Debug.Log(dist);
+                    // Debug.Log(dist);
 
                     // Once the target has been reached, destroy the target, 
                     // re enable the player controller and disable the agent
@@ -162,14 +162,6 @@ namespace Control
             {
                 MoveAndLook();
             }
-		}
-
-        public IEnumerator LookAtTarget(Transform target)
-		{
-            // Maybe delete this function.
-            settings.player.transform.rotation = Quaternion.Slerp(settings.player.transform.rotation,
-                target.transform.rotation, 5f * Time.deltaTime);
-            yield return null;
 		}
 
 		protected void MoveAndLook()

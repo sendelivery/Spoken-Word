@@ -13,7 +13,8 @@ public class WaypointLight : MonoBehaviour
 
     public void MarkComplete()
 	{
+        // Change the light to green, then mark it complete in DoorOpen.cs
         gameObject.GetComponent<Renderer>().material = completedMaterial;
-        Score.Instance.MarkComplete();
+        DoorOpen.Instance.MarkComplete();
 	}
 }

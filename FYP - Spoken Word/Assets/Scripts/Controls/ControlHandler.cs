@@ -23,9 +23,11 @@ namespace Control
         [SerializeField] float runSpeed;
         [SerializeField] float sensitivity;
         [SerializeField] PlayerUISetUp playerUI;
+        private MouseLook mouseLook;
 
         [Header("Pathfinding")]
         [SerializeField] public Transform target;
+        public Transform targetWaypoint;
         #endregion
 
         private static VoiceCommands voiceCommands;
@@ -33,6 +35,12 @@ namespace Control
         private static State _default;
         private static State _ringtoss;
         private static State _tilt;
+
+        // Rotating the camera when pathfinding
+        float tempAngle;
+        float oldTempAngle;
+        float lerpChange;
+        float t;
 
         private void Awake()
         {
@@ -48,6 +56,8 @@ namespace Control
             // _settings contains references to any objects or components needed by each state
             _settings = new Settings(this.gameObject, ref voiceCommands, playerPhysics, ref characterController,
                 agentMovement, ref navMeshAgent, runSpeed, sensitivity, Camera.main, controls, playerUI);
+
+            mouseLook = _settings.cam.GetComponent<MouseLook>();
 
             if (_default == null || _ringtoss == null || _tilt == null)
 			{
@@ -67,6 +77,9 @@ namespace Control
             obj.AddComponent<VoiceCommands>();
             voiceCommands = obj.GetComponent<VoiceCommands>();
             voiceCommands.player = this.gameObject;
+            // Only reliable way of getting the camera in awake, gamemanager might not have it yet,
+            // same with the player
+            voiceCommands.cam = Camera.main;
 		}
 
 		private void OnEnable()
@@ -85,7 +98,7 @@ namespace Control
             _default.ChangeStateRingToss -= () => SwitchState("RingToss");
         }
 
-		void FixedUpdate()
+        void FixedUpdate()
         {
             Debug.Log(state);
             state.HandleInput();
@@ -103,19 +116,31 @@ namespace Control
                         }
                         break;
 
-                    case Default.TargetState.SET:
-                        transform.LookAt(target);
-                        Debug.Log("case: SET");
-                        break;
+					case Default.TargetState.SET:
+						// targetWaypoint = (10,0,10), this = (1,1,2) then, targetWaypoint - this = (9,-1,8)
+						Vector3 lookPos = targetWaypoint.position - transform.position;
+						lookPos.y = 1;
+						Quaternion rotation = Quaternion.LookRotation(lookPos);
+						transform.rotation = Quaternion.Slerp(transform.rotation, rotation, 5f * Time.deltaTime);
 
-                    case Default.TargetState.REACHED:
+						// Camera rotation
+						CameraToTarget();
+
+						Debug.Log("case: SET");
+						break;
+
+					case Default.TargetState.REACHED:
                         Debug.Log("case: REACHED");
                         // If we have a target but it's been reached: set it to null, and reset the target state inside _default.
                         if (target)
                         {
-                            //StartCoroutine(((Default)state).LookAtTarget(target));
                             target = null;
-                            ((Default)_default).targetState = Default.TargetState.NONE;
+                            t = 0;
+                            tempAngle = 0;
+                            oldTempAngle = 0;
+                            lerpChange = 0;
+
+                            BodyToTarget();
                         }
                         break;
 
@@ -124,6 +149,33 @@ namespace Control
                 }
             }
 		}
+
+		private void CameraToTarget()
+		{
+            // Linear interpolation between our current angle and 0,
+            // we're getting the difference between the previous angle and the new angle
+            // and rotating by that difference to get a smooth linear rotation over time.
+
+			t += Time.deltaTime / 2f;
+			tempAngle = Mathf.Lerp(mouseLook.GetCumulativeXAngle(), 0f, t);
+
+            // If there's no previous temporary angle to subtract by, we subtract by the cumulative angle in MouseLook.cs
+            lerpChange = oldTempAngle == 0 ? tempAngle - mouseLook.GetCumulativeXAngle() : tempAngle - oldTempAngle;
+
+			mouseLook.HandleInput(new Vector2(lerpChange, 0f));
+			oldTempAngle = tempAngle;
+		}
+
+        private IEnumerator BodyToTarget()
+		{
+            for(int i = 0; i < 1; i++)
+            {
+                
+                yield return null;
+            }
+
+            ((Default)_default).targetState = Default.TargetState.NONE;
+        }
 
 		public void Options(PlayerControls c)
         {
@@ -199,6 +251,13 @@ namespace Control
         {
             ((TiltShrine)state).temp = SpokenWord.GameManager.activeArena.transform;
         }
+
+        public float GetAndResetTotalTilt()
+		{
+            float t = ((TiltShrine)state).GetTotalTilt();
+            ((TiltShrine)state).ResetTotalTilt();
+            return t;
+		}
 
         [ContextMenu("Autofill Fields")]
         void AutofillFields()

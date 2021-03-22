@@ -12,6 +12,8 @@ public class RingTossSetUp : MonoBehaviour
     [SerializeField]
     private GameObject waypoint;
 
+    public List<RingTossGoal> ringTossGoals;
+
     // Position variables
     public GameObject defaultRingPosition;
     public GameObject nextRingPosition;
@@ -103,10 +105,19 @@ public class RingTossSetUp : MonoBehaviour
             else // If no next ring exists, highlight the exit button.
 			{
                 completedText.enabled = true;
+                ApplyBonus();
                 waypoint.GetComponentInChildren<WaypointLight>().MarkComplete();
                 EventSystem.current.SetSelectedGameObject(exitButton);
 			}
         }
+	}
+
+    private void ApplyBonus()
+	{
+        foreach (var goal in ringTossGoals)
+		{
+            goal.CalculateBonus();
+		}
 	}
 
 	public Ring GetActiveRing()

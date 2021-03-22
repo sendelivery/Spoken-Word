@@ -19,6 +19,8 @@ namespace SpokenWord
 
 		public static Snapshot snapshot;
 
+		public static int waypointCount;
+
 		#region Ring Toss Members
 		[Header("Ring Toss")]
 		public Waypoint ringToss;
@@ -75,6 +77,8 @@ namespace SpokenWord
 
 			rtWaypoint = ringToss;
 			tsWaypoint = tiltShrine;
+
+			waypointCount = 2;
 
 			osc = forceBar.GetComponent<Oscillator2>();
 			staticArenas = arenas;

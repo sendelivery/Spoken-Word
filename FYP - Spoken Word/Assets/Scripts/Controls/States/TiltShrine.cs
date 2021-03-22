@@ -15,6 +15,8 @@ namespace Control
 		private Transform camera;
 		public Transform temp;
 
+		private float totalTilt;
+
         public TiltShrine(ref Settings settings) : base(ref settings)
 		{
 		}
@@ -107,14 +109,12 @@ namespace Control
 
 		public override void HandleInput()
 		{
-			Debug.Log("Inside tilt HandleInput");
 			if (tilt != Vector2.zero)
 			{
-				Debug.Log("Should be rotating");
+				totalTilt += Math.Abs(tilt.x)  + Math.Abs(tilt.y);
 				temp.RotateAround(camera.position, camera.forward, -tilt.x);
 				temp.RotateAround(camera.position, camera.right, tilt.y);
-				Debug.Log(GameManager.activeArena);
-				Debug.Log(camera);
+
 				// Discard yaw rotations then set rotation to the environment :)
 				GameManager.activeArena.transform.rotation = 
 					new Quaternion(temp.rotation.x, 0f, temp.rotation.z, temp.rotation.w);
@@ -123,6 +123,16 @@ namespace Control
 			{
 				camera.Rotate(0f, rotate.x * Time.deltaTime * 50f, 0f);
 			}
+		}
+
+		public float GetTotalTilt()
+		{
+			return totalTilt;
+		}
+
+		public void ResetTotalTilt()
+		{
+			totalTilt = 0;
 		}
 	}
 }

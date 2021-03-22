@@ -23,7 +23,6 @@ public class TiltShrineSetUp : MonoBehaviour
 	{
         if (GameManager.NextArena())
 		{
-            Debug.Log("Hello");
             // Disable controls
             GameManager.player.GetComponent<ControlHandler>().DisableControls();
 
