@@ -121,5 +121,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b5e21f9cfbae7f43b9a79502822f0be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  force: {x: 0, y: 110, z: -110}
+  force: {x: 0, y: 200, z: -110}
   resetVelocity: 1

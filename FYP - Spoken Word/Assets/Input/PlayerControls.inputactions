@@ -235,7 +235,7 @@
                     "id": "afb70e8d-eb9d-49f0-9a3a-277817c336d2",
                     "path": "<Gamepad>/rightStick",
                     "interactions": "",
-                    "processors": "StickDeadzone",
+                    "processors": "StickDeadzone,ScaleVector2(x=1.5,y=1.5)",
                     "groups": "Gamepad",
                     "action": "Look",
                     "isComposite": false,
@@ -300,7 +300,7 @@
                     "name": "",
                     "id": "ef0b2002-b0cf-4dc1-80ad-2655d84dd64f",
                     "path": "<Gamepad>/leftTrigger",
-                    "interactions": "Hold(pressPoint=0.9)",
+                    "interactions": "Hold(duration=0.1,pressPoint=0.9)",
                     "processors": "",
                     "groups": "Gamepad",
                     "action": "Zoom Hold",
@@ -533,14 +533,6 @@
                     "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": ""
-                },
-                {
-                    "name": "Test",
-                    "type": "Button",
-                    "id": "c1cba77e-aef4-43f9-8117-48331778bc4f",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -549,7 +541,7 @@
                     "id": "fce37e95-48cf-4572-be54-012b8af7e9ce",
                     "path": "<Gamepad>/leftStick",
                     "interactions": "",
-                    "processors": "StickDeadzone",
+                    "processors": "StickDeadzone,ScaleVector2(x=1.5,y=1.5)",
                     "groups": "Gamepad",
                     "action": "Tilt",
                     "isComposite": false,
@@ -571,7 +563,7 @@
                     "id": "54c1ed27-898b-418d-8247-ec8e30ea028d",
                     "path": "<Gamepad>/rightStick",
                     "interactions": "",
-                    "processors": "StickDeadzone",
+                    "processors": "StickDeadzone,ScaleVector2(x=1.75,y=1.75)",
                     "groups": "Gamepad",
                     "action": "Rotate",
                     "isComposite": false,
@@ -631,17 +623,6 @@
                     "action": "Rotate",
                     "isComposite": false,
                     "isPartOfComposite": true
-                },
-                {
-                    "name": "",
-                    "id": "628aa063-eb96-46ea-996c-60d41769c2c1",
-                    "path": "<Mouse>/leftButton",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard and Mouse",
-                    "action": "Test",
-                    "isComposite": false,
-                    "isPartOfComposite": false
                 }
             ]
         }

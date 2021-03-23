@@ -48,8 +48,6 @@ public class RingTossSetUp : MonoBehaviour
         // Firstly, stop the particles from playing before the fire button is pressed.
         bubbles.Stop();
 
-        fireButton.GetComponent<Button>().interactable = false;
-
         // Then calculate and position the rings based on the number of rings specified.
         if (numberOfRings > 0)
 		{
@@ -94,25 +92,36 @@ public class RingTossSetUp : MonoBehaviour
     {
         // These if can definitely be shortened somehow...
         // Check if first ring in list is no longer active (just been fired)
-        if (rings.Count > 0 && rings[0].GetIsActive() == false && rings[0].GetInPlace() == true)
+        if (rings.Count > 0 && rings[0].IsActive() == false && rings[0].IsInPlace() == true)
 		{
             rings.Remove(rings[0]); // Remove it from the list of rings
 
-            if (rings.Count > 0 && rings[0] && rings[0].GetInPlace() == false) // Check if the next ring exists and if it's in place
+            if (rings.Count > 0 && rings[0] && rings[0].IsInPlace() == false) // Check if the next ring exists and if it's in place
             {
                 StartCoroutine(PrepareRing());
             } 
             else // If no next ring exists, highlight the exit button.
 			{
-                completedText.enabled = true;
-                ApplyBonus();
-                waypoint.GetComponentInChildren<WaypointLight>().MarkComplete();
-                EventSystem.current.SetSelectedGameObject(exitButton);
+				StartCoroutine(EndGame());
 			}
-        }
+		}
 	}
 
-    private void ApplyBonus()
+	private IEnumerator EndGame()
+	{
+        // Wait 2 seconds so the final ring has time to land somewhere.
+        yield return new WaitForSeconds(2);
+
+		completedText.enabled = true;
+		ApplyBonus();
+		EventSystem.current.SetSelectedGameObject(exitButton);
+
+        // Wait another 2 seconds before marking the game as complete so the open cutscene doesn't feel so sudden.
+        yield return new WaitForSeconds(2);
+        waypoint.GetComponentInChildren<WaypointLight>().MarkComplete();
+    }
+
+	private void ApplyBonus()
 	{
         foreach (var goal in ringTossGoals)
 		{
@@ -124,7 +133,7 @@ public class RingTossSetUp : MonoBehaviour
 	{
         for(int i = 0; i < rings.Count; i++)
 		{
-            if (rings[i].GetIsActive() == true)
+            if (rings[i].IsActive() == true)
                 return rings[i];
 		}
         return null;

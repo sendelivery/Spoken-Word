@@ -17,4 +17,7 @@ public class Waypoint : MonoBehaviour
 	[Header("Buttons")]
 	public Button positiveAction = null;
 	public Button negativeAction = null;
+
+	[Header("Actors")]
+	public GameObject actor = null;
 }

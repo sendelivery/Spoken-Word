@@ -37,7 +37,8 @@ public class DoorOpen : MonoBehaviour
 
     private IEnumerator OpenDoorCutscene()
 	{
-        // Switch cameras
+        // Switch cameras and disable reticle
+        SpokenWord.GameManager.player.GetComponentInChildren<PlayerUISetUp>().reticle.SetActive(false);
         SpokenWord.GameManager.camera.enabled = false;
         cutseneCam.enabled = true;
 
@@ -48,7 +49,8 @@ public class DoorOpen : MonoBehaviour
             // so we have to check for the idle or opening animation state here.
         } while (doorOpen.GetCurrentAnimatorStateInfo(0).IsName("Opening") || doorOpen.GetCurrentAnimatorStateInfo(0).IsName("Idle"));
 
-        // Switch back
+        // Switch back and enable reticle
+        SpokenWord.GameManager.player.GetComponentInChildren<PlayerUISetUp>().reticle.SetActive(true);
         cutseneCam.enabled = false;
         SpokenWord.GameManager.camera.enabled = true;
     }

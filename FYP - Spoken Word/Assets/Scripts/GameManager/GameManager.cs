@@ -3,6 +3,8 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
 using System.Collections;
+using TMPro;
+using System;
 
 namespace SpokenWord
 {
@@ -15,6 +17,9 @@ namespace SpokenWord
 		[SerializeField]
 		private GameObject _fadeIn;
 		private static GameObject fadein;
+		private static TextMeshProUGUI instructionsText;
+		private static TextMeshProUGUI thanksText;
+		private static TextMeshProUGUI quitText;
 		public static Camera camera;
 
 		public static Snapshot snapshot;
@@ -47,9 +52,10 @@ namespace SpokenWord
 		#region Pause Canvas Members
 		[SerializeField]
 		private GameObject _pauseCanvas;
+		[SerializeField]
+		private Button _quitGameButton;
+		private static Button quitGameButton;
 		private static GameObject pauseCanvas;
-		//[SerializeField]
-		//private AdjustTimeScale _timeSlider;
 		private static AdjustTimeScale timeSlider;
 
 		private static float newTimeScale;
@@ -68,9 +74,15 @@ namespace SpokenWord
 		private void Awake()
 		{
 			player = _player;
-			Debug.Log("Static player = " + player);
+
 			fadein = _fadeIn;
-			fadein.GetComponent<Image>().color = new Color(0, 0, 0, 1);
+			fadein.GetComponent<Image>().color = new Color(0, 0, 0, 1); // black, no transparency
+			instructionsText = fadein.GetComponentsInChildren<TextMeshProUGUI>()[0];
+			instructionsText.color = new Color(1, 1, 1, 0); // white, transparent
+			thanksText = fadein.GetComponentsInChildren<TextMeshProUGUI>()[1];
+			thanksText.color = new Color(1, 1, 1, 0); // white, transparent
+			quitText = thanksText.gameObject.GetComponentsInChildren<TextMeshProUGUI>()[1];
+			quitText.color = new Color(1, 1, 1, 0); // white, transparent
 
 			camera = Camera.main;
 			tiltCamera = _tiltCamera;
@@ -86,9 +98,12 @@ namespace SpokenWord
 			arenaIndex++;
 
 			pauseCanvas = _pauseCanvas;
+			quitGameButton = _quitGameButton;
+			quitGameButton.onClick.AddListener(Quit);
+			timeSlider = pauseCanvas.GetComponentInChildren<AdjustTimeScale>();
+
 			optionsCanvas = _optionsCanvas;
 
-			timeSlider = pauseCanvas.GetComponentInChildren<AdjustTimeScale>();
 		}
 
 		private void Start()
@@ -98,27 +113,69 @@ namespace SpokenWord
 
 		private IEnumerator FadeIntoView()
 		{
-			float t = 3f;
-			Color col = fadein.GetComponent<Image>().color;
+			float t = 2f;
 
+			Color col = instructionsText.color; // white transparent
+
+			// fade instruction text into view
+			for (float i = 0f; i < 1f; i += Time.deltaTime / t)
+			{
+				col.a += Time.deltaTime / t;
+				instructionsText.color = col;
+				yield return null;
+			}
+
+			// hold the text for 2 seconds, then begin fading out the text and black screen
+			yield return new WaitForSeconds(2);
+
+			Color secondCol = fadein.GetComponent<Image>().color;
+			t = 3f;
+
+			// fade out black title card
 			for (float i = 0f; i < 1f; i += Time.deltaTime / t)
 			{
 				col.a -= Time.deltaTime / t;
+				secondCol.a -= Time.deltaTime / t;
+				instructionsText.color = col;
+				fadein.GetComponent<Image>().color = secondCol;
+				yield return null;
+			}
+			fadein.SetActive(false);
+		}
+
+		public static IEnumerator FadeOutAndQuit()
+		{
+			player.GetComponent<Control.ControlHandler>().DisableControls();
+			player.GetComponentInChildren<PlayerUISetUp>().reticle.SetActive(false);
+			fadein.SetActive(true);
+
+			float t = 2f;
+			Color col = fadein.GetComponent<Image>().color;
+			Color textCol = thanksText.color;
+
+			for (float i = 0f; i < 1f; i += Time.deltaTime / t)
+			{
+				col.a += Time.deltaTime / t;
 				fadein.GetComponent<Image>().color = col;
 				yield return null;
 			}
-			Destroy(fadein);
+
+			for (float i = 0; i < 1f; i += Time.deltaTime / t)
+			{
+				textCol.a += Time.deltaTime / t;
+				thanksText.color = textCol;
+				quitText.color = textCol;
+				yield return null;
+			}
+
+			yield return new WaitForSeconds(5f);
+			Quit();
 		}
 
-		public static bool NextArena()
+		private static void Quit()
 		{
-			return arenaIndex < staticArenas.Count ? true : false;
-		}
-
-		public static void SetNextArena()
-		{
-			activeArena = staticArenas[arenaIndex];
-			arenaIndex++;
+			Debug.Log("QUIT");
+			Application.Quit();
 		}
 
 		public static void TakeSnapshot()
@@ -131,6 +188,8 @@ namespace SpokenWord
 		{
 			if (Time.timeScale == 0f) // Unpause
 			{
+				player.GetComponentInChildren<PlayerUISetUp>().playerUICanvas.enabled = true;
+
 				// Min slider value is 0.1f, time scale will not be set to 0 outside of the pause screen.
 				if (newTimeScale > 0 && newTimeScale < 1) Time.timeScale = newTimeScale;
 				else Time.timeScale = 1f;
@@ -144,6 +203,8 @@ namespace SpokenWord
 			}
 			else // Pause
 			{
+				player.GetComponentInChildren<PlayerUISetUp>().playerUICanvas.enabled = false;
+
 				Time.timeScale = 0;
 				timeSlider.TimeScaleChanged += SetTimeScale;
 
@@ -163,10 +224,12 @@ namespace SpokenWord
 
 			if (canvas.enabled == false)
 			{
+				player.GetComponentInChildren<PlayerUISetUp>().playerUICanvas.enabled = false;
 				canvas.enabled = true;
 			}
 			else
 			{
+				player.GetComponentInChildren<PlayerUISetUp>().playerUICanvas.enabled = true;
 				canvas.enabled = false;
 			}
 
@@ -185,6 +248,28 @@ namespace SpokenWord
 		private static void SetTimeScale()
 		{
 			newTimeScale = timeSlider.GetComponent<Slider>().value;
+		}
+
+		// Minigame state methods:
+		public static void EnableSphere()
+		{
+			tsWaypoint.actor.GetComponent<Rigidbody>().isKinematic = false;
+		}
+
+		public static void DisableSphere()
+		{
+			tsWaypoint.actor.GetComponent<Rigidbody>().isKinematic = true;
+		}
+
+		public static bool NextArena()
+		{
+			return arenaIndex < staticArenas.Count ? true : false;
+		}
+
+		public static void SetNextArena()
+		{
+			activeArena = staticArenas[arenaIndex];
+			arenaIndex++;
 		}
 	}
 }

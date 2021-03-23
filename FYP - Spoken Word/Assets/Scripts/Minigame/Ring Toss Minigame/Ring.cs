@@ -48,6 +48,10 @@ public class Ring : MonoBehaviour
                 force.z + Random.Range(1f, 2f)
             );
             body.AddTorque(new Vector3(Random.Range(1f, 2f), Random.Range(1f, 2f), Random.Range(-20f, -10f)));
+
+            // Minimum ring force multiplier is 1.75f
+            forceMultiplier = forceMultiplier <= 1.25f ? 1.25f : forceMultiplier;
+
             body.AddForce(forceApplied * forceMultiplier);
 
             isActive = false;
@@ -88,17 +92,17 @@ public class Ring : MonoBehaviour
         osc.PlayForceBar();
     }
     
-    public bool GetIsActive()
+    public bool IsActive()
 	{
         return isActive;
 	}
 
-    public bool GetInPlace()
+    public bool IsInPlace()
 	{
         return inPlace;
 	}
 
-    public bool GetIsLast()
+    public bool IsLast()
 	{
         return isLastRing;
 	}

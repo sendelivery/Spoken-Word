@@ -74,6 +74,11 @@ namespace Control
             settings.playerControls.DefaultGameplay.Enable();
 		}
 
+		public override void Disable()
+		{
+            settings.playerControls.DefaultGameplay.Disable();
+		}
+
 		private void TestVoiceCommand()
 		{
             // RuntimeEntity testEntity = new RuntimeEntity();

@@ -236,7 +236,6 @@ namespace Control
 			}
         }
 
-        // Tilt Shrine specific functions:
         public void DisableControls()
         {
             state.Disable();
@@ -247,6 +246,7 @@ namespace Control
             state.Enable();
         }
 
+        // Tilt Shrine specific functions:
         public void UpdateTiltTranformReference()
         {
             ((TiltShrine)state).temp = SpokenWord.GameManager.activeArena.transform;

@@ -248,7 +248,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""id"": ""afb70e8d-eb9d-49f0-9a3a-277817c336d2"",
                     ""path"": ""<Gamepad>/rightStick"",
                     ""interactions"": """",
-                    ""processors"": ""StickDeadzone"",
+                    ""processors"": ""StickDeadzone,ScaleVector2(x=1.5,y=1.5)"",
                     ""groups"": ""Gamepad"",
                     ""action"": ""Look"",
                     ""isComposite"": false,
@@ -313,7 +313,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""name"": """",
                     ""id"": ""ef0b2002-b0cf-4dc1-80ad-2655d84dd64f"",
                     ""path"": ""<Gamepad>/leftTrigger"",
-                    ""interactions"": ""Hold(pressPoint=0.9)"",
+                    ""interactions"": ""Hold(duration=0.1,pressPoint=0.9)"",
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
                     ""action"": ""Zoom Hold"",
@@ -546,14 +546,6 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """"
-                },
-                {
-                    ""name"": ""Test"",
-                    ""type"": ""Button"",
-                    ""id"": ""c1cba77e-aef4-43f9-8117-48331778bc4f"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -562,7 +554,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""id"": ""fce37e95-48cf-4572-be54-012b8af7e9ce"",
                     ""path"": ""<Gamepad>/leftStick"",
                     ""interactions"": """",
-                    ""processors"": ""StickDeadzone"",
+                    ""processors"": ""StickDeadzone,ScaleVector2(x=1.5,y=1.5)"",
                     ""groups"": ""Gamepad"",
                     ""action"": ""Tilt"",
                     ""isComposite"": false,
@@ -584,7 +576,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""id"": ""54c1ed27-898b-418d-8247-ec8e30ea028d"",
                     ""path"": ""<Gamepad>/rightStick"",
                     ""interactions"": """",
-                    ""processors"": ""StickDeadzone"",
+                    ""processors"": ""StickDeadzone,ScaleVector2(x=1.75,y=1.75)"",
                     ""groups"": ""Gamepad"",
                     ""action"": ""Rotate"",
                     ""isComposite"": false,
@@ -644,17 +636,6 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""action"": ""Rotate"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""628aa063-eb96-46ea-996c-60d41769c2c1"",
-                    ""path"": ""<Mouse>/leftButton"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard and Mouse"",
-                    ""action"": ""Test"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -713,7 +694,6 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         m_TiltShrine = asset.FindActionMap("TiltShrine", throwIfNotFound: true);
         m_TiltShrine_Tilt = m_TiltShrine.FindAction("Tilt", throwIfNotFound: true);
         m_TiltShrine_Rotate = m_TiltShrine.FindAction("Rotate", throwIfNotFound: true);
-        m_TiltShrine_Test = m_TiltShrine.FindAction("Test", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -961,14 +941,12 @@ public class @PlayerControls : IInputActionCollection, IDisposable
     private ITiltShrineActions m_TiltShrineActionsCallbackInterface;
     private readonly InputAction m_TiltShrine_Tilt;
     private readonly InputAction m_TiltShrine_Rotate;
-    private readonly InputAction m_TiltShrine_Test;
     public struct TiltShrineActions
     {
         private @PlayerControls m_Wrapper;
         public TiltShrineActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
         public InputAction @Tilt => m_Wrapper.m_TiltShrine_Tilt;
         public InputAction @Rotate => m_Wrapper.m_TiltShrine_Rotate;
-        public InputAction @Test => m_Wrapper.m_TiltShrine_Test;
         public InputActionMap Get() { return m_Wrapper.m_TiltShrine; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -984,9 +962,6 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @Rotate.started -= m_Wrapper.m_TiltShrineActionsCallbackInterface.OnRotate;
                 @Rotate.performed -= m_Wrapper.m_TiltShrineActionsCallbackInterface.OnRotate;
                 @Rotate.canceled -= m_Wrapper.m_TiltShrineActionsCallbackInterface.OnRotate;
-                @Test.started -= m_Wrapper.m_TiltShrineActionsCallbackInterface.OnTest;
-                @Test.performed -= m_Wrapper.m_TiltShrineActionsCallbackInterface.OnTest;
-                @Test.canceled -= m_Wrapper.m_TiltShrineActionsCallbackInterface.OnTest;
             }
             m_Wrapper.m_TiltShrineActionsCallbackInterface = instance;
             if (instance != null)
@@ -997,9 +972,6 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @Rotate.started += instance.OnRotate;
                 @Rotate.performed += instance.OnRotate;
                 @Rotate.canceled += instance.OnRotate;
-                @Test.started += instance.OnTest;
-                @Test.performed += instance.OnTest;
-                @Test.canceled += instance.OnTest;
             }
         }
     }
@@ -1050,6 +1022,5 @@ public class @PlayerControls : IInputActionCollection, IDisposable
     {
         void OnTilt(InputAction.CallbackContext context);
         void OnRotate(InputAction.CallbackContext context);
-        void OnTest(InputAction.CallbackContext context);
     }
 }

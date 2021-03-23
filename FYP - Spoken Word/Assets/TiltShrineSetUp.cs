@@ -44,13 +44,21 @@ public class TiltShrineSetUp : MonoBehaviour
         }
         else
 		{
-            completedText.enabled = true;
-            GameManager.player.GetComponent<ControlHandler>().DisableControls();
-            waypoint.GetComponentInChildren<WaypointLight>().MarkComplete();
+			StartCoroutine(EndGame());
 		}
 	}
 
-    private IEnumerator MoveSphereOut()
+	private IEnumerator EndGame()
+	{
+		completedText.enabled = true;
+		GameManager.player.GetComponent<ControlHandler>().DisableControls();
+
+        // Wait 2 seconds before marking the game complete so the door opening cutscene doesn't feel too sudden.
+        yield return new WaitForSeconds(2);
+		waypoint.GetComponentInChildren<WaypointLight>().MarkComplete();
+	}
+
+	private IEnumerator MoveSphereOut()
 	{
         float x = 2f;
         sphere.GetComponent<Rigidbody>().isKinematic = true;

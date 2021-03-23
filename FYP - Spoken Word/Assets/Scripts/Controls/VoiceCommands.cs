@@ -338,5 +338,20 @@ namespace Control
             GameManager.activeArena.transform.rotation =
                     new Quaternion(temp.rotation.x, 0f, temp.rotation.z, temp.rotation.w);
         }
+
+        // Move this to a helper gameobject or something later on, it should not be here.
+        public void DisableActionTemporarily(UnityEngine.InputSystem.InputAction action, float seconds)
+        {
+            StartCoroutine(DisableActionTemporarilyCoroutine(action, seconds));
+        }
+
+        private IEnumerator DisableActionTemporarilyCoroutine(UnityEngine.InputSystem.InputAction action, float seconds)
+        {
+            action.Disable();
+            Debug.Log("disabled fire");
+            yield return new WaitForSeconds(seconds);
+            action.Enable();
+            Debug.Log("enabled fire");
+        }
     }
 }

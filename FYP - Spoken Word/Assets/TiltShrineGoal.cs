@@ -33,12 +33,8 @@ public class TiltShrineGoal : Goal
             t *= 0.66f;
             b = Mathf.CeilToInt(t / 10); // 779.4 => 78
 
-            Debug.Log("inverse bonus = " + b);
-
             // If our bonus limit - the calculated bonus is negative, the bonus for this game is 0
             b = bonus - b < 0 ? 0 : bonus - b;
-
-            Debug.Log("final bonus = " + b);
         }
         
         Score.Instance.IncreaseScore(b);

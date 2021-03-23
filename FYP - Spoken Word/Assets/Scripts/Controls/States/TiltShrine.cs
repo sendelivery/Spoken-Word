@@ -99,12 +99,14 @@ namespace Control
 			settings.playerControls.Minigame.Enable();
 			settings.playerControls.TiltShrine.Enable();
 
-
+			GameManager.EnableSphere();
 		}
 
 		public override void Disable()
 		{
 			settings.playerControls.TiltShrine.Disable();
+
+			GameManager.DisableSphere();
 		}
 
 		public override void HandleInput()

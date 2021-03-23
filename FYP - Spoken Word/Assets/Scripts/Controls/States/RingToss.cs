@@ -20,6 +20,7 @@ namespace Control
 
 			// Get exit button, add listener.
 			GameManager.rtWaypoint.negativeAction.onClick.AddListener(settings.playerUI.ExitButtonTaskOnClick);
+			GameManager.rtWaypoint.positiveAction.interactable = false;
 
 			Enable();
 		}
@@ -59,6 +60,8 @@ namespace Control
 		private void Fire()
 		{
 			GameManager.rtWaypoint.positiveAction.onClick.Invoke();
+			VoiceCommands voiceCommands = settings.voiceCommands;
+			voiceCommands.DisableActionTemporarily(settings.playerControls.RingToss.Fire, 2f);
 		}
 
 		private void VoiceFire()

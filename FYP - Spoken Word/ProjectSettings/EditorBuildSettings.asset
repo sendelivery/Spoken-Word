@@ -4,7 +4,10 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/Testing-04-RingToss-Tilt-Game.unity
+    guid: 8a4394e169216c9479adcde4931fae15
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: 8212e168d6ac10b42a3ff633fdbc3636,
       type: 2}

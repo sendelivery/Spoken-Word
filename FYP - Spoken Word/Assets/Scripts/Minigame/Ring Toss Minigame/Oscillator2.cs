@@ -87,7 +87,7 @@ public class Oscillator2 : MonoBehaviour
         multiplier = forceBar.value * scaleFactor;
         ringTossSetUp.bubbles.Play();
 
-        // Finally, disbable the fire button.
+        // Finally, disable the fire button.
         forceButton.enabled = false;
     }
 }
