@@ -125,7 +125,9 @@ namespace Control
 		{
             // place the target by distance:
             target.position = player.transform.position + player.transform.TransformDirection(direction * distance);
-
+            Debug.Log("target set in SetTarget(direction, distance)");
+            Debug.Log("target = " + target);
+            Debug.Log("player = " + player);
             player.GetComponent<ControlHandler>().target = target;
 		}
 
@@ -147,7 +149,15 @@ namespace Control
                     int end = (int)incomingEntities[i].Location[1];
 
                     string temp = inputText.Substring(start, (end - start));
-                    angle = float.Parse(temp);
+
+                    try
+                    {
+                        angle = float.Parse(temp);
+                    }
+                    catch
+					{
+                        Debug.Log("Could not extract an angle from the input text, default angle is " + angle);
+					}
 				}
 
                 //foreach (var item in incomingEntities[i].Location)
@@ -178,6 +188,10 @@ namespace Control
                     case "left":
                         Debug.Log("Left, Look " + direction + " " + angle);
                         StartCoroutine(LookOnY(new Vector3(0, -1, 0), duration, angle));
+                        break;
+                    case "around":
+                        Debug.Log("Around, Look " + direction + " " + 180);
+                        StartCoroutine(LookOnY(new Vector3(0, -1, 0), duration, 180f));
                         break;
                 }
             }
@@ -296,28 +310,28 @@ namespace Control
                 switch (direction[i])
                 {
                     case "above":
-                        Debug.Log("Up, Look " + direction + " " + amount);
-                        StartCoroutine(TiltArena(camera, camera.forward, angle, duration));
+                        Debug.Log("Above, Tilt " + direction + " " + amount);
+                        StartCoroutine(TiltArena(camera, camera.right, angle, duration));
                         break;
                     case "forward":
-                        Debug.Log("Forward, Look " + direction + " " + amount);
-                        StartCoroutine(TiltArena(camera, camera.forward, angle, duration));
+                        Debug.Log("Forward, Tilt " + direction + " " + amount);
+                        StartCoroutine(TiltArena(camera, camera.right, angle, duration));
                         break;
                     case "below":
-                        Debug.Log("Down, Look " + direction + " " + amount);
-                        StartCoroutine(TiltArena(camera, camera.forward, angle, duration));
+                        Debug.Log("Below, Tilt " + direction + " " + amount);
+                        StartCoroutine(TiltArena(camera, -camera.right, angle, duration));
                         break;
                     case "back":
-                        Debug.Log("Up, Look " + direction + " " + amount);
-                        StartCoroutine(TiltArena(camera, camera.forward, angle, duration));
+                        Debug.Log("Back, Tilt " + direction + " " + amount);
+                        StartCoroutine(TiltArena(camera, -camera.right, angle, duration));
                         break;
                     case "right":
-                        Debug.Log("Right, Look " + direction + " " + amount);
-                        StartCoroutine(TiltArena(camera, camera.right, angle, duration));
+                        Debug.Log("Right, Tilt " + direction + " " + amount);
+                        StartCoroutine(TiltArena(camera, -camera.forward, angle, duration));
                         break;
                     case "left":
-                        Debug.Log("Left, Look " + direction + " " + amount);
-                        StartCoroutine(TiltArena(camera, camera.right, angle, duration));
+                        Debug.Log("Left, Tilt " + direction + " " + amount);
+                        StartCoroutine(TiltArena(camera, camera.forward, angle, duration));
                         break;
                 }
             }
@@ -328,6 +342,8 @@ namespace Control
             Transform temp = GameManager.activeArena.transform;
             float angleChange;
 
+            GameManager.EnableSphere();
+
             for (float t = 0f; t < 1; t += Time.deltaTime / duration)
             {
                 angleChange = targetAngle * Time.deltaTime;
@@ -335,8 +351,9 @@ namespace Control
                 yield return null;
             }
 
-            GameManager.activeArena.transform.rotation =
-                    new Quaternion(temp.rotation.x, 0f, temp.rotation.z, temp.rotation.w);
+
+            //GameManager.activeArena.transform.rotation =
+            //        new Quaternion(temp.rotation.x, 0f, temp.rotation.z, temp.rotation.w);
         }
 
         // Move this to a helper gameobject or something later on, it should not be here.

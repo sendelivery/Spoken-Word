@@ -81,6 +81,7 @@ namespace Control
 			{
 				if(_voiceActions.ContainsKey(intentOutput[i]))
 				{
+					Debug.Log("Calling intent = " + intentOutput[i]);
 					_voiceActions[intentOutput[i]]();
 				}
 				else

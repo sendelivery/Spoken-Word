@@ -32,6 +32,7 @@ namespace Control
 			VoiceCommands voiceCommands = settings.voiceCommands;
 			_voiceActions.Add("tilt", () => voiceCommands.TiltShrineTilt(incomingEntities, inputText, camera));
 			_voiceActions.Add("rotate", () => voiceCommands.TiltShrineRotate(incomingEntities, inputText, camera));
+			_voiceActions.Add("look", () => voiceCommands.TiltShrineRotate(incomingEntities, inputText, camera));
 
             // Tilt
             settings.playerControls.TiltShrine.Tilt.performed += ctx => tilt = ctx.ReadValue<Vector2>();
@@ -99,7 +100,6 @@ namespace Control
 			settings.playerControls.Minigame.Enable();
 			settings.playerControls.TiltShrine.Enable();
 
-			GameManager.EnableSphere();
 		}
 
 		public override void Disable()
@@ -113,6 +113,8 @@ namespace Control
 		{
 			if (tilt != Vector2.zero)
 			{
+				GameManager.EnableSphere();
+
 				totalTilt += Math.Abs(tilt.x)  + Math.Abs(tilt.y);
 				temp.RotateAround(camera.position, camera.forward, -tilt.x);
 				temp.RotateAround(camera.position, camera.right, tilt.y);

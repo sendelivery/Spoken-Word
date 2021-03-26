@@ -147,7 +147,6 @@ namespace Control
                     // re enable the player controller and disable the agent
                     if (dist != 0 && dist <= settings.goalRadius)
 					{
-                        target = null;
                         targetState = TargetState.REACHED;
                         settings.characterController.enabled = true;
                         settings.navMeshAgent.enabled = false;

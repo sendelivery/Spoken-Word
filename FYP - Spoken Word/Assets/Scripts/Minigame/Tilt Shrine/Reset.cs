@@ -30,5 +30,6 @@ public class Reset : MonoBehaviour
 		transform.position = startingPos;
 		GameManager.activeArena.transform.rotation =
 			new Quaternion(0f, 0f, 0f, GameManager.activeArena.transform.rotation.w);
+		GameManager.DisableSphere();
 	}
 }

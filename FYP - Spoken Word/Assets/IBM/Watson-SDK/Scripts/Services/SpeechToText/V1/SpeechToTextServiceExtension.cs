@@ -403,7 +403,7 @@ namespace IBM.Watson.SpeechToText.V1
                 {
                     if (_listenActive)
                     {
-                        SendTakeSnapshot.Invoke();
+                        //SendTakeSnapshot.Invoke();
                         _listenSocket.Send(new WSConnector.BinaryMessage(AudioClipUtil.GetL16(clip.Clip)));
                         _audioSent = true;
                         audioSentOrEnqueued = true;

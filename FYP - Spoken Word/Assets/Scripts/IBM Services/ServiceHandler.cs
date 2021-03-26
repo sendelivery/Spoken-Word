@@ -101,7 +101,7 @@ namespace SpokenWord.IBM
 
             Active = true;
 
-            _speechToTextService.SendTakeSnapshot += () => GameManager.TakeSnapshot();
+            //_speechToTextService.SendTakeSnapshot += () => GameManager.TakeSnapshot();
 
             // Creating Assistant Service ---------------------------------------------------------------------------------------------------------------------
             IamAuthenticator assistantAuthenticator = new IamAuthenticator(apikey: "9Az7c6aj2kKhH31OROZ_cIlaYXo8HT8ut248Q8CXx_qq");
@@ -212,7 +212,7 @@ namespace SpokenWord.IBM
                         Log.Debug("ExampleStreaming.OnRecognize()", text); // I need to take a snapshot well before this line
                         resultsField.GetComponent<AutoScroll>().ChangeScrollState();
                         resultsField.text = text;
-
+                        Debug.Log("Confidence threshold is at : " + _sttConfidence);
                         // Send message if stt confidence is above a certain threshold
                         if (res.final && alt.confidence >= _sttConfidence)
                         {
@@ -225,6 +225,7 @@ namespace SpokenWord.IBM
                             };
 
                             _assistantService.Message(OnMessage, _workspaceId, input);
+                            GameManager.TakeSnapshot();
                         }
                     }
 
@@ -270,6 +271,8 @@ namespace SpokenWord.IBM
             // is at the same index as that intent if there is one.
             if (resp != null && resp.Result.Intents.Count != 0)
             {
+                Debug.Log("Number of Received Intents: " + resp.Result.Intents.Count);
+
                 for (int i = 0; i < resp.Result.Intents.Count; i++)
 				{
                     Debug.Log("Received Intent: " + resp.Result.Intents[i].Intent);

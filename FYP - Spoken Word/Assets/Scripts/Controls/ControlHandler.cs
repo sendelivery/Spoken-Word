@@ -118,13 +118,16 @@ namespace Control
 
 					case Default.TargetState.SET:
 						// targetWaypoint = (10,0,10), this = (1,1,2) then, targetWaypoint - this = (9,-1,8)
-						Vector3 lookPos = targetWaypoint.position - transform.position;
-						lookPos.y = 1;
-						Quaternion rotation = Quaternion.LookRotation(lookPos);
-						transform.rotation = Quaternion.Slerp(transform.rotation, rotation, 5f * Time.deltaTime);
+                        if (targetWaypoint)
+						{
+                            Vector3 lookPos = targetWaypoint.position - transform.position;
+                            lookPos.y = 1;
+                            Quaternion rotation = Quaternion.LookRotation(lookPos);
+                            transform.rotation = Quaternion.Slerp(transform.rotation, rotation, 5f * Time.deltaTime);
 
-						// Camera rotation
-						CameraToTarget();
+                            // Camera rotation
+                            CameraToTarget();
+                        }
 
 						Debug.Log("case: SET");
 						break;
@@ -135,12 +138,13 @@ namespace Control
                         if (target)
                         {
                             target = null;
+                            targetWaypoint = null;
                             t = 0;
                             tempAngle = 0;
                             oldTempAngle = 0;
                             lerpChange = 0;
 
-                            BodyToTarget();
+                            ((Default)state).ResetTarget();
                         }
                         break;
 
@@ -165,17 +169,6 @@ namespace Control
 			mouseLook.HandleInput(new Vector2(lerpChange, 0f));
 			oldTempAngle = tempAngle;
 		}
-
-        private IEnumerator BodyToTarget()
-		{
-            for(int i = 0; i < 1; i++)
-            {
-                
-                yield return null;
-            }
-
-            ((Default)_default).targetState = Default.TargetState.NONE;
-        }
 
 		public void Options(PlayerControls c)
         {
@@ -225,6 +218,7 @@ namespace Control
                 // Get only the top 2 intents that are above the confidence threshold
                 for (int i = 0; i < 2; i++)
                 {
+                    Debug.Log("Confidence threshold = " + confThreshold);
                     intentOutput[i] = intents[i].Confidence >= confThreshold ? intents[i].Intent : null;
                 }
                 state.HandleMultipleIntents(intentOutput, entities, text);

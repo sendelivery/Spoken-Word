@@ -3017,7 +3017,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &404354938
 Transform:
   m_ObjectHideFlags: 0
@@ -11730,7 +11730,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1573464320
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11747,7 +11747,7 @@ MonoBehaviour:
   _speechToTextServiceUrl: https://api.eu-gb.speech-to-text.watson.cloud.ibm.com/instances/6ea3ab50-9420-476c-a7bd-d7fefa31f4b3
   _speechToTextIamApikey: pABoHA5QFyGO6ZCZpB9p96eEEQf5xMv3bkH5HvPfqODT
   _recognizeModel: en-US_BroadbandModel
-  _sttConfidence: 0.6
+  _sttConfidence: 0.4
   _assistantServiceUrl: 
   _workspaceId: 00235722-3eeb-4034-bca8-ba3b2d78045e
   _assistantVersionDate: 2019-02-18
@@ -11827,12 +11827,12 @@ Terrain:
   m_Enabled: 1
   serializedVersion: 6
   m_TerrainData: {fileID: 15600000, guid: 72a273daaf5544c4ab8ccda07f52aaf2, type: 2}
-  m_TreeDistance: 200
+  m_TreeDistance: 150
   m_TreeBillboardDistance: 64
   m_TreeCrossFadeLength: 5
-  m_TreeMaximumFullLODCount: 20
+  m_TreeMaximumFullLODCount: 15
   m_DetailObjectDistance: 55
-  m_DetailObjectDensity: 0.4
+  m_DetailObjectDensity: 0.35
   m_HeightmapPixelError: 5
   m_SplatMapDistance: 1000
   m_HeightmapMaximumLOD: 0
@@ -17984,8 +17984,8 @@ Rigidbody:
   m_AngularDrag: 0.05
   m_UseGravity: 1
   m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 32
+  m_Interpolate: 2
+  m_Constraints: 0
   m_CollisionDetection: 3
 --- !u!135 &1850207096
 SphereCollider:
@@ -18055,7 +18055,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1850207093}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 8.39, y: -10.589, z: -10.23}
+  m_LocalPosition: {x: 8.39, y: -10, z: -10.23}
   m_LocalScale: {x: 0.65, y: 0.65, z: 0.65}
   m_Children: []
   m_Father: {fileID: 315821780}
@@ -20133,7 +20133,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1831210165, guid: e9f9911921edc4d418b050027493b281, type: 3}
       propertyPath: period
-      value: 0.75
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 1889888073, guid: e9f9911921edc4d418b050027493b281, type: 3}
       propertyPath: m_StaticEditorFlags
