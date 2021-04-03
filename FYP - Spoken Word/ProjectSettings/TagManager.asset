@@ -15,6 +15,7 @@ TagManager:
   - Options Canvas
   - Target
   - Exit Button Container
+  - TiltShrine Sphere
   layers:
   - Default
   - TransparentFX
