@@ -71,6 +71,8 @@ namespace Control
 			base.Enable();
 
             Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+
             settings.playerControls.DefaultGameplay.Enable();
 		}
 

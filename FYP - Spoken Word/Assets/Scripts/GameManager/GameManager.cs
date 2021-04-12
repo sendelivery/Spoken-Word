@@ -62,6 +62,7 @@ namespace SpokenWord
 
 		private static GameObject tempSelected;
 		private static CursorLockMode tempCursorState;
+		private static bool tempCursorVisibility;
 		#endregion
 
 		#region Options Canvas Members
@@ -200,6 +201,7 @@ namespace SpokenWord
 				EventSystem.current.SetSelectedGameObject(tempSelected);
 
 				Cursor.lockState = tempCursorState;
+				Cursor.visible = tempCursorVisibility;
 			}
 			else // Pause
 			{
@@ -214,7 +216,9 @@ namespace SpokenWord
 				EventSystem.current.SetSelectedGameObject(timeSlider.gameObject);
 
 				tempCursorState = Cursor.lockState;
+				tempCursorVisibility = Cursor.visible;
 				Cursor.lockState = CursorLockMode.Confined;
+				Cursor.visible = true;
 			}
 		}
 
@@ -226,11 +230,19 @@ namespace SpokenWord
 			{
 				player.GetComponentInChildren<PlayerUISetUp>().playerUICanvas.enabled = false;
 				canvas.enabled = true;
+
+				tempCursorState = Cursor.lockState;
+				tempCursorVisibility = Cursor.visible;
+				Cursor.lockState = CursorLockMode.Confined;
+				Cursor.visible = true;
 			}
 			else
 			{
 				player.GetComponentInChildren<PlayerUISetUp>().playerUICanvas.enabled = true;
 				canvas.enabled = false;
+
+				Cursor.lockState = tempCursorState;
+				Cursor.visible = tempCursorVisibility;
 			}
 
 			if (Time.timeScale > 0)

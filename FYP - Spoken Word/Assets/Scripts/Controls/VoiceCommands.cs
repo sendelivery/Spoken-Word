@@ -304,8 +304,8 @@ namespace Control
 
             for(int i = 0; i < direction.Count; i++)
 			{
-                // break out of the for loop if i is 2, basically don't tilt in 3 directions at once
-                if (i == 2) break;
+                // break out of the for loop if i is 3, basically don't tilt in 3 directions at once
+                if (i == 3) break;
 
                 switch (direction[i])
                 {

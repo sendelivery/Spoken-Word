@@ -16,6 +16,7 @@ TagManager:
   - Target
   - Exit Button Container
   - TiltShrine Sphere
+  - Tree Container
   layers:
   - Default
   - TransparentFX
