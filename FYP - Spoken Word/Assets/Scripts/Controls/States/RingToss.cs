@@ -30,6 +30,8 @@ namespace Control
 			base.Enable();
 
 			Cursor.lockState = CursorLockMode.Confined;
+			Cursor.visible = true;
+
 			settings.playerControls.Minigame.Enable();
 			settings.playerControls.RingToss.Enable();
 		}

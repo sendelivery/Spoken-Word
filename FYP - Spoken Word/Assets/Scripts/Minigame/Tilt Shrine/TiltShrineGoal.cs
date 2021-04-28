@@ -9,16 +9,21 @@ public class TiltShrineGoal : Goal
     public GameObject tiltShrineSetUp;
 
 	void OnTriggerEnter(Collider other)
-    {
-        Score.Instance.IncreaseScore(pointsAwarded);
-        gameObject.GetComponent<BoxCollider>().enabled = false;
+	{
+		Goal();
+	}
 
-        CalculateBonus();
+	public void Goal()
+	{
+		Score.Instance.IncreaseScore(pointsAwarded);
+		gameObject.GetComponent<BoxCollider>().enabled = false;
 
-        tiltShrineSetUp.GetComponent<TiltShrineSetUp>().NextLevel();
-    }
+		CalculateBonus();
 
-    private void CalculateBonus()
+		tiltShrineSetUp.GetComponent<TiltShrineSetUp>().NextLevel();
+	}
+
+	private void CalculateBonus()
 	{
         // e.g. 779.4....
         float t = GameManager.player.GetComponent<ControlHandler>().GetAndResetTotalTilt();

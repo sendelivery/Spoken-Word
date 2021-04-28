@@ -31,8 +31,10 @@ namespace Control
 			// Set voice commands (functions) for relevant intents
 			VoiceCommands voiceCommands = settings.voiceCommands;
 			_voiceActions.Add("tilt", () => voiceCommands.TiltShrineTilt(incomingEntities, inputText, camera));
+			_voiceActions.Add("reset", () => voiceCommands.TiltShrineReset(settings.playerControls.TiltShrine));
 			_voiceActions.Add("rotate", () => voiceCommands.TiltShrineRotate(incomingEntities, inputText, camera));
 			_voiceActions.Add("look", () => voiceCommands.TiltShrineRotate(incomingEntities, inputText, camera));
+			_voiceActions.Add("skip", () => Skip());
 
             // Tilt
             settings.playerControls.TiltShrine.Tilt.performed += ctx => tilt = ctx.ReadValue<Vector2>();
@@ -42,8 +44,17 @@ namespace Control
             settings.playerControls.TiltShrine.Rotate.performed += ctx => rotate = ctx.ReadValue<Vector2>();
             settings.playerControls.TiltShrine.Rotate.canceled += _ => rotate = Vector2.zero;
 
+			// Reset & Skip
+			settings.playerControls.TiltShrine.Reset.performed += ctx => voiceCommands.TiltShrineReset(settings.playerControls.TiltShrine);
+			settings.playerControls.TiltShrine.Skip.performed += ctx => Skip();
+
 			Enable();
         }
+
+		private void Skip()
+		{
+			GameManager.staticTiltShrineSetUp.NextLevel();
+		}
 
 		private void testRotate()
 		{

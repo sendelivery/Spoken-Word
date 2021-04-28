@@ -533,6 +533,22 @@
                     "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": ""
+                },
+                {
+                    "name": "Reset",
+                    "type": "Button",
+                    "id": "ecb1d18f-aef8-41e2-9671-e205131c858a",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Skip",
+                    "type": "Button",
+                    "id": "1ee5f587-5cb6-4d2d-aafe-48b63c5a895c",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -623,6 +639,50 @@
                     "action": "Rotate",
                     "isComposite": false,
                     "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "e9d48f0a-b8dc-4e41-ba0a-e2998fad13a7",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard and Mouse",
+                    "action": "Reset",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ba666df9-066b-412b-b23a-f0414671935b",
+                    "path": "<Gamepad>/buttonWest",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Reset",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8db439ed-6e25-4cba-8c48-86bce10541ed",
+                    "path": "<Keyboard>/enter",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard and Mouse",
+                    "action": "Skip",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b56091de-c27f-402b-ab01-3128a499b430",
+                    "path": "<Gamepad>/buttonNorth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Skip",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         }

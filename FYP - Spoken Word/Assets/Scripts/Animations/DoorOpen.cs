@@ -9,6 +9,7 @@ public class DoorOpen : MonoBehaviour
     public Animator doorOpen;
     public Camera cutseneCam;
     private int completed;
+    public GameObject finishCollider;
 
     public static DoorOpen Instance { get { return _instance; } }
 
@@ -53,5 +54,16 @@ public class DoorOpen : MonoBehaviour
         SpokenWord.GameManager.player.GetComponentInChildren<PlayerUISetUp>().reticle.SetActive(true);
         cutseneCam.enabled = false;
         SpokenWord.GameManager.camera.enabled = true;
+
+        // Move the collider in front of the door, could do this in the loop above but it doesn't really matter.
+        Vector3 start = finishCollider.transform.position;
+        Vector3 end = finishCollider.transform.position - new Vector3(-1.75f, 0f, 0f);
+
+        for (float t = 0f; t < 1; t += Time.deltaTime / 1f)
+        {
+            finishCollider.transform.position = Vector3.Lerp(start, end, t);
+
+            yield return null;
+        }
     }
 }

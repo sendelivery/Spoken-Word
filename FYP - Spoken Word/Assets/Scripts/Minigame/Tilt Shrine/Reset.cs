@@ -25,11 +25,16 @@ public class Reset : MonoBehaviour
 
 	private void ResetPos()
 	{
-		rigidbody.velocity = new Vector3(0f, 0f, 0f);
-		rigidbody.angularVelocity = new Vector3(0f, 0f, 0f);
+		ResetVelocity();
 		transform.position = startingPos;
 		GameManager.activeArena.transform.rotation =
 			new Quaternion(0f, 0f, 0f, GameManager.activeArena.transform.rotation.w);
 		GameManager.DisableSphere();
+	}
+
+	public void ResetVelocity()
+	{
+		rigidbody.velocity = new Vector3(0f, 0f, 0f);
+		rigidbody.angularVelocity = new Vector3(0f, 0f, 0f);
 	}
 }

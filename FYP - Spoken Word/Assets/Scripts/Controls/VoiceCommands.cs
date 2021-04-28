@@ -77,6 +77,10 @@ namespace Control
                             GameManager.tsWaypoint.GetComponentsInChildren<Transform>()[2];
                         SetTarget(waypointTarget, GameManager.tsWaypoint.transform);
                         break;
+                    case "finish":
+                        waypointTarget = GameManager.finishGameCollider.transform;
+                        SetTarget(waypointTarget, null);
+                        break;
 				}
 			}
             else
@@ -304,8 +308,8 @@ namespace Control
 
             for(int i = 0; i < direction.Count; i++)
 			{
-                // break out of the for loop if i is 2, basically don't tilt in 3 directions at once
-                if (i == 2) break;
+                // break out of the for loop if i is 3, basically don't tilt in 3 directions at once
+                if (i == 3) break;
 
                 switch (direction[i])
                 {
@@ -355,6 +359,32 @@ namespace Control
             //GameManager.activeArena.transform.rotation =
             //        new Quaternion(temp.rotation.x, 0f, temp.rotation.z, temp.rotation.w);
         }
+
+        public void TiltShrineReset(PlayerControls.TiltShrineActions tiltShrine)
+		{
+			StartCoroutine(ResetArena(tiltShrine));
+		}
+
+		private IEnumerator ResetArena(PlayerControls.TiltShrineActions tiltShrine)
+		{
+            tiltShrine.Disable();
+            Transform temp = GameManager.activeArena.transform;
+            float duration = 2f;
+
+            Quaternion finalRotation = new Quaternion(0f, 0f, 0f, GameManager.activeArena.transform.rotation.w);
+
+            for (float t = 0f; t < 1; t += Time.deltaTime / duration)
+            {
+                GameManager.ResetSphereVelocity();
+                temp.rotation = Quaternion.Slerp
+                (temp.rotation, finalRotation, t);
+                yield return null;
+            }
+
+            GameManager.activeArena.transform.rotation =
+							new Quaternion(0f, 0f, 0f, GameManager.activeArena.transform.rotation.w);
+            tiltShrine.Enable();
+		}
 
         // Move this to a helper gameobject or something later on, it should not be here.
         public void DisableActionTemporarily(UnityEngine.InputSystem.InputAction action, float seconds)

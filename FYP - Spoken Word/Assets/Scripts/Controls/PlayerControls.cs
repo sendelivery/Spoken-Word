@@ -546,6 +546,22 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Reset"",
+                    ""type"": ""Button"",
+                    ""id"": ""ecb1d18f-aef8-41e2-9671-e205131c858a"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Skip"",
+                    ""type"": ""Button"",
+                    ""id"": ""1ee5f587-5cb6-4d2d-aafe-48b63c5a895c"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -636,6 +652,50 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""action"": ""Rotate"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e9d48f0a-b8dc-4e41-ba0a-e2998fad13a7"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard and Mouse"",
+                    ""action"": ""Reset"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ba666df9-066b-412b-b23a-f0414671935b"",
+                    ""path"": ""<Gamepad>/buttonWest"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Reset"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8db439ed-6e25-4cba-8c48-86bce10541ed"",
+                    ""path"": ""<Keyboard>/enter"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard and Mouse"",
+                    ""action"": ""Skip"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b56091de-c27f-402b-ab01-3128a499b430"",
+                    ""path"": ""<Gamepad>/buttonNorth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Skip"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -694,6 +754,8 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         m_TiltShrine = asset.FindActionMap("TiltShrine", throwIfNotFound: true);
         m_TiltShrine_Tilt = m_TiltShrine.FindAction("Tilt", throwIfNotFound: true);
         m_TiltShrine_Rotate = m_TiltShrine.FindAction("Rotate", throwIfNotFound: true);
+        m_TiltShrine_Reset = m_TiltShrine.FindAction("Reset", throwIfNotFound: true);
+        m_TiltShrine_Skip = m_TiltShrine.FindAction("Skip", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -941,12 +1003,16 @@ public class @PlayerControls : IInputActionCollection, IDisposable
     private ITiltShrineActions m_TiltShrineActionsCallbackInterface;
     private readonly InputAction m_TiltShrine_Tilt;
     private readonly InputAction m_TiltShrine_Rotate;
+    private readonly InputAction m_TiltShrine_Reset;
+    private readonly InputAction m_TiltShrine_Skip;
     public struct TiltShrineActions
     {
         private @PlayerControls m_Wrapper;
         public TiltShrineActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
         public InputAction @Tilt => m_Wrapper.m_TiltShrine_Tilt;
         public InputAction @Rotate => m_Wrapper.m_TiltShrine_Rotate;
+        public InputAction @Reset => m_Wrapper.m_TiltShrine_Reset;
+        public InputAction @Skip => m_Wrapper.m_TiltShrine_Skip;
         public InputActionMap Get() { return m_Wrapper.m_TiltShrine; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -962,6 +1028,12 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @Rotate.started -= m_Wrapper.m_TiltShrineActionsCallbackInterface.OnRotate;
                 @Rotate.performed -= m_Wrapper.m_TiltShrineActionsCallbackInterface.OnRotate;
                 @Rotate.canceled -= m_Wrapper.m_TiltShrineActionsCallbackInterface.OnRotate;
+                @Reset.started -= m_Wrapper.m_TiltShrineActionsCallbackInterface.OnReset;
+                @Reset.performed -= m_Wrapper.m_TiltShrineActionsCallbackInterface.OnReset;
+                @Reset.canceled -= m_Wrapper.m_TiltShrineActionsCallbackInterface.OnReset;
+                @Skip.started -= m_Wrapper.m_TiltShrineActionsCallbackInterface.OnSkip;
+                @Skip.performed -= m_Wrapper.m_TiltShrineActionsCallbackInterface.OnSkip;
+                @Skip.canceled -= m_Wrapper.m_TiltShrineActionsCallbackInterface.OnSkip;
             }
             m_Wrapper.m_TiltShrineActionsCallbackInterface = instance;
             if (instance != null)
@@ -972,6 +1044,12 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @Rotate.started += instance.OnRotate;
                 @Rotate.performed += instance.OnRotate;
                 @Rotate.canceled += instance.OnRotate;
+                @Reset.started += instance.OnReset;
+                @Reset.performed += instance.OnReset;
+                @Reset.canceled += instance.OnReset;
+                @Skip.started += instance.OnSkip;
+                @Skip.performed += instance.OnSkip;
+                @Skip.canceled += instance.OnSkip;
             }
         }
     }
@@ -1022,5 +1100,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
     {
         void OnTilt(InputAction.CallbackContext context);
         void OnRotate(InputAction.CallbackContext context);
+        void OnReset(InputAction.CallbackContext context);
+        void OnSkip(InputAction.CallbackContext context);
     }
 }
