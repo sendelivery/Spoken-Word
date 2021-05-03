@@ -60,7 +60,7 @@ namespace Control
             mouseLook = _settings.cam.GetComponent<MouseLook>();
 
             if (_default == null || _ringtoss == null || _tilt == null)
-			{
+	        {
                 _default = new Default(ref _settings);
                 _ringtoss = new RingToss(ref _settings);
                 _tilt = new TiltShrine(ref _settings);
@@ -72,15 +72,14 @@ namespace Control
         // Need to attach voice commands to an object because
         // coroutines can only be called if attached to an object, 
         private void SetUpVoiceCommands()
-		{
+        {
             GameObject obj = new GameObject("Voice Commands");
             obj.AddComponent<VoiceCommands>();
             voiceCommands = obj.GetComponent<VoiceCommands>();
             voiceCommands.player = this.gameObject;
-            // Only reliable way of getting the camera in awake, gamemanager might not have it yet,
-            // same with the player
+            // Only reliable way of getting the camera in awake, GameManger.cs does not have it yet.
             voiceCommands.cam = Camera.main;
-		}
+        }
 
 		private void OnEnable()
 		{
@@ -100,58 +99,64 @@ namespace Control
 
         void FixedUpdate()
         {
-            Debug.Log(state);
-            state.HandleInput();
-            if (target)
+	        Debug.Log(state); // Log our current state.
+            
+	        state.HandleInput();
+	        CheckTarget();
+        }
+
+		private void CheckTarget()
+		{
+			if (target) // If a target has been set through voice controls
 			{
-                switch (((Default)_default).targetState) // Downcast to access Default.cs members of _default
-                {
-                    case Default.TargetState.NONE:
-                        if (target)
-                        {
-                            Debug.Log("Target set");
-                            // target = AdjustPosition(target); // Adjust pos so that it's on top of the terrain. (if not using the target game object in the hierarchy)
-
-                            ((Default)state).SetTarget(target);
-                        }
-                        break;
-
-					case Default.TargetState.SET:
-						// targetWaypoint = (10,0,10), this = (1,1,2) then, targetWaypoint - this = (9,-1,8)
-                        if (targetWaypoint)
+				switch (((Default)_default).targetState) // Downcast to access Default.cs members of _default
+				{
+					case Default.TargetState.NONE: // If our control state has no target, give it one.
+						Debug.Log("case: NONE");
+						if (target)
 						{
-                            Vector3 lookPos = targetWaypoint.position - transform.position;
-                            lookPos.y = 1;
-                            Quaternion rotation = Quaternion.LookRotation(lookPos);
-                            transform.rotation = Quaternion.Slerp(transform.rotation, rotation, 5f * Time.deltaTime);
+							Debug.Log("Target set");
+							((Default)state).SetTarget(target);
+						}
+						break;
 
-                            // Camera rotation
-                            CameraToTarget();
-                        }
-
+					case Default.TargetState.SET: // If the controls state target is set, look in the direction of it.
 						Debug.Log("case: SET");
+						// targetWaypoint = (10,0,10), this = (1,1,2) then, targetWaypoint - this = (9,-1,8)
+						if (targetWaypoint)
+						{
+							Vector3 lookPos = targetWaypoint.position - transform.position;
+							lookPos.y = 1;
+							Quaternion rotation = Quaternion.LookRotation(lookPos);
+							transform.rotation = Quaternion.Slerp(transform.rotation, rotation, 5f * Time.deltaTime);
+
+							// Camera rotation
+							CameraToTarget();
+						}
+
 						break;
 
 					case Default.TargetState.REACHED:
-                        Debug.Log("case: REACHED");
-                        // If we have a target but it's been reached: set it to null, and reset the target state inside _default.
-                        if (target)
-                        {
-                            target = null;
-                            targetWaypoint = null;
-                            t = 0;
-                            tempAngle = 0;
-                            oldTempAngle = 0;
-                            lerpChange = 0;
+						Debug.Log("case: REACHED");
+						// If we have a target but it's been reached: set it to null, and reset the target state inside _default.
+						if (target)
+						{
+							target = null;
+							targetWaypoint = null;
+							t = 0;
+							tempAngle = 0;
+							oldTempAngle = 0;
+							lerpChange = 0;
 
-                            ((Default)state).ResetTarget();
-                        }
-                        break;
+							((Default)state).ResetTarget();
+						}
+						break;
 
-                    default:
-                        break;
-                }
-            }
+					default:
+						Debug.Log("case: DEFAULT");
+						break;
+				}
+			}
 		}
 
 		private void CameraToTarget()
@@ -240,6 +245,11 @@ namespace Control
             state.Enable();
         }
 
+        public void UpdatePlayerSensitivity(float sens)
+		{
+            _settings.sensitivity = sens;
+		}
+
         // Tilt Shrine specific functions:
         public void UpdateTiltTranformReference()
         {
@@ -253,6 +263,7 @@ namespace Control
             return t;
 		}
 
+        // Helper function:
         [ContextMenu("Autofill Fields")]
         void AutofillFields()
         {

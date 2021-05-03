@@ -27,7 +27,8 @@ namespace Control
             {
                 _instance = this;
 
-                // Doesn't work in the tilt shrine scene and that's ok :)
+                // We use the target for pathfinding so get a reference to it here.
+                // Not the most efficient way, but only done once so overhead is not bad.
                 target = GameObject.FindGameObjectWithTag("Target").transform;
             }
         }
@@ -171,7 +172,7 @@ namespace Control
             }
 
             for(int i = 0; i < direction.Count; i++)
-			{
+            {
                 // break out of the for loop if i is 2, basically don't look in 3 directions at once
                 if (i == 2) break;
 

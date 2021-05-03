@@ -25,8 +25,8 @@ namespace Control
             return;
         }
 
-		public override void Initialise()
-		{
+        public override void Initialise()
+        {
             base.Initialise();
 
             VoiceCommands voiceCommands = settings.voiceCommands;

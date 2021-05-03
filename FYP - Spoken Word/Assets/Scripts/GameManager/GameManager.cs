@@ -78,6 +78,7 @@ namespace SpokenWord
 		private GameObject _optionsCanvas;
 		private static GameObject optionsCanvas;
 		private static float tempTime;
+		private static AdjustSensitivity sensSlider;
 		#endregion
 
 		private void Awake()
@@ -116,6 +117,7 @@ namespace SpokenWord
 			timeSlider = pauseCanvas.GetComponentInChildren<AdjustTimeScale>();
 
 			optionsCanvas = _optionsCanvas;
+			sensSlider = optionsCanvas.GetComponentInChildren<AdjustSensitivity>();
 
 		}
 
@@ -238,20 +240,25 @@ namespace SpokenWord
 		{
 			Canvas canvas = optionsCanvas.GetComponent<Canvas>();
 
-			if (canvas.enabled == false)
+			if (canvas.enabled == false) // Open options canvas
 			{
 				player.GetComponentInChildren<PlayerUISetUp>().playerUICanvas.enabled = false;
 				canvas.enabled = true;
+
+				tempSelected = EventSystem.current.currentSelectedGameObject;
+				EventSystem.current.SetSelectedGameObject(sensSlider.gameObject);
 
 				tempCursorState = Cursor.lockState;
 				tempCursorVisibility = Cursor.visible;
 				Cursor.lockState = CursorLockMode.Confined;
 				Cursor.visible = true;
 			}
-			else
+			else // Close options canvas
 			{
 				player.GetComponentInChildren<PlayerUISetUp>().playerUICanvas.enabled = true;
 				canvas.enabled = false;
+
+				EventSystem.current.SetSelectedGameObject(tempSelected);
 
 				Cursor.lockState = tempCursorState;
 				Cursor.visible = tempCursorVisibility;

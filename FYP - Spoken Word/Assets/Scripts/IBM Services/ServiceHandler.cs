@@ -101,8 +101,6 @@ namespace SpokenWord.IBM
 
             Active = true;
 
-            //_speechToTextService.SendTakeSnapshot += () => GameManager.TakeSnapshot();
-
             // Creating Assistant Service ---------------------------------------------------------------------------------------------------------------------
             IamAuthenticator assistantAuthenticator = new IamAuthenticator(apikey: "9Az7c6aj2kKhH31OROZ_cIlaYXo8HT8ut248Q8CXx_qq");
 
@@ -274,16 +272,20 @@ namespace SpokenWord.IBM
                 Debug.Log("Number of Received Intents: " + resp.Result.Intents.Count);
 
                 for (int i = 0; i < resp.Result.Intents.Count; i++)
-				{
+	            {
                     Debug.Log("Received Intent: " + resp.Result.Intents[i].Intent);
                     if (resp.Result.Entities.Count > 0)
-					{
-                        Debug.Log("Received Entities: " + resp.Result.Entities[i].Entity);
-                        Debug.Log("Received Entiites Value: " + resp.Result.Entities[i].Value);
+		            {
+                        for (int j = 0; j < resp.Result.Entities.Count; j++)
+			            {
+                            Debug.Log("Received Entities: " + resp.Result.Entities[j].Entity);
+                            Debug.Log("Received Entiites Value: " + resp.Result.Entities[j].Value);
+			            }
+                        
                     } else
-					{
+		            {
                         Debug.Log("No entities received");
-					}
+		            }
                 }
 
                 player.GetComponent<Control.ControlHandler>().HandleIntent
@@ -293,7 +295,6 @@ namespace SpokenWord.IBM
                         resp.Result.Input.Text,
                         _intentConfidence
                     );
-                
             }
             else
             {
