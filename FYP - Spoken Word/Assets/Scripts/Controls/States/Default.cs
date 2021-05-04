@@ -118,15 +118,6 @@ namespace Control
 
 		public override void HandleInput()
 		{
-            // TODO: If player input is disabled, and input has been detected from the player,
-            //else if (settings.characterController.enabled == false && move != Vector2.zero)
-            //{
-                //Debug.Log("Agent navigation cancelled.");
-                // TODO: Disable the navMeshAgent, destroy the target
-                // TODO: Enable the character & player controller and proceed to handle input
-                // characterController.enabled = true;
-            //}
-
             if (target) // If we set a target to pathfind to:
             {
                 if (settings.navMeshAgent.enabled == false) settings.navMeshAgent.enabled = true; // Enable the navMeshAgent
@@ -250,8 +241,7 @@ namespace Control
 
         protected override void Interact()
         {
-            // TODO: call method in ui set up, or move that code here i.e. cast the ray from here,
-            // if true move cam in ui set up.
+            // Cast a ray, if we hit an objective then switch state.
             var (hitObjective, hit) = settings.playerUI.FireRay();
             if (hitObjective)
             {

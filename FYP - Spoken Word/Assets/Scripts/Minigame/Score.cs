@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
+// Used to keep track of score.
 public class Score : MonoBehaviour
 {
     private static Score _instance;

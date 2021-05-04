@@ -7,7 +7,7 @@ public class TargetPlacement : MonoBehaviour
 {
     public Terrain terrain;
 
-    // Update is called once per frame
+    // Keep the target, or anything else this script is attached to, stuck onto the terrain.
     void Update()
     {
         PlaceOnTerrain();

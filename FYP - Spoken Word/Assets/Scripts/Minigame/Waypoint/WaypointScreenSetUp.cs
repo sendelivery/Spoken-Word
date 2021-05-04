@@ -10,7 +10,7 @@ public class WaypointScreenSetUp : MonoBehaviour
     public Camera tiltShrineCamera;
     public Material tsCamMaterial;
 
-    // Start is called before the first frame update
+    // Setting up the render texture to render what the assigned camera is viewing.
     void Start()
     {
         if (ringTossCamera.targetTexture != null)

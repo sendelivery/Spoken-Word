@@ -3,7 +3,6 @@ using UnityEngine.AI;
 
 namespace Control
 {
-    // This should become a singleton at some point.
 	public class Settings
 	{
         // Simplified constructor
@@ -38,18 +37,6 @@ namespace Control
             runSpeed = speed; 
             sensitivity = sens; 
             cam = main;
-
-            // Log the created settings:
-            /*Debug.Log("The following settings have been created:\n"
-                + "gameObject: " + this.player + ",\n"
-                + "characterController: " + this.characterController + ",\n"
-                + "agentMovement: " + this.agentMovement + ",\n"
-                + "navMeshAgent: " + this.navMeshAgent + ",\n"
-                + "playerUI: " + playerUI + ",\n"
-                + "playerControls: " + playerControls + ",\n"
-                + "runSpeed: " + runSpeed + ",\n"
-                + "sensitivity: " + sensitivity + ",\n"
-                + "cam: " + cam + ",\n");*/
 		}
         public GameObject player { get; }
         public VoiceCommands voiceCommands { get; }
@@ -66,7 +53,6 @@ namespace Control
 
         public Camera cam { get; }
 
-        // Recently implemented settings:
         public float zoomedFOV = 30f;
         public float defaultFOV = 70f;
         public float goalRadius = 1f;

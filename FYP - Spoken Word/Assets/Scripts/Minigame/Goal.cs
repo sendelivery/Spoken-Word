@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// Individual goals inherit from this script.
 public class Goal : MonoBehaviour
 {
 	public int pointsAwarded;

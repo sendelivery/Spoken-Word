@@ -11,7 +11,7 @@ public class GridSnap : MonoBehaviour
     [SerializeField]
     bool snapY = true;
 
-    // Update is called once per frame
+    // Snap to grid every frame.
     void Update()
     {
         Vector3 snapPos;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
+// This script makes incoming speech to text data scroll across the UI element on screen when it overflows.
 public class AutoScroll : MonoBehaviour
 {
     public TextMeshProUGUI TextMeshProComponent;

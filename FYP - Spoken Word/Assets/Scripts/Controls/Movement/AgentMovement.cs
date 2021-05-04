@@ -8,10 +8,7 @@ using UnityEngine.Playables;
 
 public class AgentMovement : MonoBehaviour
 {
-
-    // Start is called before the first frame update
-    void Start() { }
-
+    // Check if the target set is valid
     public bool CheckTarget(NavMeshAgent agent, Transform target) 
     {
         NavMeshPath path = new NavMeshPath();

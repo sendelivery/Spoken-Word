@@ -14,7 +14,7 @@ public class Reset : MonoBehaviour
 		startingPos = transform.position;
 	}
 
-	// Update is called once per frame
+	// Update is called once per frame, if the ball reaches below a certain y value, reset the arena.
 	void Update()
     {
         if(transform.position.y < startingPos.y - 8f)

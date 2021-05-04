@@ -38,10 +38,4 @@ public class PlayerPhysics: MonoBehaviour
 	{
 		if (isGrounded) velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
 	}
-
-	/*private void OnDrawGizmosSelected() 
-    {
-        Gizmos.color = Color.green;
-        Gizmos.DrawSphere(groundCheck.position, groundDistance);
-    }*/
 }

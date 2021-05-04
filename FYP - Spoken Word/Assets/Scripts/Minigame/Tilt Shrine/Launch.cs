@@ -7,6 +7,7 @@ public class Launch : MonoBehaviour
 	public Vector3 force;
 	public bool resetVelocity = true;
 
+	// Launch the ball in the specified direction. Set these values in the inspector.
 	private void OnTriggerEnter(Collider other)
 	{
 		if (resetVelocity)

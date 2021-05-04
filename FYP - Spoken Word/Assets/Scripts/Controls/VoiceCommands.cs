@@ -164,11 +164,6 @@ namespace Control
                         Debug.Log("Could not extract an angle from the input text, default angle is " + angle);
 					}
 				}
-
-                //foreach (var item in incomingEntities[i].Location)
-				//{
-                //    Debug.Log(item);
-				//}
             }
 
             for(int i = 0; i < direction.Count; i++)
@@ -180,7 +175,7 @@ namespace Control
                 {
                     case "above":
                         Debug.Log("Up, Look " + direction + " " + angle);
-                        StartCoroutine(LookOnX(new Vector3(-1, 0, 0), duration, angle));
+                        StartCoroutine(LookOnX(new Vector3(1, 0, 0), duration, -angle));
                         break;
                     case "below":
                         Debug.Log("Down, Look " + direction + " " + angle);
@@ -355,10 +350,6 @@ namespace Control
                 temp.RotateAround(relativeTo.position, axis, angleChange);
                 yield return null;
             }
-
-
-            //GameManager.activeArena.transform.rotation =
-            //        new Quaternion(temp.rotation.x, 0f, temp.rotation.z, temp.rotation.w);
         }
 
         public void TiltShrineReset(PlayerControls.TiltShrineActions tiltShrine)
@@ -387,7 +378,7 @@ namespace Control
             tiltShrine.Enable();
 		}
 
-        // Move this to a helper gameobject or something later on, it should not be here.
+        // Move this to a helper gameobject maybe?
         public void DisableActionTemporarily(UnityEngine.InputSystem.InputAction action, float seconds)
         {
             StartCoroutine(DisableActionTemporarilyCoroutine(action, seconds));

@@ -261,12 +261,6 @@ namespace SpokenWord.IBM
 
         void OnMessage(DetailedResponse<MessageResponse> resp, IBMError error)
         {
-            // Going to have to rework this completely if I want to handle multiple intents and entities
-            // think about intents that may have multiple entities attached:
-            //  - how will I know that the first 2 entities correspond to the first intent in a case where i receive
-            //    two intents and two entities for example
-            // at the moment all i'm doing is iterating through the intents and printing out the intent and entity that
-            // is at the same index as that intent if there is one.
             if (resp != null && resp.Result.Intents.Count != 0)
             {
                 Debug.Log("Number of Received Intents: " + resp.Result.Intents.Count);

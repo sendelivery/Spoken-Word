@@ -24,12 +24,4 @@ public class RingFactory : MonoBehaviour
 		return ringScript;
 		// return a ring
 	}
-
-	/* Method to return an empty Ring script, never used.
-	public static Ring CreateEmptyRing()
-	{
-		Ring emptyRing = new Ring();
-		return emptyRing;
-	}
-	*/
 }

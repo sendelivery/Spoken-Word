@@ -36,8 +36,8 @@ namespace Control
 			settings.playerControls.RingToss.Disable();
 			settings.playerControls.TiltShrine.Disable();
 
-			//_voiceActions.Add("pause", () => settings.player.GetComponent<ControlHandler>().Pause(settings.playerControls));
-			//_voiceActions.Add("options", () => settings.player.GetComponent<ControlHandler>().Options(settings.playerControls));
+			_voiceActions.Add("pause", () => settings.player.GetComponent<ControlHandler>().Pause(settings.playerControls));
+			_voiceActions.Add("options", () => settings.player.GetComponent<ControlHandler>().Options(settings.playerControls));
 		}
 
 		public virtual void Enable()
